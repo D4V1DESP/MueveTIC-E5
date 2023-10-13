@@ -35,6 +35,11 @@
 		    <artifactId>spring-boot-starter-webflux</artifactId>
 		    <scope>test</scope>
 		</dependency>
+		<dependency>
+            <!-- Conectividad con MongoDB-->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
