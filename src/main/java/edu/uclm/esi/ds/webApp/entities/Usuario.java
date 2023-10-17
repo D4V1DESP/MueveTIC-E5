@@ -1,6 +1,20 @@
 package edu.uclm.esi.ds.webApp.entities;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+
+@Document(collection = "usuarios")
 public class Usuario {
+	@Id 
+	protected String dni;
+	protected String nombre;
+	protected String apellidos;
+	protected String contrasena;
+	protected String repetirContrasena;
+	protected String ciudad;
+	protected boolean activo; 
+	protected String email;
+	
 	
 	public String getDni() {
 		return dni;
@@ -26,17 +40,17 @@ public class Usuario {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getContraseña() {
-		return contraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
-	public String getRepetirContraseña() {
-		return repetirContraseña;
+	public String getRepetirContrasena() {
+		return repetirContrasena;
 	}
-	public void setRepetirContraseña(String repetirContraseña) {
-		this.repetirContraseña = repetirContraseña;
+	public void setRepetirContrasena(String repetirContrasena) {
+		this.repetirContrasena = repetirContrasena;
 	}
 	public String getCiudad() {
 		return ciudad;
@@ -50,12 +64,17 @@ public class Usuario {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	protected String dni;
-	protected String nombre;
-	protected String apellidos;
-	protected String email;
-	protected String contraseña;
-	protected String repetirContraseña;
-	protected String ciudad;
-	protected boolean activo; 
+
+	public Usuario(String email, String dni, String nombre, String apellidos, String contrasena,
+			String repetirContrasena, String ciudad, boolean activo) {
+		super();
+		this.email = email;
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.contrasena = contrasena;
+		this.repetirContrasena = repetirContrasena;
+		this.ciudad = ciudad;
+		this.activo = activo;
+	}
 }
