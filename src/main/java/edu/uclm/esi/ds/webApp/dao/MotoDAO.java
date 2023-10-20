@@ -6,4 +6,6 @@ import edu.uclm.esi.ds.webApp.entities.Moto;
 
 public interface MotoDAO extends MongoRepository <Moto, String>{
 
+	void deleteBymatricula(String string);
+
 }

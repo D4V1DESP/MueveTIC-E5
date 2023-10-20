@@ -1,11 +1,12 @@
 package edu.uclm.esi.ds.webApp.entities;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "patinetes")
+@Document(collection = "Patinete")
 public class Patinete {
-	@Id
+
+	@Indexed(unique=true)
 	private String matricula;
 	private String tipo;
 	private String direccion;
@@ -25,37 +26,38 @@ public class Patinete {
 		this.bateria = bateria;
 		this.estado = estado;
 	}
-	
+
+
 	public String getMatricula() {
 		return matricula;
 	}
-	public void setMatricula(String matricula) {
-		this.matricula = matricula;
-	}
-	public String getDireccion() {
-		return direccion;
-	}
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-	public String getModelo() {
-		return modelo;
-	}
-	public void setModelo(String modelo) {
-		this.modelo = modelo;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
+
+
 	public String getTipo() {
 		return tipo;
 	}
+
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+
+	public String getModelo() {
+		return modelo;
+	}
+
+
+	public String getColor() {
+		return color;
+	}
+
+
 	public int getBateria() {
 		return bateria;
 	}
+
+
 	public String getEstado() {
 		return estado;
 	}

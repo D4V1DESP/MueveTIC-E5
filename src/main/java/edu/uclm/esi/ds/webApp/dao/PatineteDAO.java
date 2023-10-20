@@ -4,6 +4,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import edu.uclm.esi.ds.webApp.entities.Patinete;
 
-public interface patineteDAO extends MongoRepository <Patinete, String>{
+public interface PatineteDAO extends MongoRepository <Patinete, String>{
+
+	void deleteBymatricula(String string);
 	
 }

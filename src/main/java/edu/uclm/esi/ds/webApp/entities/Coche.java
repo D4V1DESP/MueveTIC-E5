@@ -1,12 +1,12 @@
 package edu.uclm.esi.ds.webApp.entities;
 
-import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Document(collection = "coches")
+@Document(collection = "Coche")
 public class Coche {
-	@Id
+	
+	@Indexed(unique=true)
 	private String matricula;
 	private String tipo;
 	private String direccion;
@@ -30,28 +30,16 @@ public class Coche {
 		return matricula;
 	}
 
-	public void setMatricula(String matricula) {
-		this.matricula = matricula;
+	public String getTipo() {
+		return tipo;
 	}
 
 	public String getDireccion() {
 		return direccion;
 	}
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
 	public String getModelo() {
 		return modelo;
-	}
-
-	public void setModelo(String modelo) {
-		this.modelo = modelo;
-	}
-
-	public String getTipo() {
-		return tipo;
 	}
 
 	public int getnPlazas() {
@@ -64,9 +52,7 @@ public class Coche {
 
 	public String getEstado() {
 		return estado;
-	}
-	
-	
+	}	
 	
 	
 }
