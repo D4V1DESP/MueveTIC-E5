@@ -1,48 +1,29 @@
 package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Cliente")
+
+
+
 public class Usuario {
 	
-	@Indexed(unique=true)
-    private String dni;
-    private String email;
-    private String nombre;
-    private String apellidos;
-    private String contraseña;
-    private String repetirContraseña;
-    private String ciudad;
-    private boolean activo;
-    private String carnet;
-    private int telefono;
-    
-	public Usuario(String dni, String email, String nombre, String apellidos, String contraseña,
-			String repetirContraseña, String ciudad, boolean activo, String carnet, int telefono) {	
-		this.dni = dni;
-		this.email = email;
-		this.nombre = nombre;
-		this.apellidos = apellidos;
-		this.contraseña = contraseña;
-		this.repetirContraseña = repetirContraseña;
-		this.ciudad = ciudad;
-		this.activo = activo;
-		this.carnet = carnet;
-		this.telefono = telefono;
-	}
-
+	@Indexed(unique= true)
+	protected String email;
+	protected String dni;
+	protected String nombre;
+	protected String apellidos;
+	protected String contrasena;
+	protected String repetirContrasena;
+	protected String ciudad;
+	protected boolean activo; 
+	
+	
+	
 	public String getDni() {
 		return dni;
 	}
 	public void setDni(String dni) {
 		this.dni = dni;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
 	}
 	public String getNombre() {
 		return nombre;
@@ -56,17 +37,23 @@ public class Usuario {
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
-	public String getContraseña() {
-		return contraseña;
+	public String getEmail() {
+		return email;
 	}
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public String getRepetirContraseña() {
-		return repetirContraseña;
+	public String getContrasena() {
+		return contrasena;
 	}
-	public void setRepetirContraseña(String repetirContraseña) {
-		this.repetirContraseña = repetirContraseña;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+	public String getRepetirContrasena() {
+		return repetirContrasena;
+	}
+	public void setRepetirContrasena(String repetirContrasena) {
+		this.repetirContrasena = repetirContrasena;
 	}
 	public String getCiudad() {
 		return ciudad;
@@ -80,18 +67,17 @@ public class Usuario {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	public String getCarnet() {
-		return carnet;
-	}
-	public void setCarnet(String carnet) {
-		this.carnet = carnet;
-	}
-	public int getTelefono() {
-		return telefono;
-	}
-	public void setTelefono(int telefono) {
-		this.telefono = telefono;
-	}
 
-    // Getters y setters
+	public Usuario(String email, String dni, String nombre, String apellidos, String contrasena,
+			String repetirContrasena, String ciudad, boolean activo) {
+		super();
+		this.email = email;
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.contrasena = contrasena;
+		this.repetirContrasena = repetirContrasena;
+		this.ciudad = ciudad;
+		this.activo = activo;
+	}
 }
