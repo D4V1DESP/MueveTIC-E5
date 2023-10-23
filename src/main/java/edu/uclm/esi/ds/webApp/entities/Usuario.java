@@ -1,11 +1,14 @@
 package edu.uclm.esi.ds.webApp.entities;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import org.springframework.data.mongodb.core.index.Indexed;
 
 
-@Document(collection = "usuarios")
+
+
 public class Usuario {
-	@Id 
+	
+	@Indexed(unique= true)
+	protected String email;
 	protected String dni;
 	protected String nombre;
 	protected String apellidos;
@@ -13,7 +16,7 @@ public class Usuario {
 	protected String repetirContrasena;
 	protected String ciudad;
 	protected boolean activo; 
-	protected String email;
+	
 	
 	
 	public String getDni() {

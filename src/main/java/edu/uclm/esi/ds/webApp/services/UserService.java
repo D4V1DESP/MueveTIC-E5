@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,7 +43,7 @@ public class UserService {
 		boolean activo = Boolean.parseBoolean(info.get("activo").toString());
 		String ciudad = info.get("ciudad").toString();
 		try {
-			Correo c = new Correo(email);
+			Correo c = new Correo(email,info.get("tipo").toString());
 			correodao.save(c);
 		}catch(DataIntegrityViolationException  e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
@@ -71,5 +72,59 @@ public class UserService {
 		}
 		
 	}
+
+
+
+	public ResponseEntity<String> login(Map<String, Object> info) {
+		String email = info.get("email").toString();
+		String pass = info.get("contrasena").toString();
+		
+		Correo c = this.correodao.findByEmail(email);
+		if (c == null) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+		}
+		
+		String tipo = c.getTipo();
+		
+		switch (tipo){
+			case "admin":
+				Admin a = this.admindao.findByEmail(email);
+				if (!a.getContrasena().equals(pass)) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+				}
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("admin");
+				
+			case "cliente":
+				Cliente cliente = this.clientedao.findByEmail(email);
+				if (!cliente.getContrasena().equals(pass)) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+				}
+				
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("cliente");
+				
+			case "mantenimiento":
+				Mantenimiento m = this.mandao.findByEmail(email);
+				if (!m.getContrasena().equals(pass)) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+				}
+				
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("mantenimiento");
+				
+		
+		}
+		return (ResponseEntity<String>) ResponseEntity.status(HttpStatus.FORBIDDEN).body("credenciales invalidas");
+		
+		
+		
+	}
+
+
+
+	public void updateUsers(Map<String, Object> info) {
+		
+		
+	}
+	
+	
 
 }

@@ -1,5 +1,8 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection= "Cliente")
 public class Cliente extends Usuario{
 	
 	
@@ -9,6 +12,8 @@ public class Cliente extends Usuario{
 		this.telefono = telefono;
 		this.carnet = carnet;
 	}
+	
+	
 	protected String telefono;
 	protected char carnet;
 

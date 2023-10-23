@@ -42,5 +42,27 @@ public class UserController {
 		return true;
 	}
 	
+	@PostMapping("/login")
+	public boolean login(@RequestBody Map<String, Object> info) {
+		
+		try {
+			this.userService.login(info);
+		}catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			
+		}
+		return true;
+	}
+	
+	@PostMapping("/UpdateUser")
+	public boolean UpdateUser(@RequestBody Map<String,Object> info) {
+		
+		try {
+			this.userService.updateUsers(info);
+		}catch(DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
 	
 }

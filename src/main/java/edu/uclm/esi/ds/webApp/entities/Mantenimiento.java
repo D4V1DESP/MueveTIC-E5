@@ -1,5 +1,8 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection= "Mantenimiento")
 public class Mantenimiento extends Usuario{
 	
 	public Mantenimiento(String email, String dni, String nombre, String apellidos, String contrasena,
