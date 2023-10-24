@@ -69,7 +69,7 @@ public class UserService {
 			break;
 		case "cliente":
 			String telefono = info.get("telefono").toString();
-			char carnet = info.get("carnet").toString().charAt(0);
+			String carnet = info.get("carnet").toString();
 			
 			Cliente c = new Cliente(email, nombre, apellidos, dni, contrasena, repetircontrasena, ciudad, activo,telefono, carnet);
 			this.clientedao.save(c);
@@ -136,14 +136,20 @@ public class UserService {
 	public List<Usuario> obtenerUsuarios() {
 		List<Usuario> lista = new ArrayList<>();
 		lista.addAll(this.admindao.findAll());
-		lista.addAll(this.clientedao.findAll());
+		//lista.addAll(this.clientedao.findAll());
 		lista.addAll(this.mandao.findAll());
 		return this.usuarioDAO.findAll();
 	}
+	
 	public List <Admin> listaAdministradores(){
 		return this.admindao.findAll();
 	}
-	
+	public List <Mantenimiento> listaMantenimiento(){
+		return this.mandao.findAll();
+	}
+	public List <Cliente> listaClientes(){
+		return this.clientedao.findAll();
+	}
 	
 
 }

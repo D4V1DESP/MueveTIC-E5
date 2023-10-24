@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.webApp.entities.Admin;
+import edu.uclm.esi.ds.webApp.entities.Cliente;
+import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
 import edu.uclm.esi.ds.webApp.services.UserService;
 
@@ -41,7 +43,14 @@ public class UserController {
 	public List<Admin> listaAdministrador(){
 		return userService.listaAdministradores();
 	}
-	
+	@GetMapping("/mantenimiento")
+	public List<Mantenimiento> listaMantenimiento(){
+		return userService.listaMantenimiento();
+	}
+	@GetMapping("/cliente")
+	public List<Cliente> listaCliente(){
+		return userService.listaClientes();
+	}
 	
 	@PostMapping("/AddUser")
 	public boolean AnadirUsuario(@RequestBody Map<String, Object> info) {
