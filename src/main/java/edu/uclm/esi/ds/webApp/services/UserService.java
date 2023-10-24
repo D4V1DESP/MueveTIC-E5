@@ -1,5 +1,7 @@
 package edu.uclm.esi.ds.webApp.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
+import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
+import edu.uclm.esi.ds.webApp.entities.Usuario;
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 
@@ -30,6 +34,8 @@ public class UserService {
 	private MantenimientoDAO mandao;
 	@Autowired
 	private CorreoDAO correodao;
+	@Autowired
+	private UsuarioDAO usuarioDAO;
 	
 	
 	
@@ -123,6 +129,19 @@ public class UserService {
 	public void updateUsers(Map<String, Object> info) {
 		
 		
+	}
+
+
+
+	public List<Usuario> obtenerUsuarios() {
+		List<Usuario> lista = new ArrayList<>();
+		lista.addAll(this.admindao.findAll());
+		lista.addAll(this.clientedao.findAll());
+		lista.addAll(this.mandao.findAll());
+		return this.usuarioDAO.findAll();
+	}
+	public List <Admin> listaAdministradores(){
+		return this.admindao.findAll();
 	}
 	
 	

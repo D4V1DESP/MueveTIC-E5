@@ -1,6 +1,7 @@
 package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
 
@@ -8,8 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class Usuario {
 	
 	@Indexed(unique= true)
-	protected String email;
 	protected String dni;
+	protected String email;
 	protected String nombre;
 	protected String apellidos;
 	protected String contrasena;
