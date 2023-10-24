@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
@@ -39,7 +42,6 @@ public class VehicleService {
 		Matricula matriculaVehiculo = new Matricula(matricula, tipo);
 		this.matriculaDAO.save(matriculaVehiculo);
 		
-		
 		if(info.get("tipo").equals("Coche")) {
 			int nPlazas = Integer.parseInt(info.get("nPlazas").toString());
 	        Coche coche = new Coche(matricula, tipo, direccion, modelo, nPlazas, bateria, estado);
@@ -67,5 +69,22 @@ public class VehicleService {
 	
 	public List <Patinete> listaPatinetes(){
 		return this.patineteDAO.findAll();
+	}
+
+	public void eliminarTipoVehiculo(Map<String, Object> info) {
+		String matricula = info.get("matricula").toString();
+		String tipo = info.get("tipo").toString();
+		
+		this.matriculaDAO.deleteBymatricula(matricula);
+		
+		if(tipo.equals("Coche")) {
+			this.cocheDAO.deleteBymatricula(matricula);
+		
+		}else if (tipo.equals("Moto")) {
+			this.motoDAO.deleteBymatricula(matricula);
+			
+		}else if (tipo.equals("Patinete")) {
+			this.patineteDAO.deleteBymatricula(matricula);
+		}
 	}
 }

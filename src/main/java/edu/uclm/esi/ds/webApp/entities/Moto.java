@@ -1,20 +1,13 @@
 package edu.uclm.esi.ds.webApp.entities;
 
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "Moto")
-public class Moto {
+public class Moto extends Vehiculo{
 	
-	
-	private String matricula;
-	private String tipo;
-	private String direccion;
-	private String modelo;
 	private boolean casco;
-	private int bateria;
-	private String estado;
+
 	
 	public Moto(String matricula, String tipo, String direccion, String modelo, boolean casco, int bateria,
 			String estado) {

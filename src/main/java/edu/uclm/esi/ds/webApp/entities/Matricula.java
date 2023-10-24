@@ -16,7 +16,6 @@ public class Matricula {
 		this.tipo = tipo;
 	}
 
-
 	public String getMatricula() {
 		return matricula;
 	}

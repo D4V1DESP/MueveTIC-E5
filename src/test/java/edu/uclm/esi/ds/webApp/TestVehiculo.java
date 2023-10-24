@@ -65,9 +65,16 @@ public class TestVehiculo {
 		JSONObject jsoPatinete = new JSONObject();
 		jsoPatinete = crearTipoVehiculo(matriculaPatinete, jsoPatinete, "color", tipo, color);	
 		
-		borrarVehiculos(jsoCoche, jsoMoto, jsoPatinete);
+		ResultActions resultado = this.sendRequestEliminar(jsoCoche);
+		resultado.andExpect(status().isOk()).andReturn();
 		
-		ResultActions resultado = this.sendRequestAlta(jsoCoche);
+		resultado = this.sendRequestEliminar(jsoMoto);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestEliminar(jsoPatinete);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestAlta(jsoCoche);
 		resultado.andExpect(status().isOk()).andReturn();
 		
 		resultado = this.sendRequestAlta(jsoMoto);
@@ -94,13 +101,14 @@ public class TestVehiculo {
 		resultado.andExpect(status().isOk()).andReturn();
 	}
 
-	private void borrarVehiculos(JSONObject jsoCoche, JSONObject jsoMoto, JSONObject jsoPatinete) throws Exception {
-		this.cocheDAO.deleteBymatricula(jsoCoche.getString("matricula"));
-		this.motoDAO.deleteBymatricula(jsoMoto.getString("matricula"));
-		this.patineteDAO.deleteBymatricula(jsoPatinete.getString("matricula"));
-		this.matriculaDAO.deleteBymatricula(jsoCoche.getString("matricula"));
-		this.matriculaDAO.deleteBymatricula(jsoMoto.getString("matricula"));
-		this.matriculaDAO.deleteBymatricula(jsoPatinete.getString("matricula"));
+	private ResultActions sendRequestEliminar(JSONObject jsoVehiculo) throws Exception {
+		
+		RequestBuilder request = MockMvcRequestBuilders.delete("/vehiculos/eliminar")
+				.contentType("application/json")
+				.content(jsoVehiculo.toString());
+		
+		ResultActions resultado = this.server.perform(request);
+		return resultado;
 	}
 
 	private JSONObject crearTipoVehiculo(String matricula, JSONObject jsoVehiculo, String key2, String atr1, String atr2) throws Exception{
@@ -109,8 +117,8 @@ public class TestVehiculo {
 		jsoVehiculo.put("modelo", modelo);
 		jsoVehiculo.put("bateria", bateria);
 		jsoVehiculo.put("estado", estado);	
-			jsoVehiculo.put("tipo", atr1);
-			jsoVehiculo.put(key2, atr2);
+		jsoVehiculo.put("tipo", atr1);
+		jsoVehiculo.put(key2, atr2);
 		return jsoVehiculo;
 	}
 
