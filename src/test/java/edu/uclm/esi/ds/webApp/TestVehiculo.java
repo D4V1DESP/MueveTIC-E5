@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
+import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 
@@ -34,8 +35,12 @@ public class TestVehiculo {
 	private MotoDAO motoDAO;
 	@Autowired
 	private PatineteDAO patineteDAO;
+	@Autowired
+	private MatriculaDAO matriculaDAO;
 	
-	String matricula = "AD-1234-FG";
+	String matriculaCoche = "1234CFG";
+	String matriculaMoto = "4378UIY";
+	String matriculaPatinete = "6574OKU";
 	String direccion = "AV.Francia";
 	String modelo = "Nissan";
 	String bateria = "100";
@@ -50,15 +55,15 @@ public class TestVehiculo {
 		
 		String tipo = "Coche";
 		JSONObject jsoCoche = new JSONObject();
-		jsoCoche = crearTipoVehiculo(jsoCoche, "nPlazas", tipo, nPlazas);
+		jsoCoche = crearTipoVehiculo(matriculaCoche, jsoCoche, "nPlazas", tipo, nPlazas);
 		
 		tipo = "Moto";
 		JSONObject jsoMoto = new JSONObject();
-		jsoMoto = crearTipoVehiculo(jsoMoto, "casco", tipo, casco);
+		jsoMoto = crearTipoVehiculo(matriculaMoto, jsoMoto, "casco", tipo, casco);
 		
 		tipo = "Patinete";
 		JSONObject jsoPatinete = new JSONObject();
-		jsoPatinete = crearTipoVehiculo(jsoPatinete, "color", tipo, color);	
+		jsoPatinete = crearTipoVehiculo(matriculaPatinete, jsoPatinete, "color", tipo, color);	
 		
 		borrarVehiculos(jsoCoche, jsoMoto, jsoPatinete);
 		
@@ -93,9 +98,12 @@ public class TestVehiculo {
 		this.cocheDAO.deleteBymatricula(jsoCoche.getString("matricula"));
 		this.motoDAO.deleteBymatricula(jsoMoto.getString("matricula"));
 		this.patineteDAO.deleteBymatricula(jsoPatinete.getString("matricula"));
+		this.matriculaDAO.deleteBymatricula(jsoCoche.getString("matricula"));
+		this.matriculaDAO.deleteBymatricula(jsoMoto.getString("matricula"));
+		this.matriculaDAO.deleteBymatricula(jsoPatinete.getString("matricula"));
 	}
 
-	private JSONObject crearTipoVehiculo(JSONObject jsoVehiculo, String key2, String atr1, String atr2) throws Exception{
+	private JSONObject crearTipoVehiculo(String matricula, JSONObject jsoVehiculo, String key2, String atr1, String atr2) throws Exception{
 		jsoVehiculo.put("matricula", matricula);
 		jsoVehiculo.put("direccion", direccion);
 		jsoVehiculo.put("modelo", modelo);

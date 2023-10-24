@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Moto")
 public class Moto {
 	
-	@Indexed(unique=true)
+	
 	private String matricula;
 	private String tipo;
 	private String direccion;

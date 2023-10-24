@@ -22,12 +22,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 @RestController
 @RequestMapping("vehiculos")
-@CrossOrigin("*")
+@CrossOrigin({"*"})
 
 public class VehicleController {
 
 	@Autowired
 	private VehicleService vehicleService;
+	@CrossOrigin("*")
 	@PostMapping("/alta")
 	public void altaVehiculo(@RequestBody Map<String, Object> info) {
 		
