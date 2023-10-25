@@ -15,6 +15,8 @@ public class Correo {
 
 	@Indexed(unique =true)
 	protected String email; 
+	
+	
 	protected String tipo;
 	
 	
