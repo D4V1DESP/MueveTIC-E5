@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-<<<<<<< Updated upstream
-=======
+
 import edu.uclm.esi.ds.webApp.entities.Usuario;
->>>>>>> Stashed changes
+
 import edu.uclm.esi.ds.webApp.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
