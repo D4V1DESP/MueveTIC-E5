@@ -3,6 +3,7 @@ package edu.uclm.esi.ds.webApp.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,6 +20,7 @@ import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
+import io.micrometer.common.util.StringUtils;
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 
@@ -125,21 +127,26 @@ public class UserService {
 	}
 
 
+/*
+	public boolean updateUsuario(String userId, String nombre, String apellidos, String ciudad) {
+        Optional<Usuario> optionalUsuario = usuarioDAO.findById(userId);
 
-	public void updateUsers(Map<String, Object> info) {
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+            usuario.setNombre(nombre);
+            usuario.setApellidos(apellidos);
+            usuario.setCiudad(ciudad);
+            // Puedes agregar más campos aquí si es necesario
+
+            // Guarda la actualización en la base de datos
+            usuarioDAO.save(usuario);
+            return true; // Actualización exitosa
+        } else {
+            return false; // No se encontró el usuario con el ID especificado
+        }
+    }
 		
-		
-	}
-
-
-
-	public List<Usuario> obtenerUsuarios() {
-		List<Usuario> lista = new ArrayList<>();
-		lista.addAll(this.admindao.findAll());
-		//lista.addAll(this.clientedao.findAll());
-		lista.addAll(this.mandao.findAll());
-		return this.usuarioDAO.findAll();
-	}
+*/
 	
 	public List <Admin> listaAdministradores(){
 		return this.admindao.findAll();
@@ -149,6 +156,19 @@ public class UserService {
 	}
 	public List <Cliente> listaClientes(){
 		return this.clientedao.findAll();
+	}
+
+	
+	public Usuario obtenerAdminPorEmail(String email) {
+		return admindao.findByEmail(email);
+	}
+
+	public Usuario obtenerMantenimientoPorEmail(String email) {
+		return mandao.findByEmail(email);
+	}
+
+	public Usuario obtenerClientePorEmail(String email) {
+		return clientedao.findByEmail(email);
 	}
 	
 
