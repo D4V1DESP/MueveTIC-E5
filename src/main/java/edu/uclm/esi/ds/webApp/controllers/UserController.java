@@ -7,11 +7,16 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+<<<<<<< Updated upstream
+=======
+import edu.uclm.esi.ds.webApp.entities.Usuario;
+>>>>>>> Stashed changes
 import edu.uclm.esi.ds.webApp.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/AddUser")
-	public boolean AnadirUsuario(@RequestBody Map<String, Object> info) {
+	public boolean anadirUsuario(@RequestBody Map<String, Object> info) {
 		String contrasena = info.get("contrasena").toString();
 		String rcontrasena = info.get("repetirContrasena").toString();
 		if (contrasena.length()< 8 && !contrasena.equals(rcontrasena)) {
@@ -43,19 +48,19 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public boolean login(@RequestBody Map<String, Object> info) {
-		
+	public Usuario login(@RequestBody Map<String, Object> info) {
+		Usuario u;
 		try {
-			this.userService.login(info);
+			u =this.userService.login(info);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			
 		}
-		return true;
+		return u;
 	}
 	
 	@PostMapping("/UpdateUser")
-	public boolean UpdateUser(@RequestBody Map<String,Object> info) {
+	public boolean updateUser(@RequestBody Map<String,Object> info) {
 		
 		try {
 			this.userService.updateUsers(info);

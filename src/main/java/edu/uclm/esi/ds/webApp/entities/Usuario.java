@@ -1,5 +1,6 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 
@@ -7,15 +8,19 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 public class Usuario {
 	
+<<<<<<< Updated upstream
 	@Indexed(unique= true)
+=======
+	@Id
+>>>>>>> Stashed changes
 	protected String email;
 	protected String dni;
 	protected String nombre;
 	protected String apellidos;
 	protected String contrasena;
 	protected String repetirContrasena;
-	protected String ciudad;
 	protected boolean activo; 
+	protected String tipo;
 	
 	
 	
@@ -55,12 +60,7 @@ public class Usuario {
 	public void setRepetirContrasena(String repetirContrasena) {
 		this.repetirContrasena = repetirContrasena;
 	}
-	public String getCiudad() {
-		return ciudad;
-	}
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
+	
 	public boolean isActivo() {
 		return activo;
 	}
@@ -69,7 +69,7 @@ public class Usuario {
 	}
 
 	public Usuario(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena, String ciudad, boolean activo) {
+			String repetirContrasena, boolean activo,String tipo) {
 		super();
 		this.email = email;
 		this.dni = dni;
@@ -77,7 +77,7 @@ public class Usuario {
 		this.apellidos = apellidos;
 		this.contrasena = contrasena;
 		this.repetirContrasena = repetirContrasena;
-		this.ciudad = ciudad;
 		this.activo = activo;
+		this.tipo = tipo;
 	}
 }

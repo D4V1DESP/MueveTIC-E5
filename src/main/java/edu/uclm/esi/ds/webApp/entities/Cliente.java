@@ -7,17 +7,24 @@ public class Cliente extends Usuario{
 	
 	
 	public Cliente(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena, String ciudad, boolean activo, String telefono, char carnet) {
-		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, ciudad, activo);
+			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha) {
+		super(email, dni, nombre, apellidos, contrasena, repetirContrasena,  activo, tipo);
 		this.telefono = telefono;
 		this.carnet = carnet;
+		this.fechaNacimiento= fecha;
 	}
 	
 	
 	protected String telefono;
 	protected char carnet;
+	protected String fechaNacimiento;
 
-	
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
 	public String getTelefono() {
 		return telefono;
 	}
