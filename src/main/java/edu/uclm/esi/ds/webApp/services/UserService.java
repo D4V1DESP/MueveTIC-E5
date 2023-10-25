@@ -127,8 +127,7 @@ public class UserService {
 		Correo c = this.correodao.findByEmail((String) info.get("email".toString()));
 		
 		
-<<<<<<< Updated upstream
-=======
+
 		if (c!= null) {
 			String tipo =c.getTipo();
 			
@@ -166,7 +165,7 @@ public class UserService {
 			}
 		}
 		
->>>>>>> Stashed changes
+
 	}
 	
 	

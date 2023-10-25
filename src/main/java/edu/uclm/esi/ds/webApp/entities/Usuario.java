@@ -8,11 +8,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 public class Usuario {
 	
-<<<<<<< Updated upstream
-	@Indexed(unique= true)
-=======
+
 	@Id
->>>>>>> Stashed changes
 	protected String email;
 	protected String dni;
 	protected String nombre;
