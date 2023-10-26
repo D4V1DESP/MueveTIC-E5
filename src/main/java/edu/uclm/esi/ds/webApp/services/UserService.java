@@ -23,6 +23,7 @@ import edu.uclm.esi.ds.webApp.entities.Usuario;
 
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
+import edu.uclm.esi.ds.webApp.entities.Usuario;
 
 
 @Service 
@@ -47,33 +48,35 @@ public class UserService {
 		String contrasena = info.get("contrasena").toString();
 		String repetircontrasena = info.get("repetirContrasena").toString();
 		boolean activo = Boolean.parseBoolean(info.get("activo").toString());
-		String ciudad = info.get("ciudad").toString();
 		try {
 			Correo c = new Correo(email,info.get("tipo").toString());
 			correodao.save(c);
 		}catch(DataIntegrityViolationException  e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
 		}
-		switch(info.get("tipo").toString()){
+		String tipo =info.get("tipo").toString();
+		switch(tipo){
 		
-		case "admin":
-			Admin a1= new Admin(email, nombre, apellidos, dni, contrasena, repetircontrasena, ciudad, activo);
-			
-			this.admindao.save(a1);
-			break;	
-		case"mantenimiento":
-			int experiencia = Integer.parseInt(info.get("experiencia").toString());
-			Mantenimiento m1 = new Mantenimiento(email, nombre, apellidos, dni, contrasena, repetircontrasena, ciudad, activo, experiencia);
-			
-			this.mandao.save(m1);
-			break;
-		case "cliente":
-			String telefono = info.get("telefono").toString();
-			String carnet = info.get("carnet").toString();
-			
-			Cliente c = new Cliente(email, nombre, apellidos, dni, contrasena, repetircontrasena, ciudad, activo,telefono, carnet);
-			this.clientedao.save(c);
-			break;
+			case "admin":
+				
+				Admin a1= new Admin(email, dni, nombre, apellidos, contrasena, repetircontrasena, info.get("ciudad").toString(), activo,tipo );
+				
+				this.admindao.save(a1);
+				break;	
+			case"mantenimiento":
+				
+				int experiencia = Integer.parseInt(info.get("experiencia").toString());
+				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, contrasena, repetircontrasena,info.get("ciudad").toString() , activo, experiencia, tipo);
+				
+				this.mandao.save(m1);
+				break;
+			case "cliente":
+				String telefono = info.get("telefono").toString();
+				char carnet = info.get("carnet").toString().charAt(0);
+				String fecha= info.get("fecha").toString();
+				Cliente c = new Cliente(email, dni, nombre,apellidos,contrasena, repetircontrasena, activo,telefono,carnet, tipo,fecha) ;
+				this.clientedao.save(c);
+				break;
 			
 		}
 		
@@ -81,7 +84,7 @@ public class UserService {
 
 
 
-	public ResponseEntity<String> login(Map<String, Object> info) {
+	public Usuario login(Map<String, Object> info) {
 		String email = info.get("email").toString();
 		String pass = info.get("contrasena").toString();
 		
@@ -98,7 +101,7 @@ public class UserService {
 				if (!a.getContrasena().equals(pass)) {
 					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
 				}
-				return ResponseEntity.status(HttpStatus.ACCEPTED).body("admin");
+				return a;
 				
 			case "cliente":
 				Cliente cliente = this.clientedao.findByEmail(email);
@@ -106,7 +109,7 @@ public class UserService {
 					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
 				}
 				
-				return ResponseEntity.status(HttpStatus.ACCEPTED).body("cliente");
+				return cliente;
 				
 			case "mantenimiento":
 				Mantenimiento m = this.mandao.findByEmail(email);
@@ -114,38 +117,60 @@ public class UserService {
 					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
 				}
 				
-				return ResponseEntity.status(HttpStatus.ACCEPTED).body("mantenimiento");
+				return m;
 				
 		
 		}
-		return (ResponseEntity<String>) ResponseEntity.status(HttpStatus.FORBIDDEN).body("credenciales invalidas");
+		return null;
 		
 		
 		
 	}
 
 
-/*
-	public boolean updateUsuario(String userId, String nombre, String apellidos, String ciudad) {
-        Optional<Usuario> optionalUsuario = usuarioDAO.findById(userId);
 
-        if (optionalUsuario.isPresent()) {
-            Usuario usuario = optionalUsuario.get();
-            usuario.setNombre(nombre);
-            usuario.setApellidos(apellidos);
-            usuario.setCiudad(ciudad);
-            // Puedes agregar más campos aquí si es necesario
-
-            // Guarda la actualización en la base de datos
-            usuarioDAO.save(usuario);
-            return true; // Actualización exitosa
-        } else {
-            return false; // No se encontró el usuario con el ID especificado
-        }
-    }
+	public void updateUsers(Map<String, Object> info) {
+		Correo c = this.correodao.findByEmail((String) info.get("email".toString()));
 		
-*/
-	
+		
+		if (c!= null) {
+			String tipo =c.getTipo();
+			
+			switch (tipo) {
+			case "admin":
+				Admin a = this.admindao.findByEmail(c.getEmail());
+				a.setNombre(info.get("nombre").toString());
+				a.setApellidos(info.get("apellidos").toString());
+				a.setDni(info.get("dni").toString());
+				a.setCiudad(info.get("ciudad").toString());
+				
+				this.admindao.save(a);
+				
+				break;
+			case "mantenimiento":
+				Mantenimiento m = this.mandao.findByEmail(c.getEmail());
+				m.setNombre(info.get("nombre").toString());
+				m.setApellidos(info.get("apellidos").toString());
+				m.setDni(info.get("dni").toString());
+				m.setCiudad(info.get("ciudad").toString());
+				m.setExperiencia(Integer.parseInt(info.get("experiencia").toString()));
+				
+				this.mandao.save(m);
+				break;
+			case "cliente":
+				Cliente c1 = this.clientedao.findByEmail(c.getEmail());
+				c1.setNombre(info.get("nombre").toString());
+				c1.setApellidos(info.get("apellidos").toString());
+				c1.setDni(info.get("dni").toString());
+				c1.setTelefono(info.get("telefono").toString());
+				c1.setCarnet(info.get("carnet").toString().charAt(0));
+				c1.setFechaNacimiento(info.get("fecha").toString());
+				this.clientedao.save(c1);
+				break;
+			}
+		}
+		
+	}
 	public List <Admin> listaAdministradores(){
 		return this.admindao.findAll();
 	}
@@ -168,6 +193,7 @@ public class UserService {
 	public Usuario obtenerClientePorEmail(String email) {
 		return clientedao.findByEmail(email);
 	}
+	
 	
 
 }

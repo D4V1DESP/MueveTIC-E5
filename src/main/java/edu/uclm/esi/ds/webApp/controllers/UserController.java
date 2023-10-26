@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +45,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/AddUser")
-	public boolean AnadirUsuario(@RequestBody Map<String, Object> info) {
+	public boolean anadirUsuario(@RequestBody Map<String, Object> info) {
 		String contrasena = info.get("contrasena").toString();
 		String rcontrasena = info.get("repetirContrasena").toString();
 		if (contrasena.length()< 8 && !contrasena.equals(rcontrasena)) {
@@ -53,23 +54,23 @@ public class UserController {
 		else {
 			try {
 				userService.Alta(info);
-			}catch(DataIntegrityViolationException e) {
+			}catch(Exception e) {
 				throw new ResponseStatusException (HttpStatus.CONFLICT);
-			}
+			} 
 		}
 		return true;
 	}
 	
 	@PostMapping("/login")
-	public boolean login(@RequestBody Map<String, Object> info) {
-		
+	public Usuario login(@RequestBody Map<String, Object> info) {
+		Usuario u;
 		try {
-			this.userService.login(info);
+			u =this.userService.login(info);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			
 		}
-		return true;
+		return u;
 	}
 	
 	@GetMapping("/administradores/{email}")
@@ -110,5 +111,15 @@ public class UserController {
 	}
 
 
+	@PostMapping("/UpdateUser")
+	public boolean updateUser(@RequestBody Map<String,Object> info) {
+		
+		try {
+			this.userService.updateUsers(info);
+		}catch(DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
 	
 }
