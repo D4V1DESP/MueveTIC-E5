@@ -1,9 +1,9 @@
 package edu.uclm.esi.ds.webApp.services;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,11 +16,11 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
-import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
+
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
-import io.micrometer.common.util.StringUtils;
+
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 
@@ -36,8 +36,6 @@ public class UserService {
 	private MantenimientoDAO mandao;
 	@Autowired
 	private CorreoDAO correodao;
-	@Autowired
-	private UsuarioDAO usuarioDAO;
 	
 	
 	
