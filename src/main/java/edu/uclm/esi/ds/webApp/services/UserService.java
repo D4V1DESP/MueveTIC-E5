@@ -52,15 +52,15 @@ public class UserService {
 		switch(tipo){
 		
 			case "admin":
-				String ciudad = info.get("ciudad").toString();
-				Admin a1= new Admin(email, dni, nombre, apellidos, contrasena, repetircontrasena, ciudad, activo,tipo );
+				
+				Admin a1= new Admin(email, dni, nombre, apellidos, contrasena, repetircontrasena, info.get("ciudad").toString(), activo,tipo );
 				
 				this.admindao.save(a1);
 				break;	
 			case"mantenimiento":
-				ciudad = info.get("ciudad").toString();
+				
 				int experiencia = Integer.parseInt(info.get("experiencia").toString());
-				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, contrasena, repetircontrasena, ciudad, activo, experiencia, tipo);
+				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, contrasena, repetircontrasena,info.get("ciudad").toString() , activo, experiencia, tipo);
 				
 				this.mandao.save(m1);
 				break;
@@ -127,7 +127,6 @@ public class UserService {
 		Correo c = this.correodao.findByEmail((String) info.get("email".toString()));
 		
 		
-
 		if (c!= null) {
 			String tipo =c.getTipo();
 			
@@ -165,7 +164,6 @@ public class UserService {
 			}
 		}
 		
-
 	}
 	
 	

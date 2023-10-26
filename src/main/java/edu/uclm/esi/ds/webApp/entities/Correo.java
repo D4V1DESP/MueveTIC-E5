@@ -15,17 +15,10 @@ public class Correo {
 
 	@Indexed(unique =true)
 	protected String email; 
-	
-	
 	protected String tipo;
 	
 	
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	public String getTipo() {
 		return tipo;
 	}
@@ -33,7 +26,12 @@ public class Correo {
 		this.tipo = tipo;
 	}
 
-
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	
 	
 

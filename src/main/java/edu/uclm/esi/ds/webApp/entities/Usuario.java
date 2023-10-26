@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 public class Usuario {
 	
-
-
+	
 	protected String email;
 	protected String dni;
 	protected String nombre;

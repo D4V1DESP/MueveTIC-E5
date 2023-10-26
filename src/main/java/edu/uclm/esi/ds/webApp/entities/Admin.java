@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection= "Administrador")
 public class Admin extends Usuario{
+	
 	protected String ciudad;
 	
 	public String getCiudad() {
