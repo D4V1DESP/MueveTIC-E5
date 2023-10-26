@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
+import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 
@@ -34,8 +35,12 @@ public class TestVehiculo {
 	private MotoDAO motoDAO;
 	@Autowired
 	private PatineteDAO patineteDAO;
+	@Autowired
+	private MatriculaDAO matriculaDAO;
 	
-	String matricula = "AD-1234-FG";
+	String matriculaCoche = "1234CFG";
+	String matriculaMoto = "4378UIY";
+	String matriculaPatinete = "6574OKU";
 	String direccion = "AV.Francia";
 	String modelo = "Nissan";
 	String bateria = "100";
@@ -50,19 +55,26 @@ public class TestVehiculo {
 		
 		String tipo = "Coche";
 		JSONObject jsoCoche = new JSONObject();
-		jsoCoche = crearTipoVehiculo(jsoCoche, "nPlazas", tipo, nPlazas);
+		jsoCoche = crearTipoVehiculo(matriculaCoche, jsoCoche, "nPlazas", tipo, nPlazas);
 		
 		tipo = "Moto";
 		JSONObject jsoMoto = new JSONObject();
-		jsoMoto = crearTipoVehiculo(jsoMoto, "casco", tipo, casco);
+		jsoMoto = crearTipoVehiculo(matriculaMoto, jsoMoto, "casco", tipo, casco);
 		
 		tipo = "Patinete";
 		JSONObject jsoPatinete = new JSONObject();
-		jsoPatinete = crearTipoVehiculo(jsoPatinete, "color", tipo, color);	
+		jsoPatinete = crearTipoVehiculo(matriculaPatinete, jsoPatinete, "color", tipo, color);	
 		
-		borrarVehiculos(jsoCoche, jsoMoto, jsoPatinete);
+		ResultActions resultado = this.sendRequestEliminar(jsoCoche);
+		resultado.andExpect(status().isOk()).andReturn();
 		
-		ResultActions resultado = this.sendRequestAlta(jsoCoche);
+		resultado = this.sendRequestEliminar(jsoMoto);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestEliminar(jsoPatinete);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestAlta(jsoCoche);
 		resultado.andExpect(status().isOk()).andReturn();
 		
 		resultado = this.sendRequestAlta(jsoMoto);
@@ -89,20 +101,24 @@ public class TestVehiculo {
 		resultado.andExpect(status().isOk()).andReturn();
 	}
 
-	private void borrarVehiculos(JSONObject jsoCoche, JSONObject jsoMoto, JSONObject jsoPatinete) throws Exception {
-		this.cocheDAO.deleteBymatricula(jsoCoche.getString("matricula"));
-		this.motoDAO.deleteBymatricula(jsoMoto.getString("matricula"));
-		this.patineteDAO.deleteBymatricula(jsoPatinete.getString("matricula"));
+	private ResultActions sendRequestEliminar(JSONObject jsoVehiculo) throws Exception {
+		
+		RequestBuilder request = MockMvcRequestBuilders.delete("/vehiculos/eliminar")
+				.contentType("application/json")
+				.content(jsoVehiculo.toString());
+		
+		ResultActions resultado = this.server.perform(request);
+		return resultado;
 	}
 
-	private JSONObject crearTipoVehiculo(JSONObject jsoVehiculo, String key2, String atr1, String atr2) throws Exception{
+	private JSONObject crearTipoVehiculo(String matricula, JSONObject jsoVehiculo, String key2, String atr1, String atr2) throws Exception{
 		jsoVehiculo.put("matricula", matricula);
 		jsoVehiculo.put("direccion", direccion);
 		jsoVehiculo.put("modelo", modelo);
 		jsoVehiculo.put("bateria", bateria);
 		jsoVehiculo.put("estado", estado);	
-			jsoVehiculo.put("tipo", atr1);
-			jsoVehiculo.put(key2, atr2);
+		jsoVehiculo.put("tipo", atr1);
+		jsoVehiculo.put(key2, atr2);
 		return jsoVehiculo;
 	}
 

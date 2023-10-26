@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,12 +22,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 @RestController
 @RequestMapping("vehiculos")
-@CrossOrigin("*")
+@CrossOrigin({"*"})
 
 public class VehicleController {
 
 	@Autowired
 	private VehicleService vehicleService;
+	@CrossOrigin("*")
 	@PostMapping("/alta")
 	public void altaVehiculo(@RequestBody Map<String, Object> info) {
 		
@@ -50,6 +52,12 @@ public class VehicleController {
 	@GetMapping("/patinetes")
 	public List <Patinete> listaPatinete(){
 		return vehicleService.listaPatinetes();
+	}
+	
+	@DeleteMapping("/eliminar")
+	public void eliminarVehiculo(@RequestBody Map<String, Object> info) {
+		
+		vehicleService.eliminarTipoVehiculo(info);
 	}
 	
 }
