@@ -82,7 +82,7 @@ public class UserService {
 
 	public Usuario login(Map<String, Object> info) {
 		String email = info.get("email").toString();
-		String pass = info.get("contrasena").toString();
+		String pass = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
 		
 		Correo c = this.correodao.findByEmail(email);
 		if (c == null) {
