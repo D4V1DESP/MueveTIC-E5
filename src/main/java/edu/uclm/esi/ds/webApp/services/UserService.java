@@ -41,6 +41,8 @@ public class UserService {
 		String dni = info.get("dni").toString();
 		String contrasena = info.get("contrasena").toString();
 		String repetircontrasena = info.get("repetirContrasena").toString();
+		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(contrasena);
+		String rpwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(repetircontrasena);		
 		boolean activo = Boolean.parseBoolean(info.get("activo").toString());
 		try {
 			Correo c = new Correo(email,info.get("tipo").toString());
@@ -53,14 +55,14 @@ public class UserService {
 		
 			case "admin":
 				
-				Admin a1= new Admin(email, dni, nombre, apellidos, contrasena, repetircontrasena, info.get("ciudad").toString(), activo,tipo );
+				Admin a1= new Admin(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted, info.get("ciudad").toString(), activo,tipo );
 				
 				this.admindao.save(a1);
 				break;	
 			case"mantenimiento":
 				
 				int experiencia = Integer.parseInt(info.get("experiencia").toString());
-				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, contrasena, repetircontrasena,info.get("ciudad").toString() , activo, experiencia, tipo);
+				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted,info.get("ciudad").toString() , activo, experiencia, tipo);
 				
 				this.mandao.save(m1);
 				break;
@@ -68,7 +70,7 @@ public class UserService {
 				String telefono = info.get("telefono").toString();
 				char carnet = info.get("carnet").toString().charAt(0);
 				String fecha= info.get("fecha").toString();
-				Cliente c = new Cliente(email, dni, nombre,apellidos,contrasena, repetircontrasena, activo,telefono,carnet, tipo,fecha) ;
+				Cliente c = new Cliente(email, dni, nombre,apellidos,pwdEncripted, rpwdEncripted, activo,telefono,carnet, tipo,fecha) ;
 				this.clientedao.save(c);
 				break;
 			
