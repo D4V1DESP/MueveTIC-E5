@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,6 +60,31 @@ public class UserController {
 		}
 		return true;
 	}
+	@PutMapping("/administradores/{email}")
+	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Admin nuevoAdministrador) {
+	    // Primero, obtén el administrador existente por su email
+	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
+
+	    if (administradorExistente != null) {
+	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
+	        administradorExistente.setNombre(nuevoAdministrador.getNombre());
+	        administradorExistente.setApellidos(nuevoAdministrador.getApellidos());
+	        administradorExistente.setDni(nuevoAdministrador.getDni());
+	        administradorExistente.setCiudad(nuevoAdministrador.getCiudad());
+	        // Puedes seguir actualizando otros campos si es necesario
+
+	        // Luego, guarda el administrador actualizado en la base de datos o donde corresponda
+	        userService.actualizarAdmin(administradorExistente); // Asumiendo que tienes un método para guardar administradores
+
+	        // Finalmente, responde con el administrador actualizado
+	        return ResponseEntity.ok(administradorExistente);
+	    } else {
+	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+
 	
 	@PostMapping("/login")
 	public boolean login(@RequestBody Map<String, Object> info) {
@@ -73,7 +99,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/administradores/{email}")
-	public ResponseEntity<Usuario> obtenerAdminPorDNI(@PathVariable String email) {
+	public ResponseEntity<Usuario> obtenerAdminPorEmail(@PathVariable String email) {
 	    // Implementa la lógica para obtener un administrador por su DNI desde la base de datos
 	    // Deberías buscar el usuario con el DNI proporcionado y devolverlo como ResponseEntity<Usuario>
 

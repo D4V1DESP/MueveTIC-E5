@@ -156,8 +156,7 @@ public class UserService {
 		return this.clientedao.findAll();
 	}
 
-	
-	public Usuario obtenerAdminPorEmail(String email) {
+	public Admin obtenerAdminPorEmail(String email) {
 		return admindao.findByEmail(email);
 	}
 
@@ -167,6 +166,11 @@ public class UserService {
 
 	public Usuario obtenerClientePorEmail(String email) {
 		return clientedao.findByEmail(email);
+	}
+
+	public Admin actualizarAdmin(Admin administradorExistente) {
+		return admindao.save(administradorExistente);
+		
 	}
 	
 
