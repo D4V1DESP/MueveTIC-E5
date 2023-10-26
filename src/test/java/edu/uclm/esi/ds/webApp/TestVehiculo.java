@@ -2,7 +2,7 @@ package edu.uclm.esi.ds.webApp;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.jacoco.agent.rt.internal_4742761.core.internal.ContentTypeDetector;
+
 import org.json.JSONObject;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

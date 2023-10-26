@@ -7,7 +7,7 @@ public class Cliente extends Usuario{
 	
 	
 	public Cliente(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena, String ciudad, boolean activo, String telefono, char carnet) {
+			String repetirContrasena, String ciudad, boolean activo, String telefono, String carnet) {
 		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, ciudad, activo);
 		this.telefono = telefono;
 		this.carnet = carnet;
@@ -15,7 +15,7 @@ public class Cliente extends Usuario{
 	
 	
 	protected String telefono;
-	protected char carnet;
+	protected String carnet;
 
 	
 	public String getTelefono() {
@@ -24,10 +24,10 @@ public class Cliente extends Usuario{
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
-	public char getCarnet() {
+	public String getCarnet() {
 		return carnet;
 	}
-	public void setCarnet(char carnet) {
+	public void setCarnet(String carnet) {
 		this.carnet = carnet;
 	}
 

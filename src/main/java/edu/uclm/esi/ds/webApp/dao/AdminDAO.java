@@ -8,4 +8,5 @@ import edu.uclm.esi.ds.webApp.entities.Admin;
 
 public interface AdminDAO extends MongoRepository<Admin, String> {
 	Admin findByEmail(String email);
+	
 }

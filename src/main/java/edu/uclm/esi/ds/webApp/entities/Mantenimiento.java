@@ -9,7 +9,7 @@ public class Mantenimiento extends Usuario{
 			String repetirContrasena, String ciudad, boolean activo, int experiencia) {
 		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, ciudad, activo);
 		this.experiencia = experiencia;
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public int getExperiencia() {
