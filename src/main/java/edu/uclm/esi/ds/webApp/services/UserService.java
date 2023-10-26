@@ -1,9 +1,7 @@
 package edu.uclm.esi.ds.webApp.services;
 
-
 import java.util.List;
 import java.util.Map;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,11 +14,8 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
-
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
-import edu.uclm.esi.ds.webApp.entities.Usuario;
-
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
@@ -47,6 +42,8 @@ public class UserService {
 		String dni = info.get("dni").toString();
 		String contrasena = info.get("contrasena").toString();
 		String repetircontrasena = info.get("repetirContrasena").toString();
+		String pwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(contrasena);
+		String rpwdEncripted = org.apache.commons.codec.digest.DigestUtils.sha512Hex(repetircontrasena);		
 		boolean activo = Boolean.parseBoolean(info.get("activo").toString());
 		try {
 			Correo c = new Correo(email,info.get("tipo").toString());
@@ -59,14 +56,14 @@ public class UserService {
 		
 			case "admin":
 				
-				Admin a1= new Admin(email, dni, nombre, apellidos, contrasena, repetircontrasena, info.get("ciudad").toString(), activo,tipo );
+				Admin a1= new Admin(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted, info.get("ciudad").toString(), activo,tipo );
 				
 				this.admindao.save(a1);
 				break;	
 			case"mantenimiento":
 				
 				int experiencia = Integer.parseInt(info.get("experiencia").toString());
-				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, contrasena, repetircontrasena,info.get("ciudad").toString() , activo, experiencia, tipo);
+				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted,info.get("ciudad").toString() , activo, experiencia, tipo);
 				
 				this.mandao.save(m1);
 				break;
@@ -74,7 +71,7 @@ public class UserService {
 				String telefono = info.get("telefono").toString();
 				char carnet = info.get("carnet").toString().charAt(0);
 				String fecha= info.get("fecha").toString();
-				Cliente c = new Cliente(email, dni, nombre,apellidos,contrasena, repetircontrasena, activo,telefono,carnet, tipo,fecha) ;
+				Cliente c = new Cliente(email, dni, nombre,apellidos,pwdEncripted, rpwdEncripted, activo,telefono,carnet, tipo,fecha) ;
 				this.clientedao.save(c);
 				break;
 			
@@ -171,6 +168,10 @@ public class UserService {
 		}
 		
 	}
+	
+	
+
+
 	public List <Admin> listaAdministradores(){
 		return this.admindao.findAll();
 	}
