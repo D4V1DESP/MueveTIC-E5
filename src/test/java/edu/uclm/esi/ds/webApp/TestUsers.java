@@ -29,16 +29,16 @@ public class TestUsers {
 	@Autowired
 	private MockMvc server;
 	
-	@Test @Disabled
+	@Test 
 	void testAdduser() throws Exception {
 		// pruebas de registros correctos
 		ResultActions result= this.sendRequest("floresmanu99@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
 		result.andExpect(status().isOk()).andReturn();
 
-		result= this.sendRequest("danielMachuca@gmial.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente","puertollano", "666697498", "c");
+		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999");
 		result.andExpect(status().isOk()).andReturn();
 		
-		result= this.sendRequest("pabloGarcia@gmial.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "mantenimiento","puertollano", "5");
+		result= this.sendRequest("pabloGarcia@gmial.com","05939081Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "mantenimiento","puertollano", "5");
 		result.andExpect(status().isOk()).andReturn();
 		
 		// caso de que insertemos un usuario repetido en la bbdd 
@@ -76,7 +76,7 @@ public class TestUsers {
 		return resultActions;
 	}
 	private ResultActions sendRequest(String email, String dni, String nombre, String apellidos, String contraseña,
-			String rcontraseña, String activo, String tipo,String ciudad,  String telefono, String carnet)throws Exception, UnsupportedEncodingException {
+			String rcontraseña, String activo, String tipo,  String telefono, String carnet, String fecha)throws Exception, UnsupportedEncodingException {
 		JSONObject jsonUser = new JSONObject()
 				.put("email", email)
 				.put("nombre", nombre)
@@ -85,10 +85,10 @@ public class TestUsers {
 				.put("contrasena", contraseña)
 				.put("repetirContrasena", rcontraseña)
 				.put("tipo", tipo)
-				.put("ciudad", ciudad)
 				.put("activo", activo)
 				.put("telefono", telefono)
-				.put("carnet", carnet);
+				.put("carnet", carnet)
+				.put("fecha", fecha);
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
