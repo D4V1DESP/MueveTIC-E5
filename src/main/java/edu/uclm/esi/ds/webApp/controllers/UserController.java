@@ -64,7 +64,7 @@ public class UserController {
 	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Admin nuevoAdministrador) {
 	    // Primero, obtén el administrador existente por su email
 	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
-
+	    
 	    if (administradorExistente != null) {
 	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
 	        administradorExistente.setNombre(nuevoAdministrador.getNombre());
@@ -72,17 +72,18 @@ public class UserController {
 	        administradorExistente.setDni(nuevoAdministrador.getDni());
 	        administradorExistente.setCiudad(nuevoAdministrador.getCiudad());
 	        // Puedes seguir actualizando otros campos si es necesario
-
-	        // Luego, guarda el administrador actualizado en la base de datos o donde corresponda
-	        userService.actualizarAdmin(administradorExistente); // Asumiendo que tienes un método para guardar administradores
-
+	        
+	        // Luego, guarda el administrador actualizado en la base de datos
+	        Admin adminActualizado = userService.actualizarAdmin(administradorExistente);
+	        
 	        // Finalmente, responde con el administrador actualizado
-	        return ResponseEntity.ok(administradorExistente);
+	        return ResponseEntity.ok(adminActualizado);
 	    } else {
 	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+
 
 
 	

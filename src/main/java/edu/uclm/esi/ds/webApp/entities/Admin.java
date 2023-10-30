@@ -10,5 +10,4 @@ public class Admin extends Usuario{
 		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, ciudad, activo);
 		
 	}
-
 }
