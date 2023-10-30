@@ -60,6 +60,32 @@ public class UserController {
 		}
 		return true;
 	}
+	@PutMapping("/administradores/{email}")
+	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Admin nuevoAdministrador) {
+	    // Primero, obtén el administrador existente por su email
+	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
+	    
+	    if (administradorExistente != null) {
+	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
+	        administradorExistente.setNombre(nuevoAdministrador.getNombre());
+	        administradorExistente.setApellidos(nuevoAdministrador.getApellidos());
+	        administradorExistente.setDni(nuevoAdministrador.getDni());
+	        administradorExistente.setCiudad(nuevoAdministrador.getCiudad());
+	        // Puedes seguir actualizando otros campos si es necesario
+	        
+	        // Luego, guarda el administrador actualizado en la base de datos
+	        Admin adminActualizado = userService.actualizarAdmin(administradorExistente);
+	        
+	        // Finalmente, responde con el administrador actualizado
+	        return ResponseEntity.ok(adminActualizado);
+	    } else {
+	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+
+
 	
 	@PostMapping("/login")
 	public Usuario login(@RequestBody Map<String, Object> info) {
@@ -74,7 +100,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/administradores/{email}")
-	public ResponseEntity<Usuario> obtenerAdminPorDNI(@PathVariable String email) {
+	public ResponseEntity<Usuario> obtenerAdminPorEmail(@PathVariable String email) {
 	    // Implementa la lógica para obtener un administrador por su DNI desde la base de datos
 	    // Deberías buscar el usuario con el DNI proporcionado y devolverlo como ResponseEntity<Usuario>
 

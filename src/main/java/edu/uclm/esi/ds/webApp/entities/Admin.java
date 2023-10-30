@@ -21,5 +21,4 @@ public class Admin extends Usuario{
 		this.ciudad= ciudad;
 		
 	}
-
 }

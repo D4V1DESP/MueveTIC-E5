@@ -8,10 +8,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 
 public class Usuario {
-	
+	@Id
+    private String id;
 	@Indexed(unique= true)
-	protected String dni;
 	protected String email;
+	protected String dni;
 	protected String nombre;
 	protected String apellidos;
 	protected String contrasena;
@@ -19,7 +20,13 @@ public class Usuario {
 	protected boolean activo; 
 	protected String tipo;
 	
-	
+	public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 	
 	public String getDni() {
 		return dni;
