@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,6 +31,8 @@ public class UserService {
 	private MantenimientoDAO mandao;
 	@Autowired
 	private CorreoDAO correodao;
+	
+	
 	
 	
 	
@@ -75,6 +76,7 @@ public class UserService {
 				this.clientedao.save(c);
 				break;
 			
+			
 		}
 		
 	}
@@ -83,7 +85,7 @@ public class UserService {
 
 	public Usuario login(Map<String, Object> info) {
 		String email = info.get("email").toString();
-		String pass = info.get("contrasena").toString();
+		String pass = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
 		
 		Correo c = this.correodao.findByEmail(email);
 		if (c == null) {
@@ -127,7 +129,7 @@ public class UserService {
 
 
 	public void updateUsers(Map<String, Object> info) {
-		Correo c = this.correodao.findByEmail((String) info.get("email".toString()));
+		Correo c = this.correodao.findByEmail((String) info.get("email"));
 		
 		
 		if (c!= null) {
@@ -164,6 +166,8 @@ public class UserService {
 				c1.setFechaNacimiento(info.get("fecha").toString());
 				this.clientedao.save(c1);
 				break;
+				default:
+					throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario invalidas");
 			}
 		}
 		
