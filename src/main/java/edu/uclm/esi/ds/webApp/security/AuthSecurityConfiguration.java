@@ -1,4 +1,4 @@
-/*package edu.uclm.esi.ds.webApp.security;
+package edu.uclm.esi.ds.webApp.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
@@ -19,4 +19,4 @@ public class AuthSecurityConfiguration {
 		DefaultSecurityFilterChain filterChain = http.build();
 		return filterChain;
 	}
-}*/
+}

@@ -8,4 +8,6 @@ import edu.uclm.esi.ds.webApp.entities.Correo;
 public interface CorreoDAO extends MongoRepository<Correo, String> {
 	Correo findByEmail(String email);
 
+	void deleteByemail(String string);
+
 }

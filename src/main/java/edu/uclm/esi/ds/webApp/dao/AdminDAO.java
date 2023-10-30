@@ -9,6 +9,8 @@ import edu.uclm.esi.ds.webApp.entities.Usuario;
 
 public interface AdminDAO extends MongoRepository<Admin, String> {
 	Admin findByEmail(String email);
+
+	void deleteByemail(String string);
 	
 	
 }

@@ -34,12 +34,19 @@ public class UserService {
 	
 	
 	
-	
+	String adminS = "admin";
+	String apellidosS = "apellidos";
+	String ciudadS = "ciudad";
+	String clienteS = "cliente";
+	String credencialesS = "credenciales invalidas";
+	String emailS = "email";
+	String mantenimientoS = "mantenimiento";
+	String nombreS = "nombre";
 	
 	public void Alta(Map <String ,Object> info) {
-		String email = info.get("email").toString();
-		String nombre = info.get("nombre").toString();
-		String apellidos = info.get("apellidos").toString();
+		String email = info.get(emailS).toString();
+		String nombre = info.get(nombreS).toString();
+		String apellidos = info.get(apellidosS).toString();
 		String dni = info.get("dni").toString();
 		String contrasena = info.get("contrasena").toString();
 		String repetircontrasena = info.get("repetirContrasena").toString();
@@ -53,28 +60,24 @@ public class UserService {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
 		}
 		String tipo =info.get("tipo").toString();
-		switch(tipo){
 		
-			case "admin":
+			if(tipo.equals(adminS)) {
 				
-				Admin a1= new Admin(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted, info.get("ciudad").toString(), activo,tipo );
+				Admin a1= new Admin(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted, info.get(ciudadS).toString(), activo,tipo );
+				this.admindao.save(a1);	
 				
-				this.admindao.save(a1);
-				break;	
-			case"mantenimiento":
+			} else if (tipo.equals(mantenimientoS)) {
 				
 				int experiencia = Integer.parseInt(info.get("experiencia").toString());
 				Mantenimiento m1 = new Mantenimiento(email, dni, nombre, apellidos, pwdEncripted, rpwdEncripted,info.get("ciudad").toString() , activo, experiencia, tipo);
-				
 				this.mandao.save(m1);
-				break;
-			case "cliente":
+				
+			} else if (tipo.equals(clienteS)) {
 				String telefono = info.get("telefono").toString();
 				char carnet = info.get("carnet").toString().charAt(0);
 				String fecha= info.get("fecha").toString();
 				Cliente c = new Cliente(email, dni, nombre,apellidos,pwdEncripted, rpwdEncripted, activo,telefono,carnet, tipo,fecha) ;
 				this.clientedao.save(c);
-				break;
 			
 			
 		}
@@ -84,90 +87,83 @@ public class UserService {
 
 
 	public Usuario login(Map<String, Object> info) {
-		String email = info.get("email").toString();
+		String email = info.get(emailS).toString();
 		String pass = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
 		
 		Correo c = this.correodao.findByEmail(email);
 		if (c == null) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, credencialesS);
 		}
 		
 		String tipo = c.getTipo();
 		
-		switch (tipo){
-			case "admin":
+			if (tipo.equals(adminS)) {
 				Admin a = this.admindao.findByEmail(email);
 				if (!a.getContrasena().equals(pass)) {
-					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, credencialesS);
 				}
 				return a;
 				
-			case "cliente":
+			} else if (tipo.equals(clienteS)) {
+	
 				Cliente cliente = this.clientedao.findByEmail(email);
 				if (!cliente.getContrasena().equals(pass)) {
-					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, credencialesS);
 				}
 				
 				return cliente;
 				
-			case "mantenimiento":
+			} else if (tipo.equals(mantenimientoS)) {
+			
 				Mantenimiento m = this.mandao.findByEmail(email);
 				if (!m.getContrasena().equals(pass)) {
-					throw new ResponseStatusException(HttpStatus.FORBIDDEN, "credenciales invalidas");
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, credencialesS);
 				}
 				
 				return m;
-				
-		
-		}
-		return null;
-		
-		
-		
+			}
+			return null;
 	}
 
 
 
 	public void updateUsers(Map<String, Object> info) {
-		Correo c = this.correodao.findByEmail((String) info.get("email"));
+		Correo c = this.correodao.findByEmail((String) info.get(emailS));
 		
 		
 		if (c!= null) {
 			String tipo =c.getTipo();
 			
-			switch (tipo) {
-			case "admin":
+			if (tipo.equals(adminS)) {
+				
 				Admin a = this.admindao.findByEmail(c.getEmail());
-				a.setNombre(info.get("nombre").toString());
-				a.setApellidos(info.get("apellidos").toString());
+				a.setNombre(info.get(nombreS).toString());
+				a.setApellidos(info.get(apellidosS).toString());
 				a.setDni(info.get("dni").toString());
-				a.setCiudad(info.get("ciudad").toString());
+				a.setCiudad(info.get(ciudadS).toString());
 				
 				this.admindao.save(a);
-				
-				break;
-			case "mantenimiento":
+			
+			}else if(tipo.equals(mantenimientoS)) {
 				Mantenimiento m = this.mandao.findByEmail(c.getEmail());
-				m.setNombre(info.get("nombre").toString());
-				m.setApellidos(info.get("apellidos").toString());
+				m.setNombre(info.get(nombreS).toString());
+				m.setApellidos(info.get(apellidosS).toString());
 				m.setDni(info.get("dni").toString());
-				m.setCiudad(info.get("ciudad").toString());
+				m.setCiudad(info.get(ciudadS).toString());
 				m.setExperiencia(Integer.parseInt(info.get("experiencia").toString()));
 				
 				this.mandao.save(m);
-				break;
-			case "cliente":
+			} else if(tipo.equals(clienteS)) {
 				Cliente c1 = this.clientedao.findByEmail(c.getEmail());
-				c1.setNombre(info.get("nombre").toString());
-				c1.setApellidos(info.get("apellidos").toString());
+				c1.setNombre(info.get(nombreS).toString());
+				c1.setApellidos(info.get(apellidosS).toString());
 				c1.setDni(info.get("dni").toString());
 				c1.setTelefono(info.get("telefono").toString());
 				c1.setCarnet(info.get("carnet").toString().charAt(0));
 				c1.setFechaNacimiento(info.get("fecha").toString());
 				this.clientedao.save(c1);
-				break;
-				default:
-					throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario invalidas");
+			} else {
+				throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario invalidas");
 			}
 		}
 		

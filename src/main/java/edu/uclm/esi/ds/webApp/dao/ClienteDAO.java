@@ -7,4 +7,6 @@ import edu.uclm.esi.ds.webApp.entities.Cliente;
 
 public interface ClienteDAO extends MongoRepository<Cliente, String>{
 	Cliente findByEmail(String email);
+
+	void deleteByemail(String string);
 }

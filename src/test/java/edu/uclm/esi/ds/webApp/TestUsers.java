@@ -20,6 +20,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import edu.uclm.esi.ds.webApp.dao.AdminDAO;
+import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
+import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
+import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
+
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -27,10 +32,26 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 public class TestUsers {
 	@Autowired
 	private MockMvc server;
+	@Autowired 
+	private AdminDAO adminDAO;
+	@Autowired 
+	private MantenimientoDAO mantenimientoDAO;
+	@Autowired 
+	private ClienteDAO clienteDAO;
+	@Autowired
+	private CorreoDAO correoDAO;
 	
 	@Test 
 	void testAdduser() throws Exception {
 		// pruebas de registros correctos
+		
+		this.adminDAO.deleteByemail("floresmanu99@gmail.com");
+		this.mantenimientoDAO.deleteByemail("pabloGarcia@gmial.com");
+		this.clienteDAO.deleteByemail("danielMachuca@gmial.com");
+		this.correoDAO.deleteByemail("floresmanu99@gmail.com");
+		this.correoDAO.deleteByemail("danielMachuca@gmial.com");
+		this.correoDAO.deleteByemail("pabloGarcia@gmial.com");
+		
 		ResultActions result= this.sendRequest("floresmanu99@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
 		result.andExpect(status().isOk()).andReturn();
 
