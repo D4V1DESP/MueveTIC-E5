@@ -186,7 +186,7 @@ public class UserService {
 		return admindao.findByEmail(email);
 	}
 
-	public Usuario obtenerMantenimientoPorEmail(String email) {
+	public Mantenimiento obtenerMantenimientoPorEmail(String email) {
 		return mandao.findByEmail(email);
 	}
 
@@ -197,6 +197,9 @@ public class UserService {
 	public Admin actualizarAdmin(Admin administradorExistente) {
 		return admindao.save(administradorExistente);
 		
+	}
+	public Mantenimiento actualizarMantenimiento(Mantenimiento mantenimientoExistente) {
+		return mandao.save(mantenimientoExistente);	
 	}
 	
 	

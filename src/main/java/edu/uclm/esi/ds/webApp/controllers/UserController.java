@@ -83,6 +83,29 @@ public class UserController {
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	@PutMapping("/mantenimiento/{email}")
+	public ResponseEntity<Mantenimiento> actualizarMantenimiento(@PathVariable String email, @RequestBody Map <String, Object> nuevoMantenimiento) {
+	    // Primero, obtén el administrador existente por su email
+	    Mantenimiento mantenimientoExistente = userService.obtenerMantenimientoPorEmail(email);
+	    
+	    if (mantenimientoExistente != null) {
+	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
+	    	mantenimientoExistente.setNombre(nuevoMantenimiento.get("nombre").toString());
+	    	mantenimientoExistente.setApellidos(nuevoMantenimiento.get("apellidos").toString());
+	    	mantenimientoExistente.setDni(nuevoMantenimiento.get("dni").toString());
+	    	mantenimientoExistente.setCiudad(nuevoMantenimiento.get("ciudad").toString());
+	        // Puedes seguir actualizando otros campos si es necesario
+	        
+	        // Luego, guarda el administrador actualizado en la base de datos
+	        Mantenimiento mantenimientoActualizado = userService.actualizarMantenimiento(mantenimientoExistente);
+	        
+	        // Finalmente, responde con el administrador actualizado
+	        return ResponseEntity.ok(mantenimientoActualizado);
+	    } else {
+	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
+	        return ResponseEntity.notFound().build();
+	    }
+	}
 
 
 
