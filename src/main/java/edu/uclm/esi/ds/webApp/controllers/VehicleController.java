@@ -54,7 +54,7 @@ public class VehicleController {
 		return vehicleService.listaPatinetes();
 	}
 	
-	@DeleteMapping("/eliminar")
+	@PostMapping("/eliminar")
 	public void eliminarVehiculo(@RequestBody Map<String, Object> info) {
 		
 		vehicleService.eliminarTipoVehiculo(info);

@@ -160,7 +160,7 @@ public class UserService {
 				c1.setDni(info.get("dni").toString());
 				c1.setTelefono(info.get("telefono").toString());
 				c1.setCarnet(info.get("carnet").toString().charAt(0));
-				c1.setFechaNacimiento(info.get("fecha").toString());
+				c1.setFecha(info.get("fecha").toString());
 				this.clientedao.save(c1);
 			} else {
 				throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario invalidas");

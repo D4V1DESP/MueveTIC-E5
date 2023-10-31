@@ -61,16 +61,16 @@ public class UserController {
 		return true;
 	}
 	@PutMapping("/administradores/{email}")
-	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Admin nuevoAdministrador) {
+	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Map <String, Object> nuevoAdministrador) {
 	    // Primero, obtén el administrador existente por su email
 	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
 	    
 	    if (administradorExistente != null) {
 	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
-	        administradorExistente.setNombre(nuevoAdministrador.getNombre());
-	        administradorExistente.setApellidos(nuevoAdministrador.getApellidos());
-	        administradorExistente.setDni(nuevoAdministrador.getDni());
-	        administradorExistente.setCiudad(nuevoAdministrador.getCiudad());
+	        administradorExistente.setNombre(nuevoAdministrador.get("nombre").toString());
+	        administradorExistente.setApellidos(nuevoAdministrador.get("apellidos").toString());
+	        administradorExistente.setDni(nuevoAdministrador.get("dni").toString());
+	        administradorExistente.setCiudad(nuevoAdministrador.get("ciudad").toString());
 	        // Puedes seguir actualizando otros campos si es necesario
 	        
 	        // Luego, guarda el administrador actualizado en la base de datos
