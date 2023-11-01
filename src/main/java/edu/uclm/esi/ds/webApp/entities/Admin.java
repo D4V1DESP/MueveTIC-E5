@@ -7,6 +7,13 @@ public class Admin extends Usuario{
 	
 	protected String ciudad;
 	
+	public Admin(String email, String dni, String nombre, String apellidos, String contrasena,
+			String repetirContrasena, String ciudad, boolean activo, String tipo) {
+		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, activo,tipo);
+		this.ciudad= ciudad;
+		
+	}
+	
 	public String getCiudad() {
 		return ciudad;
 	}
@@ -15,10 +22,5 @@ public class Admin extends Usuario{
 		this.ciudad = ciudad;
 	}
 
-	public Admin(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena, String ciudad, boolean activo, String tipo) {
-		super(email, dni, nombre, apellidos, contrasena, repetirContrasena, activo,tipo);
-		this.ciudad= ciudad;
-		
-	}
+	
 }

@@ -5,7 +5,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection= "Cliente")
 public class Cliente extends Usuario{
 	
-	
+	protected String telefono;
+	protected char carnet;
+	protected String fecha;
+
 	public Cliente(String email, String dni, String nombre, String apellidos, String contrasena,
 			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha) {
 		super(email, dni, nombre, apellidos, contrasena, repetirContrasena,  activo, tipo);
@@ -13,11 +16,6 @@ public class Cliente extends Usuario{
 		this.carnet = carnet;
 		this.fecha= fecha;
 	}
-	
-	
-	protected String telefono;
-	protected char carnet;
-	protected String fecha;
 
 	public String getFecha() {
 		return fecha;
@@ -38,6 +36,4 @@ public class Cliente extends Usuario{
 	public void setCarnet(char carnet) {
 		this.carnet = carnet;
 	}
-
-
 }

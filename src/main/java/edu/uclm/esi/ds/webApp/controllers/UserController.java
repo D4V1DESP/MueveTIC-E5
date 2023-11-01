@@ -35,10 +35,12 @@ public class UserController {
 	public List<Admin> listaAdministrador(){
 		return userService.listaAdministradores();
 	}
+	
 	@GetMapping("/mantenimiento")
 	public List<Mantenimiento> listaMantenimiento(){
 		return userService.listaMantenimiento();
 	}
+	
 	@GetMapping("/cliente")
 	public List<Cliente> listaCliente(){
 		return userService.listaClientes();
@@ -60,56 +62,70 @@ public class UserController {
 		}
 		return true;
 	}
+	
 	@PutMapping("/administradores/{email}")
 	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Map <String, Object> nuevoAdministrador) {
-	    // Primero, obtén el administrador existente por su email
+	    
 	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
 	    
 	    if (administradorExistente != null) {
-	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
+	        
 	        administradorExistente.setNombre(nuevoAdministrador.get("nombre").toString());
 	        administradorExistente.setApellidos(nuevoAdministrador.get("apellidos").toString());
 	        administradorExistente.setDni(nuevoAdministrador.get("dni").toString());
 	        administradorExistente.setCiudad(nuevoAdministrador.get("ciudad").toString());
-	        // Puedes seguir actualizando otros campos si es necesario
 	        
-	        // Luego, guarda el administrador actualizado en la base de datos
 	        Admin adminActualizado = userService.actualizarAdmin(administradorExistente);
-	        
-	        // Finalmente, responde con el administrador actualizado
+	              
 	        return ResponseEntity.ok(adminActualizado);
 	    } else {
-	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	
 	@PutMapping("/mantenimiento/{email}")
 	public ResponseEntity<Mantenimiento> actualizarMantenimiento(@PathVariable String email, @RequestBody Map <String, Object> nuevoMantenimiento) {
-	    // Primero, obtén el administrador existente por su email
+	    
 	    Mantenimiento mantenimientoExistente = userService.obtenerMantenimientoPorEmail(email);
 	    
 	    if (mantenimientoExistente != null) {
-	        // Ahora, actualiza los campos del administrador existente con los nuevos datos
+	        
 	    	mantenimientoExistente.setNombre(nuevoMantenimiento.get("nombre").toString());
 	    	mantenimientoExistente.setApellidos(nuevoMantenimiento.get("apellidos").toString());
 	    	mantenimientoExistente.setDni(nuevoMantenimiento.get("dni").toString());
 	    	mantenimientoExistente.setCiudad(nuevoMantenimiento.get("ciudad").toString());
-	        // Puedes seguir actualizando otros campos si es necesario
+	    	mantenimientoExistente.setExperiencia(Integer.parseInt(nuevoMantenimiento.get("experiencia").toString()));
 	        
-	        // Luego, guarda el administrador actualizado en la base de datos
 	        Mantenimiento mantenimientoActualizado = userService.actualizarMantenimiento(mantenimientoExistente);
 	        
-	        // Finalmente, responde con el administrador actualizado
 	        return ResponseEntity.ok(mantenimientoActualizado);
 	    } else {
-	        // El administrador no existe, puedes devolver un ResponseEntity con un código de estado apropiado
 	        return ResponseEntity.notFound().build();
 	    }
 	}
 
+	@PutMapping("/cliente/{email}")
+	public ResponseEntity<Cliente> actualizarCliente(@PathVariable String email, @RequestBody Map <String, Object> nuevoCliente){
+		
+	    Cliente clienteExistente = userService.obtenerClientePorEmail(email);
+	    
+	    if (clienteExistente != null) {
+	        
+	    	clienteExistente.setNombre(nuevoCliente.get("nombre").toString());
+	    	clienteExistente.setApellidos(nuevoCliente.get("apellidos").toString());
+	    	clienteExistente.setDni(nuevoCliente.get("dni").toString());
+	    	clienteExistente.setCarnet(nuevoCliente.get("carnet").toString().charAt(0));
+	    	clienteExistente.setTelefono(nuevoCliente.get("telefono").toString());
+	    	clienteExistente.setFecha(nuevoCliente.get("fecha").toString());
+	        
+	        Cliente clienteActualizado = userService.actualizarCliente(clienteExistente);
+	        
+	        return ResponseEntity.ok(clienteActualizado);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
 
-
-	
 	@PostMapping("/login")
 	public Usuario login(@RequestBody Map<String, Object> info) {
 		Usuario u;
@@ -123,39 +139,34 @@ public class UserController {
 	}
 	
 	@GetMapping("/administradores/{email}")
-	public ResponseEntity<Usuario> obtenerAdminPorEmail(@PathVariable String email) {
-	    // Implementa la lógica para obtener un administrador por su DNI desde la base de datos
-	    // Deberías buscar el usuario con el DNI proporcionado y devolverlo como ResponseEntity<Usuario>
-
-	    Usuario administrador = userService.obtenerAdminPorEmail(email); // Implementa esta función en tu userService
+	public ResponseEntity<Admin> obtenerAdminPorEmail(@PathVariable String email) {
+	    Admin administrador = userService.obtenerAdminPorEmail(email);
 	    if (administrador != null) {
 	        return new ResponseEntity<>(administrador, HttpStatus.OK);
 	    } else {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Otra respuesta apropiada si no se encuentra el administrador
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
 	}
+	
 	@GetMapping("/mantenimiento/{email}")
-	public ResponseEntity<Usuario> obtenerMantenimientoPorDNI(@PathVariable String email) {
-	    // Implementa la lógica para obtener un administrador por su DNI desde la base de datos
-	    // Deberías buscar el usuario con el DNI proporcionado y devolverlo como ResponseEntity<Usuario>
+	public ResponseEntity<Mantenimiento> obtenerMantenimientoPorEmail(@PathVariable String email) {
 
-	    Usuario mantenimiento = userService.obtenerMantenimientoPorEmail(email); // Implementa esta función en tu userService
+	    Mantenimiento mantenimiento = userService.obtenerMantenimientoPorEmail(email); // Implementa esta función en tu userService
 	    if (mantenimiento != null) {
 	        return new ResponseEntity<>(mantenimiento, HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Otra respuesta apropiada si no se encuentra el administrador
 	    }
 	}
+	
 	@GetMapping("/cliente/{email}")
-	public ResponseEntity<Usuario> obtenerClientePorDNI(@PathVariable String email) {
-	    // Implementa la lógica para obtener un administrador por su DNI desde la base de datos
-	    // Deberías buscar el usuario con el DNI proporcionado y devolverlo como ResponseEntity<Usuario>
-
-	    Usuario cliente = userService.obtenerClientePorEmail(email); // Implementa esta función en tu userService
+	public ResponseEntity<Usuario> obtenerClientePorEmail(@PathVariable String email) {
+	    
+	    Cliente cliente = userService.obtenerClientePorEmail(email);
 	    if (cliente != null) {
 	        return new ResponseEntity<>(cliente, HttpStatus.OK);
 	    } else {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Otra respuesta apropiada si no se encuentra el administrador
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
 	}
 
