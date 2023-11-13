@@ -59,5 +59,17 @@ public class VehicleController {
 		
 		vehicleService.eliminarTipoVehiculo(info);
 	}
+	@GetMapping("/coches/disponibles")
+	public List <Coche> listaCocheDisponible(){
+		return vehicleService.listaCochesDisponibles();
+	}
+	@GetMapping("/motos/disponibles")
+	public List <Moto> listaMotoDisponible(){
+		return vehicleService.listaMotosDisponibles();
+	}
+	@GetMapping("/patinetes/disponibles")
+	public List <Patinete> listaPatineteDisponible(){
+		return vehicleService.listaPatinetesDisponibles();
+	}
 	
 }

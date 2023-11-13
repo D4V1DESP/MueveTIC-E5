@@ -87,4 +87,16 @@ public class VehicleService {
 			this.patineteDAO.deleteBymatricula(matricula);
 		}
 	}
+
+	public List<Coche> listaCochesDisponibles() {
+        return this.cocheDAO.findByEstado("disponible");
+    }
+
+	public List<Moto> listaMotosDisponibles() {
+		return this.motoDAO.findByEstado("disponible");
+	}
+
+	public List<Patinete> listaPatinetesDisponibles() {
+		return this.patineteDAO.findByEstado("disponible");
+	}
 }
