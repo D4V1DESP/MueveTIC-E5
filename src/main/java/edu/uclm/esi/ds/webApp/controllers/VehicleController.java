@@ -4,9 +4,10 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import edu.uclm.esi.ds.webApp.entities.Coche;
 import edu.uclm.esi.ds.webApp.entities.Moto;
 import edu.uclm.esi.ds.webApp.entities.Patinete;
+import edu.uclm.esi.ds.webApp.entities.Vehiculo;
 import edu.uclm.esi.ds.webApp.services.VehicleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 @CrossOrigin({"*"})
 
 public class VehicleController {
-
+	
 	@Autowired
 	private VehicleService vehicleService;
 	@CrossOrigin("*")
@@ -60,4 +62,16 @@ public class VehicleController {
 		vehicleService.eliminarTipoVehiculo(info);
 	}
 	
+	@GetMapping("/recargables/{tipo}")
+	public List<Vehiculo> listaVehiculosRecargables(@PathVariable String tipo) {
+		
+		return vehicleService.listaRecargables(tipo);
+	}
+	
+	@PutMapping("/recargar")
+	public void recargaVehiculo(@RequestBody Map<String, Object> info) {
+		
+			vehicleService.recargaVehiculo(info);
+	
+	}
 }

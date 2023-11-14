@@ -1,9 +1,12 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 public class Vehiculo {
 	
+	@Id
+	private String id;
 	@Indexed (unique = true)
 	protected String matricula;
 	protected String tipo;
@@ -31,6 +34,8 @@ public class Vehiculo {
 	public String getEstado() {
 		return estado;
 	}
-	
+	public void setBateria(int bateria) {
+		this.bateria = bateria;
+	}
 	
 }
