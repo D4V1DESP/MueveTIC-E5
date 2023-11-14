@@ -1,9 +1,12 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection= "Reservas")
 public class ReservaCliente {
 	
 	
-	protected String cliente;
+	protected String email;
 	protected String vehiculo;
 	protected int valoracion;
 	protected String valoracionText;
@@ -12,10 +15,10 @@ public class ReservaCliente {
 	
 	
 	public String getCliente() {
-		return cliente;
+		return email;
 	}
 	public void setCliente(String cliente) {
-		this.cliente = cliente;
+		this.email = cliente;
 	}
 	public String getVehiculo() {
 		return vehiculo;
@@ -42,9 +45,9 @@ public class ReservaCliente {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	public ReservaCliente(String cliente, String vehiculo, String fecha) {
+	public ReservaCliente(String email, String vehiculo, String fecha) {
 		super();
-		this.cliente = cliente;
+		this.email = email;
 		this.vehiculo = vehiculo;
 		this.estado = "reservado";
 		this.fecha= fecha;
