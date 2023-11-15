@@ -7,4 +7,6 @@ import edu.uclm.esi.ds.webApp.entities.Matricula;
 public interface MatriculaDAO extends MongoRepository<Matricula, String> {
 
 	void deleteBymatricula(String matricula);
+
+	Matricula findByMatricula(String matricula);
 }

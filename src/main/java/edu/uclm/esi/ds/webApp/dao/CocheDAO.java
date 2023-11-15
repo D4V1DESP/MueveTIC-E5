@@ -10,4 +10,5 @@ public interface CocheDAO extends MongoRepository<Coche, String>{
 
 	void deleteBymatricula(String string);
 	List<Coche> findByEstado(String estado);
+	Coche findByMatricula(String matricula);
 }

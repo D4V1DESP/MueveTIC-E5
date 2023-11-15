@@ -11,5 +11,5 @@ public interface MotoDAO extends MongoRepository <Moto, String>{
 	void deleteBymatricula(String string);
 
 	List<Moto> findByEstado(String string);
-
+	Moto findByMatricula(String matricula);
 }
