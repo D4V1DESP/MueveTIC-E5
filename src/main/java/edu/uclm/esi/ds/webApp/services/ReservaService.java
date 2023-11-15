@@ -25,7 +25,7 @@ public class ReservaService {
 		}else {
 			
 			Calendar c = Calendar.getInstance();
-			String fecha =Integer.toString(c.get(Calendar.DATE))+"/"+Integer.toString(c.get(Calendar.MONTH))+"/"+Integer.toString(c.get(Calendar.YEAR));
+			String fecha =Integer.toString(c.get(Calendar.DATE))+"/"+Integer.toString(c.get(Calendar.MONTH)+1)+"/"+Integer.toString(c.get(Calendar.YEAR));
 			String vehiculo = info.get("vehiculo").toString();
 			
 			ReservaCliente newReserva = new ReservaCliente(email, vehiculo,fecha);
