@@ -53,12 +53,17 @@ public class VehicleController {
 	public List <Patinete> listaPatinete(){
 		return vehicleService.listaPatinetes();
 	}
+	@PostMapping("/reservar")
+	public void reservarVehiculo(@RequestBody Map<String, Object> info) {
+		vehicleService.reservarVehiculo(info);
+	}
 	
 	@PostMapping("/eliminar")
 	public void eliminarVehiculo(@RequestBody Map<String, Object> info) {
 		
 		vehicleService.eliminarTipoVehiculo(info);
 	}
+	
 	@GetMapping("/coches/disponibles")
 	public List <Coche> listaCocheDisponible(){
 		return vehicleService.listaCochesDisponibles();

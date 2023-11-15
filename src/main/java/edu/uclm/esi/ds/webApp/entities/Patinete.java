@@ -22,4 +22,10 @@ public class Patinete extends Vehiculo{
 	public String getColor() {
 		return color;
 	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+		// TODO Auto-generated method stub
+		
+	}
 }

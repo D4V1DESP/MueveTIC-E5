@@ -22,4 +22,7 @@ public class Coche extends Vehiculo{
 	public int getnPlazas() {
 		return nPlazas;
 	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
 }

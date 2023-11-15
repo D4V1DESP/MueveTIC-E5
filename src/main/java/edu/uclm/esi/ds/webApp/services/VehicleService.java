@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
+import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 import edu.uclm.esi.ds.webApp.entities.Coche;
+import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Matricula;
 import edu.uclm.esi.ds.webApp.entities.Moto;
 import edu.uclm.esi.ds.webApp.entities.Patinete;
@@ -29,7 +31,13 @@ public class VehicleService {
 	private PatineteDAO patineteDAO;
 	@Autowired
 	private MatriculaDAO matriculaDAO;
+	@Autowired
+	private CorreoDAO correodao;
 	
+	String matriculaS = "matricula";
+	String cocheS = "coche";
+	String motoS = "moto";
+	String patineteS = "patinete";
 	
 	public void altaVehiculo(Map <String, Object> info) {
 		String matricula = info.get("matricula").toString();
@@ -99,4 +107,27 @@ public class VehicleService {
 	public List<Patinete> listaPatinetesDisponibles() {
 		return this.patineteDAO.findByEstado("disponible");
 	}
+	public void reservarVehiculo(Map<String, Object> info) {
+		Matricula m = this.matriculaDAO.findByMatricula((String) info.get(matriculaS));
+		
+		Coche coche = this.cocheDAO.findByMatricula(m.getMatricula());
+		if (coche != null) {
+		    coche.setEstado("No Disponible");
+		    this.cocheDAO.save(coche);
+		}
+		
+		Moto moto = this.motoDAO.findByMatricula(m.getMatricula());
+		if(moto != null) {
+			moto.setEstado("No Disponible");
+			this.motoDAO.save(moto);
+		}
+		
+		Patinete patinete = this.patineteDAO.findByMatricula(m.getMatricula());
+		if(patinete != null) {
+			patinete.setEstado("No Disponible");
+			this.motoDAO.save(moto);
+		}
+		
+	}
+
 }
