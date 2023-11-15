@@ -40,7 +40,7 @@ public class TestReserves {
 	@Test
 	void AddClientReserve() throws Exception {
 		
-		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "0000AAA");
+		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
 		
 	}
@@ -49,7 +49,7 @@ public class TestReserves {
 	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
 		JSONObject jsonReserve = new JSONObject()
 				.put("email", email)
-				.put("vehiculo", vehiculo);
+				.put("matricula", vehiculo);
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/reservas/usersAdd").
 				contentType("application/json").

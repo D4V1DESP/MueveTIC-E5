@@ -1,6 +1,7 @@
 package edu.uclm.esi.ds.webApp.services;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,15 @@ public class ReservaService {
 	
 	public void addReservaCliente(Map<String , Object>info ) {
 		String email = info.get("email").toString();
-		ReservaCliente reserva = this.reservaClienteDAO.findByEmail(email);
-		if (reserva != null &&reserva.getEstado().equals("reservado")) {
-			
+		List<ReservaCliente> reserva = this.reservaClienteDAO.findByEmail(email);
+		
+		if (EncontrarReservaActiva(reserva) == null ) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}else {
 			
 			Calendar c = Calendar.getInstance();
 			String fecha =Integer.toString(c.get(Calendar.DATE))+"/"+Integer.toString(c.get(Calendar.MONTH)+1)+"/"+Integer.toString(c.get(Calendar.YEAR));
-			String vehiculo = info.get("vehiculo").toString();
+			String vehiculo =(String) info.get("matricula");
 			
 			ReservaCliente newReserva = new ReservaCliente(email, vehiculo,fecha);
 		
@@ -36,6 +37,27 @@ public class ReservaService {
 		}
 		
 	}
+
+	public void CancelUserReserve(Map<String, Object> info) {
+		String email = info.get("email").toString();
+		
+		List<ReservaCliente> reservas = this.reservaClienteDAO.findByEmail(email);
+		ReservaCliente reserva= EncontrarReservaActiva(reservas);
+		
+		reserva.setEstado("cancelada");
+		this.reservaClienteDAO.save(reserva);
+	}
 	
 
-}
+	public ReservaCliente EncontrarReservaActiva(List<ReservaCliente> lista) {
+		ReservaCliente r = null;
+		
+		for (ReservaCliente reserva: lista ) {
+			if (reserva.getEstado().equals("reservado")) {
+				r = reserva;
+			}
+		}
+		return r;
+	}
+		
+	}
