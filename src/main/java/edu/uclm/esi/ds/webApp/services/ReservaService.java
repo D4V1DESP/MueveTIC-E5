@@ -17,18 +17,19 @@ public class ReservaService {
 	private ReservaClienteDAO reservaClienteDAO;
 	
 	public void addReservaCliente(Map<String , Object>info ) {
-		String mail = info.get("email").toString();
-		ReservaCliente reserva = this.reservaClienteDAO.findByEmail(mail);
-		if (reserva.getEstado().equals("reservado")) {
+		String email = info.get("email").toString();
+		ReservaCliente reserva = this.reservaClienteDAO.findByEmail(email);
+		if (reserva != null &&reserva.getEstado().equals("reservado")) {
 			
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}else {
 			
 			Calendar c = Calendar.getInstance();
-			String fecha = "";//Integer.toString(c.get(Calendar.DATE))+"/"+Integer.toString(c.get(Calendar.MONTH))+"/"+Integer.toString(c.get(Calendar.YEAR));
+			String fecha =Integer.toString(c.get(Calendar.DATE))+"/"+Integer.toString(c.get(Calendar.MONTH))+"/"+Integer.toString(c.get(Calendar.YEAR));
 			String vehiculo = info.get("vehiculo").toString();
 			
-			ReservaCliente newReserva = new ReservaCliente(mail, vehiculo,fecha);
+			ReservaCliente newReserva = new ReservaCliente(email, vehiculo,fecha);
+		
 			this.reservaClienteDAO.save(newReserva);
 			
 		

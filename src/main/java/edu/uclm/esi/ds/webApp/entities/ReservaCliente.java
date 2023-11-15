@@ -1,11 +1,13 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection= "Reservas")
 public class ReservaCliente {
 	
-	
+	@Id 
+	private String id;
 	protected String email;
 	protected String vehiculo;
 	protected int valoracion;
@@ -46,11 +48,12 @@ public class ReservaCliente {
 		this.estado = estado;
 	}
 	public ReservaCliente(String email, String vehiculo, String fecha) {
-		super();
 		this.email = email;
 		this.vehiculo = vehiculo;
 		this.estado = "reservado";
 		this.fecha= fecha;
+		this.valoracion= -1;
+		this.valoracionText ="";
 		
 	}
 	

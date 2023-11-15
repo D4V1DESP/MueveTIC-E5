@@ -2,8 +2,18 @@ package edu.uclm.esi.ds.webApp;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.UnsupportedEncodingException;
+
+
 import org.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+
+import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,32 +25,33 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
-import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
+
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
+
 public class TestReserves {
 	
 	@Autowired
 	private MockMvc server;
-	@Autowired
-	private ReservaClienteDAO reservaClienteDAO;
+
 	
 	@Test
 	void AddClientReserve() throws Exception {
-		ResultActions result = this.sendRequest("floresmanu99@gimail.com", "0000AAA");
+		
+		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "0000AAA");
 		result.andExpect(status().isOk()).andReturn();
 		
 	}
 
 
-	private ResultActions sendRequest(String email, String vehiculo) throws Exception {
+	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
 		JSONObject jsonReserve = new JSONObject()
 				.put("email", email)
-				.put("nombre", vehiculo);
+				.put("vehiculo", vehiculo);
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/reservas/users/add").
+				post("/reservas/usersAdd").
 				contentType("application/json").
 				content(jsonReserve.toString());
 		
