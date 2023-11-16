@@ -50,4 +50,14 @@ public class ReservaController {
 		}
 		return true;
 	}
+	
+	@PostMapping("AddReview")
+	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
+		try {
+			reservaService.AddValoracion(info);
+		}catch(Exception e) {
+			throw new  ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
 }

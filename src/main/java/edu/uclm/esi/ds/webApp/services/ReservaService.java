@@ -59,5 +59,9 @@ public class ReservaService {
 		}
 		return r;
 	}
+
+	public void AddValoracion(Map<String, Object> info) {
+	
+	}
 		
 	}
