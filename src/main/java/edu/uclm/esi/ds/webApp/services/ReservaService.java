@@ -61,7 +61,18 @@ public class ReservaService {
 	}
 
 	public void AddValoracion(Map<String, Object> info) {
-	
+		String email = info.get("email").toString();
+		List<ReservaCliente> reserva = this.reservaClienteDAO.findByEmail(email);
+		ReservaCliente reservaActiva = this.EncontrarReservaActiva(reserva);
+		int valoracion = Integer.parseInt(info.get("estrellas").toString());
+		String comentario = info.get("comentario").toString();
+		
+		reservaActiva.setValoracion(valoracion);
+		reservaActiva.setValoracionText(comentario);
+		reservaActiva.setEstado("finalizada");
+		this.reservaClienteDAO.save(reservaActiva);
+		
+		
 	}
 		
 	}
