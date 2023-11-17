@@ -125,7 +125,7 @@ public class VehicleService {
 		Patinete patinete = this.patineteDAO.findByMatricula(m.getMatricula());
 		if(patinete != null) {
 			patinete.setEstado("No Disponible");
-			this.motoDAO.save(moto);
+			this.patineteDAO.save(patinete);
 		}
 		
 	}
