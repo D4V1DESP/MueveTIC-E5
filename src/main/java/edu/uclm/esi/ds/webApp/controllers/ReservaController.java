@@ -50,7 +50,7 @@ public class ReservaController {
 		return true;
 	}
 	
-	@PostMapping("AddReview")
+	@PostMapping("/AddReview")
 	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
 		try {
 			reservaService.AddValoracion(info);
