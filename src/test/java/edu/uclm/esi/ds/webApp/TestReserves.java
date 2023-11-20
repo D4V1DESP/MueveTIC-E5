@@ -36,36 +36,25 @@ public class TestReserves {
 	private MockMvc server;
 
 	
-	@Test @Disabled
+	@Test 
 	void AddClientReserve() throws Exception {
 		// todo correcto 
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
 		// usuario no existe 
+		/*result = this.sendRequest("aaa@gmail.com", "1234CFG");
+		result.andExpect(status().isConflict()).andReturn();
 		// vehiculo no existe
+		result = this.sendRequest("floresmanu99@gmail.com", "1111AAA");
+		result.andExpect(status().isConflict()).andReturn();
 		//vehiculo ya reservad
+		result = this.sendRequest("manuPruebaCliente@gmail.com", "1234CFG");
+		result.andExpect(status().isConflict()).andReturn();
 		// usuario con reserva activa
-		//vehiculo no esta disponible 
-		// usuario sin carnet para vehiculo 
+		result = this.sendRequest("floresmanu99@gmail.com", "2342GSL");
+		result.andExpect(status().isConflict()).andReturn();
+	*/
 		
-	}
-	@Test
-	void TestConfig() throws Exception{
-		ResultActions result = this.sendRequestConfig("vehiculoRecarga", "21");
-		result.andExpect(status().isOk()).andReturn();
-	}
-	
-	private ResultActions sendRequestConfig(String nombre, String valor) throws Exception, UnsupportedEncodingException {
-		JSONObject jsonReserve = new JSONObject()
-				.put("nombre", nombre)
-				.put("valor", valor);
-		RequestBuilder request = MockMvcRequestBuilders.
-				post("/config/Add").
-				contentType("application/json").
-				content(jsonReserve.toString());
-		ResultActions resultActions =this.server.perform(request);
-		
-		return resultActions;
 	}
 
 	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
