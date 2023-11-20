@@ -39,13 +39,19 @@ public class TestReserves {
 	
 	@Test
 	void AddClientReserve() throws Exception {
-		
+		// todo correcto 
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
+		// usuario no existe 
+		// vehiculo no existe
+		//vehiculo ya reservad
+		// usuario con reserva activa
+		//vehiculo no esta disponible 
+		// usuario sin carnet para vehiculo 
 		
 	}
 
-
+	
 	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
 		JSONObject jsonReserve = new JSONObject()
 				.put("email", email)

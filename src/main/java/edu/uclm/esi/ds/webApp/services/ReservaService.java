@@ -31,9 +31,7 @@ public class ReservaService {
 			
 			ReservaCliente newReserva = new ReservaCliente(email, vehiculo,fecha);
 		
-			this.reservaClienteDAO.save(newReserva);
-			
-		
+			this.reservaClienteDAO.save(newReserva);	
 		}
 		
 	}
@@ -75,4 +73,4 @@ public class ReservaService {
 		
 	}
 		
-	}
+}
