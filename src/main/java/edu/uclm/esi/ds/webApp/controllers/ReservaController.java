@@ -23,7 +23,7 @@ import edu.uclm.esi.ds.webApp.services.VehicleService;
 
 @RestController
 @RequestMapping("reservas")
-@CrossOrigin({"*"})
+@CrossOrigin("*")
 public class ReservaController {
 	
 	@Autowired
@@ -45,11 +45,12 @@ public class ReservaController {
 	
 	@PostMapping("/usersCancel")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
-		System.out.println("hola");
+		
 		//metodo para cambiar estado a disponible 
 		
 		try {
 			reservaService.CancelUserReserve(info);
+			
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
@@ -57,13 +58,14 @@ public class ReservaController {
 	}
 	
 	@GetMapping("/reservaActiva/{email}")
-	public ResponseEntity<List<ReservaCliente>> obtenerReservaPorEmail(@PathVariable String email) {
-	    List<ReservaCliente> reserva = reservaService.obtenerReservaPorEmail(email);
-	    if (reserva != null && !reserva.isEmpty()) {
+	public ResponseEntity<ReservaCliente> obtenerReservaActivaPorEmail(@PathVariable String email) {
+	    ReservaCliente reserva = reservaService.obtenerReservaActivaPorEmail(email);
+	    if (reserva != null) {
 	        return new ResponseEntity<>(reserva, HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
 	}
+
 
 }

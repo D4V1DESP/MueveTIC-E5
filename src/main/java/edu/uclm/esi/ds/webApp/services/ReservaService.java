@@ -37,7 +37,7 @@ public class ReservaService {
 		
 	public void addReservaCliente(Map<String, Object> info) {
 	    String email = info.get("email").toString();
-	    List<ReservaCliente> reservas = this.reservaClienteDAO.findByEmail(email);
+	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
 
 	    // Verificar si hay alguna reserva en estado "reservado"
 	    boolean tieneReservaEnEstadoReservado = false;
@@ -67,41 +67,65 @@ public class ReservaService {
 
 
 	public void CancelUserReserve(Map<String, Object> info) {
-		String email = info.get("email").toString();
-		String matricula = info.get("vehiculo").toString();
+		 System.out.println("Contenido del objeto info: " + info);
+
+		try {
+			
+			String email = info.get("cliente").toString();
+			String matricula = info.get("vehiculo").toString();
+			
+			List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
+			
+			Matricula m = this.matriculaDAO.findByMatricula(matricula);
+			
+			for (ReservaCliente reserva : reservas) {
+			    System.out.println("Estado actual de la reserva: " + reserva.getEstado());
+			    
+			    if (reserva.getEstado().equals("reservado")) {
+			        System.out.println("Cancelando reserva: " + reserva);
+			        
+			        reserva.setEstado("cancelada");
+			        this.reservaClienteDAO.save(reserva);
+			    }
+			}
+			String tipo = m.getTipo().toString();
+			
+		    if(tipo.equals("Coche")) {
+		    	Coche coche = this.cocheDAO.findByMatricula(matricula);
+		    	coche.setEstado("disponible");
+		    	this.cocheDAO.save(coche);
+		    }
+		    if(tipo.equals("Moto")) {
+		    	Moto moto = this.motoDAO.findByMatricula(matricula);
+		    	moto.setEstado("disponible");
+		    	this.motoDAO.save(moto);
+		    }
+		    if(tipo.equals("Patinete")) {
+		    	Patinete patinete = this.patineteDAO.findByMatricula(matricula);
+		    	patinete.setEstado("disponible");
+		    	this.patineteDAO.save(patinete);
+		    }
+		} catch (NullPointerException npe) {
+		    npe.printStackTrace();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		
-		List<ReservaCliente> reservas = this.reservaClienteDAO.findByEmail(email);
-		Matricula m = this.matriculaDAO.findByMatricula(matricula);
-		
-	    for (ReservaCliente reserva : reservas) {
-	        if (reserva.getEstado().equals("reservado")) {
-	            
-	            reserva.setEstado("cancelada");
-	    		this.reservaClienteDAO.save(reserva);
-	        }
-	    }
-	    if(m.getTipo().equals("Coche")) {
-	    	Coche coche = this.cocheDAO.findByMatricula(matricula);
-	    	coche.setEstado("disponible");
-	    	this.cocheDAO.save(coche);
-	    }
-	    if(m.getTipo().equals("Moto")) {
-	    	Moto moto = this.motoDAO.findByMatricula(matricula);
-	    	moto.setEstado("disponible");
-	    	this.motoDAO.save(moto);
-	    }
-	    if(m.getTipo().equals("Patinete")) {
-	    	Patinete patinete = this.patineteDAO.findByMatricula(matricula);
-	    	patinete.setEstado("disponible");
-	    	this.patineteDAO.save(patinete);
-	    }
-	    
-	    
-	    
 	}
 
-	public List<ReservaCliente> obtenerReservaPorEmail(String email) {
-		return reservaClienteDAO.findByEmail(email);
+	public ReservaCliente obtenerReservaActivaPorEmail(String email) {
+	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
+	    
+	    for (int i = 0; i < reservas.size(); i++) {
+	        ReservaCliente reserva = reservas.get(i);
+	        
+	        if ("reservado".equals(reserva.getEstado())) {
+	            return reserva;
+	        }
+	    }
+	    
+	    // Devolver null si no se encuentra ninguna reserva en estado 'reservado'
+	    return null;
 	}
 		
 }
