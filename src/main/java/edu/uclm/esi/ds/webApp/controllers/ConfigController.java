@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +22,7 @@ public class ConfigController {
 	ConfigService configservice;
 	
 	@PostMapping("/Add")
-	public boolean AddConfig(Map<String,Object>info) {
+	public boolean AddConfig(@RequestBody  Map<String,Object>info) {
 		try {
 			this.configservice.addNewConfig(info);
 		}catch(Exception e) {
@@ -30,8 +31,8 @@ public class ConfigController {
 		return true;
 		
 	}
-	@PostMapping("/update")
-	public boolean UpdateConfig(Map<String,Object>info) {
+	@PostMapping("/Update")
+	public boolean UpdateConfig(@RequestBody Map<String,Object>info) {
 		
 		try {
 			this.configservice.updateConfig(info);

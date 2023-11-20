@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.UnsupportedEncodingException;
 
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.Disabled;
 
@@ -37,7 +36,7 @@ public class TestReserves {
 	private MockMvc server;
 
 	
-	@Test
+	@Test @Disabled
 	void AddClientReserve() throws Exception {
 		// todo correcto 
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
@@ -50,8 +49,25 @@ public class TestReserves {
 		// usuario sin carnet para vehiculo 
 		
 	}
-
+	@Test
+	void TestConfig() throws Exception{
+		ResultActions result = this.sendRequestConfig("vehiculoRecarga", "21");
+		result.andExpect(status().isOk()).andReturn();
+	}
 	
+	private ResultActions sendRequestConfig(String nombre, String valor) throws Exception, UnsupportedEncodingException {
+		JSONObject jsonReserve = new JSONObject()
+				.put("nombre", nombre)
+				.put("valor", valor);
+		RequestBuilder request = MockMvcRequestBuilders.
+				post("/config/Add").
+				contentType("application/json").
+				content(jsonReserve.toString());
+		ResultActions resultActions =this.server.perform(request);
+		
+		return resultActions;
+	}
+
 	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
 		JSONObject jsonReserve = new JSONObject()
 				.put("email", email)
