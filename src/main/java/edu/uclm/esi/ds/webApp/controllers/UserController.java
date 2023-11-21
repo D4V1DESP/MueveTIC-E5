@@ -205,6 +205,7 @@ public class UserController {
 		}
 		return true;
 	}
+	
 	@PostMapping("/updatePass")
 	public boolean updatePass(@RequestBody Map<String,Object> info) {
 		try {

@@ -14,12 +14,14 @@ import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
 import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
+import edu.uclm.esi.ds.webApp.dao.TokenRecoverDAO;
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
+import edu.uclm.esi.ds.webApp.entities.TokenRecover;
 
 @Service
 public class UserService {
@@ -34,6 +36,8 @@ public class UserService {
 	private CorreoDAO correodao;
 	@Autowired 
 	private ReservaClienteDAO reservadao;
+	@Autowired
+	private TokenRecoverDAO tokenRecoverDAO;
 
 	String adminS = "admin";
 	String apellidosS = "apellidos";
@@ -221,22 +225,52 @@ public class UserService {
 
 	public boolean checkUser(Map<String, Object> info) {
 		boolean exist = false;
+		TokenRecover token= null;
 		String mail = info.get("email").toString();
 		
 		List<Correo> lstUser = this.correodao.findAll();
 		
 		for (Correo user : lstUser) {
-			if(user.getEmail().equals(mail))
+			if(user.getEmail().equals(mail)) {
 				exist =true;
+				token= new TokenRecover(user.getEmail());
+				this.tokenRecoverDAO.save(token);
+			}
 		}
 		
 		return exist;
+		
 	}
 
 	public void updatePassword(Map<String, Object> info) {
 		String mailEncripted = info.get(emailS).toString();
-		String password = info.get("contrasena").toString();
-		String rpassword = info.get("repetirContrasena").toString();
+		String password = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
+		String rpassword = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("repetirContrasena").toString());
+		TokenRecover token = this.tokenRecoverDAO.findBytoken(mailEncripted);
+		String email = token.getEmail();
+		this.tokenRecoverDAO.delete(token);
+		Correo correo = this.correodao.findByEmail(email);
+		if (correo.getTipo().equals(adminS)) {
+			Admin admin = this.admindao.findByEmail(email);
+			admin.setContrasena(password);
+			admin.setRepetirContrasena(rpassword);
+			this.admindao.save(admin);
+			
+		}
+		else if (correo.getTipo().equals(mantenimientoS)) {
+			Mantenimiento mantenimiento = this.mandao.findByEmail(email);
+			mantenimiento.setContrasena(password);
+			mantenimiento.setRepetirContrasena(rpassword);
+			this.mandao.save(mantenimiento);
+			
+		}
+		else if (correo.getTipo().equals(clienteS)) {
+			Cliente cliente = this.clientedao.findByEmail(email);
+			cliente.setContrasena(password);
+			cliente.setRepetirContrasena(rpassword);
+			this.clientedao.save(cliente);
+			
+		}
 		
 		
 		
