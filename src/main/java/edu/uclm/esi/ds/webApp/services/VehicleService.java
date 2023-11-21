@@ -4,18 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
-import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 import edu.uclm.esi.ds.webApp.entities.Coche;
-import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Matricula;
 import edu.uclm.esi.ds.webApp.entities.Moto;
 import edu.uclm.esi.ds.webApp.entities.Patinete;
@@ -31,8 +27,7 @@ public class VehicleService {
 	private PatineteDAO patineteDAO;
 	@Autowired
 	private MatriculaDAO matriculaDAO;
-	@Autowired
-	private CorreoDAO correodao;
+
 	
 	String matriculaS = "matricula";
 	String cocheS = "coche";

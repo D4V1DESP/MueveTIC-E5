@@ -37,6 +37,8 @@ public class ReservaService {
 	private MotoDAO motoDAO;
 	@Autowired
 	private PatineteDAO patineteDAO;
+	@Autowired 
+	private CorreoDAO correoDAO;
 	
 		
 	public void addReservaCliente(Map<String, Object> info) {
@@ -128,8 +130,7 @@ public class ReservaService {
 
 	public void AddValoracion(Map<String, Object> info) {
 		String email = info.get("email").toString();
-		List<ReservaCliente> reserva = this.reservaClienteDAO.findByEmail(email);
-		ReservaCliente reservaActiva = this.EncontrarReservaActiva(reserva);
+		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
 		String comentario = info.get("comentario").toString();
 		
@@ -140,6 +141,9 @@ public class ReservaService {
 		
 		
 	}
+
+
+
 	public boolean checkUser(String email) {
 		boolean checked = false;
 		List<Correo> lstUser = this.correoDAO.findAll();

@@ -218,4 +218,27 @@ public class UserService {
 	    this.clientedao.deleteByemail(email);
 	    this.correodao.deleteByemail(email);
 	}
+
+	public boolean checkUser(Map<String, Object> info) {
+		boolean exist = false;
+		String mail = info.get("email").toString();
+		
+		List<Correo> lstUser = this.correodao.findAll();
+		
+		for (Correo user : lstUser) {
+			if(user.getEmail().equals(mail))
+				exist =true;
+		}
+		
+		return exist;
+	}
+
+	public void updatePassword(Map<String, Object> info) {
+		String mailEncripted = info.get(emailS).toString();
+		String password = info.get("contrasena").toString();
+		String rpassword = info.get("repetirContrasena").toString();
+		
+		
+		
+	}
 }
