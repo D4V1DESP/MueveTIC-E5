@@ -67,23 +67,17 @@ public class ReservaService {
 
 
 	public void CancelUserReserve(Map<String, Object> info) {
-		 System.out.println("Contenido del objeto info: " + info);
-
 		try {
 			
 			String email = info.get("cliente").toString();
 			String matricula = info.get("vehiculo").toString();
 			
 			List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
-			
 			Matricula m = this.matriculaDAO.findByMatricula(matricula);
 			
 			for (ReservaCliente reserva : reservas) {
-			    System.out.println("Estado actual de la reserva: " + reserva.getEstado());
-			    
+				
 			    if (reserva.getEstado().equals("reservado")) {
-			        System.out.println("Cancelando reserva: " + reserva);
-			        
 			        reserva.setEstado("cancelada");
 			        this.reservaClienteDAO.save(reserva);
 			    }

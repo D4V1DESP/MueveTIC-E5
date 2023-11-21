@@ -182,4 +182,14 @@ public class UserController {
 		return true;
 	}
 	
+	@PostMapping("/BajaUser")
+	public boolean bajaUsuario(@RequestBody Map<String, Object> info) {
+		try {
+			this.userService.bajaUsuarios(info);
+		}catch(DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
+	
 }

@@ -13,8 +13,10 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
+import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
 import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
+import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
@@ -30,6 +32,8 @@ public class UserService {
 	private MantenimientoDAO mandao;
 	@Autowired
 	private CorreoDAO correodao;
+	@Autowired 
+	private ReservaClienteDAO reservadao;
 
 	String adminS = "admin";
 	String apellidosS = "apellidos";
@@ -198,4 +202,20 @@ public class UserService {
 		return clientedao.save(clienteExistente);
 	}
 
+	public void bajaUsuarios(Map<String, Object> info) {
+	    String email = (String) info.get(emailS);
+	    Cliente cliente = this.clientedao.findByEmail(email);
+	    List<ReservaCliente> reservasCliente = this.reservadao.findListByEmail(email);
+
+	    if (reservasCliente.stream().anyMatch(reserva -> reserva.getEstado().equals("reservado"))) {
+	        throw new ResponseStatusException(HttpStatus.CONFLICT, "El cliente tiene reservas activas.");
+	    }
+	    for (ReservaCliente reserva : reservasCliente) {
+	        reserva.setCliente("Cliente_baja");
+	    }
+
+	    this.reservadao.saveAll(reservasCliente);
+	    this.clientedao.deleteByemail(email);
+	    this.correodao.deleteByemail(email);
+	}
 }
