@@ -40,7 +40,12 @@ public class ReservaCliente {
 	public void setValoracionText(String valoracionText) {
 		this.valoracionText = valoracionText;
 	}
-	
+	public String getFecha() {
+		return fecha; 
+	}
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
+	}
 	public String getEstado() {
 		return estado;
 	}

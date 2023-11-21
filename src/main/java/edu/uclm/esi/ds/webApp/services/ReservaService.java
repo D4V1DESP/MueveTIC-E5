@@ -127,5 +127,8 @@ public class ReservaService {
 	    // Devolver null si no se encuentra ninguna reserva en estado 'reservado'
 	    return null;
 	}
+	public List<ReservaCliente> listaReservas() {
+		return reservaClienteDAO.findAll();
+	}
 		
 }
