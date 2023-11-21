@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,13 +22,14 @@ import edu.uclm.esi.ds.webApp.services.VehicleService;
 
 @RestController
 @RequestMapping("reservas")
-@CrossOrigin({"*"})
+@CrossOrigin("*")
 public class ReservaController {
 	
 	@Autowired
 	private ReservaService reservaService;
 	@Autowired 
 	private VehicleService vehicleService;
+	
 	
 	@PostMapping ("/usersAdd")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
@@ -45,11 +45,12 @@ public class ReservaController {
 	
 	@PostMapping("/usersCancel")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
-		System.out.println("hola");
+		
 		//metodo para cambiar estado a disponible 
 		
 		try {
 			reservaService.CancelUserReserve(info);
+			
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
@@ -57,9 +58,9 @@ public class ReservaController {
 	}
 	
 	@GetMapping("/reservaActiva/{email}")
-	public ResponseEntity<List<ReservaCliente>> obtenerReservaPorEmail(@PathVariable String email) {
-	    List<ReservaCliente> reserva = reservaService.obtenerReservaPorEmail(email);
-	    if (reserva != null && !reserva.isEmpty()) {
+	public ResponseEntity<ReservaCliente> obtenerReservaActivaPorEmail(@PathVariable String email) {
+	    ReservaCliente reserva = reservaService.obtenerReservaActivaPorEmail(email);
+	    if (reserva != null) {
 	        return new ResponseEntity<>(reserva, HttpStatus.OK);
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,4 +72,17 @@ public class ReservaController {
 	    return reservaService.listaReservas();
 	}
 
+
+	
+	@PostMapping("/AddReview")
+	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
+		
+		//metodo para cambiar estado a disponible y resta bateria
+		try {
+			reservaService.AddValoracion(info);
+		}catch(Exception e) {
+			throw new  ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
 }

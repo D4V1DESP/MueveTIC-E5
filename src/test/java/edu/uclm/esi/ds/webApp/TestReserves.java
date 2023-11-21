@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.UnsupportedEncodingException;
 
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.Disabled;
 
@@ -37,14 +36,26 @@ public class TestReserves {
 	private MockMvc server;
 
 	
-	@Test
+	@Test 
 	void AddClientReserve() throws Exception {
-		
+		// todo correcto 
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
+		// usuario no existe 
+		/*result = this.sendRequest("aaa@gmail.com", "1234CFG");
+		result.andExpect(status().isConflict()).andReturn();
+		// vehiculo no existe
+		result = this.sendRequest("floresmanu99@gmail.com", "1111AAA");
+		result.andExpect(status().isConflict()).andReturn();
+		//vehiculo ya reservad
+		result = this.sendRequest("manuPruebaCliente@gmail.com", "1234CFG");
+		result.andExpect(status().isConflict()).andReturn();
+		// usuario con reserva activa
+		result = this.sendRequest("floresmanu99@gmail.com", "2342GSL");
+		result.andExpect(status().isConflict()).andReturn();
+	*/
 		
 	}
-
 
 	private ResultActions sendRequest(String email, String vehiculo) throws Exception , UnsupportedEncodingException{
 		JSONObject jsonReserve = new JSONObject()
