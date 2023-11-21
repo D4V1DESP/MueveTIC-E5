@@ -4,8 +4,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,11 +23,14 @@ import edu.uclm.esi.ds.webApp.dao.CocheDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
+import edu.uclm.esi.ds.webApp.entities.Admin;
+import edu.uclm.esi.ds.webApp.security.Role;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestVehiculo {
 
 	@Autowired
@@ -48,11 +54,20 @@ class TestVehiculo {
 	String nPlazas = "2";
 	String color = "Rojo";
 	String casco = "true";
+
+	private String tokenAdmin;	
+	private String tokenMantenimiento;
+	
+	@BeforeAll
+	void obtenerToken() throws Exception{
+		tokenAdmin = generarTokenAdmin();
+		tokenMantenimiento = generarTokenMantenimiento();
+	}
 	
 	
 	@Test @Order(1)
 	void testDarAltaVehiculo() throws Exception{
-		
+
 		String tipo = "Coche";
 		JSONObject jsoCoche = new JSONObject();
 		jsoCoche = crearTipoVehiculo(matriculaCoche, jsoCoche, "nPlazas", tipo, nPlazas);
@@ -102,18 +117,18 @@ class TestVehiculo {
 	}
 	
 	@Test @Order(3)
-	void testConsultaVehiculosrecargables() throws Exception{
+	void testConsultaVehiculosRecargables() throws Exception{
 		
-		ResultActions resultado = this.sendRequestConsulta("recargables/Coche");
+		ResultActions resultado = this.sendRequestConsultaRecargables("recargables/Coche");
 		resultado.andExpect(status().isOk()).andReturn();
 		
-		resultado = this.sendRequestConsulta("recargables/Moto");
+		resultado = this.sendRequestConsultaRecargables("recargables/Moto");
 		resultado.andExpect(status().isOk()).andReturn();
 		
-		resultado = this.sendRequestConsulta("recargables/Patinete");
+		resultado = this.sendRequestConsultaRecargables("recargables/Patinete");
 		resultado.andExpect(status().isOk()).andReturn();
 		
-		resultado = this.sendRequestConsulta("recargables/coche");
+		resultado = this.sendRequestConsultaRecargables("recargables/coche");
 		resultado.andExpect(status().isConflict()).andReturn();
 	}
 	
@@ -145,8 +160,10 @@ class TestVehiculo {
 	private ResultActions sendRequestEliminar(JSONObject jsoVehiculo) throws Exception {
 		
 		RequestBuilder request = MockMvcRequestBuilders.post("/vehiculos/eliminar")
+				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsoVehiculo.toString());
+		
 		
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
@@ -166,6 +183,7 @@ class TestVehiculo {
 	private ResultActions sendRequestAlta(JSONObject jsoVehiculo) throws Exception{
 		
 		RequestBuilder request = MockMvcRequestBuilders.post("/vehiculos/alta")
+				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsoVehiculo.toString());
 		
@@ -177,20 +195,88 @@ class TestVehiculo {
 	private ResultActions sendRequestConsulta(String recurso) throws Exception {
 		String requestCad = "/vehiculos/" + recurso;
 		
-		RequestBuilder request = MockMvcRequestBuilders.get(requestCad);
+		RequestBuilder request = MockMvcRequestBuilders.get(requestCad)
+				.header("Authorization", "Bearer " + tokenAdmin);
 			
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
 	}
 	
+	private ResultActions sendRequestConsultaRecargables(String recurso) throws Exception {
+		String requestCad = "/vehiculos/" + recurso;
+		
+		RequestBuilder request = MockMvcRequestBuilders.get(requestCad)
+				.header("Authorization", "Bearer " + tokenMantenimiento);
+			
+		ResultActions resultado = this.server.perform(request);
+		return resultado;
+	}
 	
 	private ResultActions sendRequestRecarga(JSONObject jsoVehiculo) throws Exception{
 		
 		RequestBuilder request = MockMvcRequestBuilders.put("/vehiculos/recargar")
+				.header("Authorization", "Bearer " + tokenMantenimiento)
 				.contentType("application/json")
 				.content(jsoVehiculo.toString());
 		
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
+	}
+	
+	private String generarTokenAdmin() throws Exception{
+		JSONObject jsoAdmin = new JSONObject();
+		jsoAdmin.put("email", "NuevoAdminAutenticado@gmail.com");
+		jsoAdmin.put("dni", "OASDASJBASDKDA");
+		jsoAdmin.put("nombre", "OTRACOMPROBACION");
+		jsoAdmin.put("apellidos", "TusApellidos");
+		jsoAdmin.put("contrasena", "TuContrasena");
+		jsoAdmin.put("repetirContrasena", "TuContrasena");
+		jsoAdmin.put("activo", true);
+		jsoAdmin.put("tipo", "admin");
+		jsoAdmin.put("ciudad", "Toledo");
+		
+//		server.perform(MockMvcRequestBuilders.post("/users/AddUser")
+//				.contentType("application/json")
+//				.content(jsoAdmin.toString()));
+		
+		//Crear y eliminar el usuario, cuando se merge con la parte de Delete
+		
+		String tokenAdmin = server.perform(MockMvcRequestBuilders.post("/users/authenticate")
+		        .contentType("application/json")
+		        .content(jsoAdmin.toString()))
+		        .andReturn()
+		        .getResponse()
+		        .getContentAsString();
+		
+		return tokenAdmin;
+	}
+	
+	private String generarTokenMantenimiento() throws Exception{
+		JSONObject jsoMantenimiento = new JSONObject();
+		jsoMantenimiento.put("email", "NuevoMantenimientoAutenticado@gmail.com");
+		jsoMantenimiento.put("dni", "23451231ASD");
+		jsoMantenimiento.put("nombre", "TuNombre");
+		jsoMantenimiento.put("apellidos", "TusApellidos");
+		jsoMantenimiento.put("contrasena", "TuContrasena");
+		jsoMantenimiento.put("repetirContrasena", "TuContrasena");
+		jsoMantenimiento.put("activo", true);
+		jsoMantenimiento.put("tipo", "mantenimiento");
+		jsoMantenimiento.put("ciudad", "Ciudad Real");
+		jsoMantenimiento.put("experiencia", "2");
+		
+//		server.perform(MockMvcRequestBuilders.post("/users/AddUser")
+//		.contentType("application/json")
+//		.content(jsoMantenimiento.toString()));
+
+		//Crear y eliminar el usuario, cuando se merge con la parte de Delete
+		
+		String tokenMantenimiento = server.perform(MockMvcRequestBuilders.post("/users/authenticate")
+		        .contentType("application/json")
+		        .content(jsoMantenimiento.toString()))
+		        .andReturn()
+		        .getResponse()
+		        .getContentAsString();
+		
+		return tokenMantenimiento;
 	}
 }

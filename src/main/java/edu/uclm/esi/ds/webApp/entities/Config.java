@@ -1,38 +1,38 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="Config")
+@Document(collection= "Config")
 public class Config {
-	
-	private int idConfig;
-	private int bateriaRecarga;
-	private int vehiculosMantenimiento;
-	private int eurosViaje;
-	private int bateriaViaje;
-	
-	
-	
-	public Config(int idConfig, int bateriaRecarga, int vehiculosMantenimiento, int eurosViaje, int bateriaViaje) {
+	@Id 
+	private String id;
+	@Indexed(unique=true)
+	protected String nombre;
+	protected int valor;
+
+	public Config(String nombre, int valor) {
 		super();
-		this.idConfig = idConfig;
-		this.bateriaRecarga = bateriaRecarga;
-		this.vehiculosMantenimiento = vehiculosMantenimiento;
-		this.eurosViaje = eurosViaje;
-		this.bateriaViaje = bateriaViaje;
+		this.nombre = nombre;
+		this.valor = valor;
 	}
-	public int getBateriaRecarga() {
-		return bateriaRecarga;
+
+	public String getNombre() {
+		return nombre;
 	}
-	public int getVehiculosMantenimiento() {
-		return vehiculosMantenimiento;
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
-	public int getEurosViaje() {
-		return eurosViaje;
+
+	public int getValor() {
+		return valor;
 	}
-	public int getBateriaViaje() {
-		return bateriaViaje;
+
+	public void setValor(int valor) {
+		this.valor = valor;
 	}
-	
-	
+
 }

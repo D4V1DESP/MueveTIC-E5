@@ -95,6 +95,8 @@ public class VehicleService extends ConstVehiculos{
 
 	public List<Vehiculo> listaRecargables(String tipo) {
 		
+		Config config = this.configDAO.findBynombre("bateriaRecarga");
+		
 		List <Vehiculo> listaVehiculos = null;
 		
 		if (tipo.equals(COCHE)) {
@@ -110,7 +112,12 @@ public class VehicleService extends ConstVehiculos{
 		if(listaVehiculos == null) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
-		
+
+		for (int i = 0; i < listaVehiculos.size(); i++) {
+		  if(listaVehiculos.get(i).getBateria() >= config.getValor()) {
+			  listaVehiculos.remove(i);
+		  }
+		}
 		return listaVehiculos;
 	}
 	
@@ -134,12 +141,5 @@ public class VehicleService extends ConstVehiculos{
 			patinete.setBateria(RECARGA);
 			this.patineteDAO.save(patinete);
 		}
-	}
-	
-
-	private Config obtenerConfiguracion() {
-		List <Config> listConfig= this.configDAO.findAll();
-		return listConfig.get(0);
-		//config.get<Atributo>()
 	}
 }

@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class VehicleController {
 	private VehicleService vehicleService;
 	@CrossOrigin("*")
 	@PostMapping("/alta")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public void altaVehiculo(@RequestBody Map<String, Object> info) {
 		
 				try {
@@ -42,33 +44,39 @@ public class VehicleController {
 	}
 	
 	@GetMapping("/coches")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
 	public List<Coche> listaCoche() {	
 			return vehicleService.listaCoches();
 	}
 	
 	@GetMapping("/motos")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
 	public List <Moto> listaMoto() {
 			return vehicleService.listaMotos();
 	}
 	
 	@GetMapping("/patinetes")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
 	public List <Patinete> listaPatinete(){
 		return vehicleService.listaPatinetes();
 	}
 	
 	@PostMapping("/eliminar")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public void eliminarVehiculo(@RequestBody Map<String, Object> info) {
 		
 		vehicleService.eliminarTipoVehiculo(info);
 	}
 	
 	@GetMapping("/recargables/{tipo}")
+	@PreAuthorize("hasAuthority('ROLE_MANTENIMIENTO')")
 	public List<Vehiculo> listaVehiculosRecargables(@PathVariable String tipo) {
 		
 		return vehicleService.listaRecargables(tipo);
 	}
 	
 	@PutMapping("/recargar")
+	@PreAuthorize("hasAuthority('ROLE_MANTENIMIENTO')")
 	public void recargaVehiculo(@RequestBody Map<String, Object> info) {
 		
 			vehicleService.recargaVehiculo(info);
