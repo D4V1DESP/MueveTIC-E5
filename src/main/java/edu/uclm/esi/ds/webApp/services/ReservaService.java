@@ -8,11 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
+import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
+import edu.uclm.esi.ds.webApp.entities.Correo;
+import edu.uclm.esi.ds.webApp.entities.Matricula;
 import edu.uclm.esi.ds.webApp.entities.Coche;
 import edu.uclm.esi.ds.webApp.entities.Matricula;
 import edu.uclm.esi.ds.webApp.entities.Moto;
@@ -121,5 +125,42 @@ public class ReservaService {
 	    // Devolver null si no se encuentra ninguna reserva en estado 'reservado'
 	    return null;
 	}
+
+	public void AddValoracion(Map<String, Object> info) {
+		String email = info.get("email").toString();
+		List<ReservaCliente> reserva = this.reservaClienteDAO.findByEmail(email);
+		ReservaCliente reservaActiva = this.EncontrarReservaActiva(reserva);
+		int valoracion = Integer.parseInt(info.get("estrellas").toString());
+		String comentario = info.get("comentario").toString();
 		
+		reservaActiva.setValoracion(valoracion);
+		reservaActiva.setValoracionText(comentario);
+		reservaActiva.setEstado("finalizada");
+		this.reservaClienteDAO.save(reservaActiva);
+		
+		
+	}
+	public boolean checkUser(String email) {
+		boolean checked = false;
+		List<Correo> lstUser = this.correoDAO.findAll();
+		for (Correo c : lstUser) {
+			if(c.getEmail().equals(email)) {
+				checked = true;
+			}
+		}
+		
+		return checked;
+	}
+	public boolean checkVehicle(String matricula) {
+		boolean checked = false;
+		List<Matricula> lstvehicles = this.matriculaDAO.findAll();
+		for (Matricula m : lstvehicles) {
+			if(m.getMatricula().equals(matricula)) {
+				checked = true;
+			}
+		}
+		
+		return checked;
+	}
+	
 }
