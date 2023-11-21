@@ -65,5 +65,10 @@ public class ReservaController {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
 	}
+	
+	@GetMapping("/listaReservas")
+	public List<ReservaCliente> obtenerReserva() {
+	    return reservaService.listaReservas();
+	}
 
 }

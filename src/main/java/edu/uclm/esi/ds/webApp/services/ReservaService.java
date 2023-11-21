@@ -103,5 +103,8 @@ public class ReservaService {
 	public List<ReservaCliente> obtenerReservaPorEmail(String email) {
 		return reservaClienteDAO.findByEmail(email);
 	}
+	public List<ReservaCliente> listaReservas() {
+		return reservaClienteDAO.findAll();
+	}
 		
 }
