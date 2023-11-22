@@ -15,6 +15,7 @@ import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
 import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
+import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.entities.Correo;
 import edu.uclm.esi.ds.webApp.entities.Matricula;
 import edu.uclm.esi.ds.webApp.entities.Coche;
@@ -37,6 +38,8 @@ public class ReservaService {
 	private MotoDAO motoDAO;
 	@Autowired
 	private PatineteDAO patineteDAO;
+	@Autowired
+	private CorreoDAO correoDAO;
 	
 		
 	public void addReservaCliente(Map<String, Object> info) {
@@ -128,8 +131,7 @@ public class ReservaService {
 
 	public void AddValoracion(Map<String, Object> info) {
 		String email = info.get("email").toString();
-		List<ReservaCliente> reserva = this.reservaClienteDAO.findByEmail(email);
-		ReservaCliente reservaActiva = this.EncontrarReservaActiva(reserva);
+		ReservaCliente reservaActiva = this.obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
 		String comentario = info.get("comentario").toString();
 		
