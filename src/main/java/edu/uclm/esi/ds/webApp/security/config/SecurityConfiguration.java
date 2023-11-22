@@ -31,11 +31,6 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(req ->
                 req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
-//                        .requestMatchers("/users/UpdateUser/", "/users/administradores/", "/users/mantenimiento/", "/users/cliente/").hasAuthority("ROLE_ADMIN")
-//                        .requestMatchers("/users/administradores/{email}/", "/users/mantenimiento/{email}/", "/users/cliente/{email}/").hasRole("ROLE_ADMIN")
-//                        .requestMatchers("/vehiculos/alta/", "/vehiculos/eliminar/").hasRole("ROLE_ADMIN")
-//        				.requestMatchers("/vehiculos/recargables/", "/vehiculos/recargar/").hasRole("ROLE_MANTENIMIENTO")
-//                        .requestMatchers("/vehiculos/coches/", "/vehiculos/motos/", "/vehiculos/patinetes/").hasAnyRole("ROLE_CLIENTE")
                         .anyRequest()
                         .authenticated()
         )

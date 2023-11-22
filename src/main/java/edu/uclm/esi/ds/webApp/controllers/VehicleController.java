@@ -26,7 +26,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 @RestController
 @RequestMapping("vehiculos")
 @CrossOrigin({"*"})
-
 public class VehicleController {
 	
 	@Autowired

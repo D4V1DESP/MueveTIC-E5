@@ -43,6 +43,8 @@ class TestVehiculo {
 	private PatineteDAO patineteDAO;
 	@Autowired
 	private MatriculaDAO matriculaDAO;
+	@Autowired
+	private JWToken testToken;
 	
 	String matriculaCoche = "1234CFG";
 	String matriculaMoto = "4378UIY";
@@ -60,8 +62,8 @@ class TestVehiculo {
 	
 	@BeforeAll
 	void obtenerToken() throws Exception{
-		tokenAdmin = generarTokenAdmin();
-		tokenMantenimiento = generarTokenMantenimiento();
+		tokenAdmin = testToken.generarTokenAdmin();
+		tokenMantenimiento = testToken.generarTokenMantenimiento();
 	}
 	
 	
@@ -221,62 +223,5 @@ class TestVehiculo {
 		
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
-	}
-	
-	private String generarTokenAdmin() throws Exception{
-		JSONObject jsoAdmin = new JSONObject();
-		jsoAdmin.put("email", "NuevoAdminAutenticado@gmail.com");
-		jsoAdmin.put("dni", "OASDASJBASDKDA");
-		jsoAdmin.put("nombre", "OTRACOMPROBACION");
-		jsoAdmin.put("apellidos", "TusApellidos");
-		jsoAdmin.put("contrasena", "TuContrasena");
-		jsoAdmin.put("repetirContrasena", "TuContrasena");
-		jsoAdmin.put("activo", true);
-		jsoAdmin.put("tipo", "admin");
-		jsoAdmin.put("ciudad", "Toledo");
-		
-//		server.perform(MockMvcRequestBuilders.post("/users/AddUser")
-//				.contentType("application/json")
-//				.content(jsoAdmin.toString()));
-		
-		//Crear y eliminar el usuario, cuando se merge con la parte de Delete
-		
-		String tokenAdmin = server.perform(MockMvcRequestBuilders.post("/users/authenticate")
-		        .contentType("application/json")
-		        .content(jsoAdmin.toString()))
-		        .andReturn()
-		        .getResponse()
-		        .getContentAsString();
-		
-		return tokenAdmin;
-	}
-	
-	private String generarTokenMantenimiento() throws Exception{
-		JSONObject jsoMantenimiento = new JSONObject();
-		jsoMantenimiento.put("email", "NuevoMantenimientoAutenticado@gmail.com");
-		jsoMantenimiento.put("dni", "23451231ASD");
-		jsoMantenimiento.put("nombre", "TuNombre");
-		jsoMantenimiento.put("apellidos", "TusApellidos");
-		jsoMantenimiento.put("contrasena", "TuContrasena");
-		jsoMantenimiento.put("repetirContrasena", "TuContrasena");
-		jsoMantenimiento.put("activo", true);
-		jsoMantenimiento.put("tipo", "mantenimiento");
-		jsoMantenimiento.put("ciudad", "Ciudad Real");
-		jsoMantenimiento.put("experiencia", "2");
-		
-//		server.perform(MockMvcRequestBuilders.post("/users/AddUser")
-//		.contentType("application/json")
-//		.content(jsoMantenimiento.toString()));
-
-		//Crear y eliminar el usuario, cuando se merge con la parte de Delete
-		
-		String tokenMantenimiento = server.perform(MockMvcRequestBuilders.post("/users/authenticate")
-		        .contentType("application/json")
-		        .content(jsoMantenimiento.toString()))
-		        .andReturn()
-		        .getResponse()
-		        .getContentAsString();
-		
-		return tokenMantenimiento;
 	}
 }
