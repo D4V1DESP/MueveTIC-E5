@@ -6,10 +6,11 @@ import java.io.UnsupportedEncodingException;
 
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,7 +30,8 @@ import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 
-public class TestUsers {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class TestUsers  {
 	@Autowired
 	private MockMvc server;
 	@Autowired 
@@ -40,6 +42,15 @@ public class TestUsers {
 	private ClienteDAO clienteDAO;
 	@Autowired
 	private CorreoDAO correoDAO;
+	@Autowired
+	private JWToken testToken;
+	
+	private String tokenAdmin;	
+	
+	@BeforeAll
+	void obtenerToken() throws Exception{
+		tokenAdmin = testToken.generarTokenAdmin();
+	}
 	
 	@Test 
 	void testAdduser() throws Exception {
@@ -87,9 +98,10 @@ public class TestUsers {
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.header("Authorization", "Bearer " + tokenAdmin)
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);
@@ -112,9 +124,10 @@ public class TestUsers {
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.header("Authorization", "Bearer " + tokenAdmin)
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);
@@ -137,9 +150,10 @@ public class TestUsers {
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.header("Authorization", "Bearer " + tokenAdmin)
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);

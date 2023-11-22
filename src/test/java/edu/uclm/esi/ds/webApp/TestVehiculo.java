@@ -4,8 +4,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,12 +23,15 @@ import edu.uclm.esi.ds.webApp.dao.CocheDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
+import edu.uclm.esi.ds.webApp.entities.Admin;
+import edu.uclm.esi.ds.webApp.security.Role;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 
-public class TestVehiculo {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class TestVehiculo {
 
 	@Autowired
 	private MockMvc server;
@@ -37,22 +43,33 @@ public class TestVehiculo {
 	private PatineteDAO patineteDAO;
 	@Autowired
 	private MatriculaDAO matriculaDAO;
+	@Autowired
+	private JWToken testToken;
 	
 	String matriculaCoche = "1234CFG";
 	String matriculaMoto = "4378UIY";
 	String matriculaPatinete = "6574OKU";
 	String direccion = "AV.Francia";
 	String modelo = "Nissan";
-	String bateria = "100";
+	String bateria = "0";
 	String estado = "disponible";
 	String nPlazas = "2";
 	String color = "Rojo";
 	String casco = "true";
+
+	private String tokenAdmin;	
+	private String tokenMantenimiento;
+	
+	@BeforeAll
+	void obtenerToken() throws Exception{
+		tokenAdmin = testToken.generarTokenAdmin();
+		tokenMantenimiento = testToken.generarTokenMantenimiento();
+	}
 	
 	
 	@Test @Order(1)
 	void testDarAltaVehiculo() throws Exception{
-		
+
 		String tipo = "Coche";
 		JSONObject jsoCoche = new JSONObject();
 		jsoCoche = crearTipoVehiculo(matriculaCoche, jsoCoche, "nPlazas", tipo, nPlazas);
@@ -100,12 +117,55 @@ public class TestVehiculo {
 		resultado = this.sendRequestConsulta("patinetes");
 		resultado.andExpect(status().isOk()).andReturn();
 	}
+	
+	@Test @Order(3)
+	void testConsultaVehiculosRecargables() throws Exception{
+		
+		ResultActions resultado = this.sendRequestConsultaRecargables("recargables/Coche");
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestConsultaRecargables("recargables/Moto");
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestConsultaRecargables("recargables/Patinete");
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestConsultaRecargables("recargables/coche");
+		resultado.andExpect(status().isConflict()).andReturn();
+	}
+	
+	@Test @Order(4)
+	void testRecargaVehiculos() throws Exception{
+		
+		String tipo = "Coche";
+		JSONObject jsoCocheRecarga = new JSONObject();
+		jsoCocheRecarga = crearTipoVehiculo(matriculaCoche, jsoCocheRecarga, "nPlazas", tipo, nPlazas);
+		
+		tipo = "Moto";
+		JSONObject jsoMotoRecarga = new JSONObject();
+		jsoMotoRecarga = crearTipoVehiculo(matriculaMoto, jsoMotoRecarga, "casco", tipo, casco);
+		
+		tipo = "Patinete";
+		JSONObject jsoPatineteRecarga = new JSONObject();
+		jsoPatineteRecarga = crearTipoVehiculo(matriculaPatinete, jsoPatineteRecarga, "color", tipo, color);	
+		
+		ResultActions resultado = this.sendRequestRecarga(jsoCocheRecarga);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestRecarga(jsoMotoRecarga);
+		resultado.andExpect(status().isOk()).andReturn();
+		
+		resultado = this.sendRequestRecarga(jsoPatineteRecarga);
+		resultado.andExpect(status().isOk()).andReturn();
+	}
 
 	private ResultActions sendRequestEliminar(JSONObject jsoVehiculo) throws Exception {
 		
-		RequestBuilder request = MockMvcRequestBuilders.delete("/vehiculos/eliminar")
+		RequestBuilder request = MockMvcRequestBuilders.post("/vehiculos/eliminar")
+				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsoVehiculo.toString());
+		
 		
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
@@ -125,6 +185,7 @@ public class TestVehiculo {
 	private ResultActions sendRequestAlta(JSONObject jsoVehiculo) throws Exception{
 		
 		RequestBuilder request = MockMvcRequestBuilders.post("/vehiculos/alta")
+				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsoVehiculo.toString());
 		
@@ -136,8 +197,30 @@ public class TestVehiculo {
 	private ResultActions sendRequestConsulta(String recurso) throws Exception {
 		String requestCad = "/vehiculos/" + recurso;
 		
-		RequestBuilder request = MockMvcRequestBuilders.get(requestCad);
+		RequestBuilder request = MockMvcRequestBuilders.get(requestCad)
+				.header("Authorization", "Bearer " + tokenAdmin);
 			
+		ResultActions resultado = this.server.perform(request);
+		return resultado;
+	}
+	
+	private ResultActions sendRequestConsultaRecargables(String recurso) throws Exception {
+		String requestCad = "/vehiculos/" + recurso;
+		
+		RequestBuilder request = MockMvcRequestBuilders.get(requestCad)
+				.header("Authorization", "Bearer " + tokenMantenimiento);
+			
+		ResultActions resultado = this.server.perform(request);
+		return resultado;
+	}
+	
+	private ResultActions sendRequestRecarga(JSONObject jsoVehiculo) throws Exception{
+		
+		RequestBuilder request = MockMvcRequestBuilders.put("/vehiculos/recargar")
+				.header("Authorization", "Bearer " + tokenMantenimiento)
+				.contentType("application/json")
+				.content(jsoVehiculo.toString());
+		
 		ResultActions resultado = this.server.perform(request);
 		return resultado;
 	}
