@@ -62,7 +62,7 @@ public class EmailService {
 		String email = info.get("email").toString();
 		String token = org.apache.commons.codec.digest.DigestUtils.sha512Hex(email);
 		
-		String htmlContent = "<html><head></head><body><p>Por favor usa el enlace de a continuacion para recuperar tu cuenta</p><p>Haz click aquí <a href='http://localhost/users/confirm/" + token + "'>para confirmar la recuperacion de tu cuenta</a></p></body></html>";
+		String htmlContent = "<html><head></head><body><p>Por favor usa el enlace de a continuacion para recuperar tu cuenta</p><p>Haz click aquí <a href='http://localhost:4200/moficiar-contrasena/" + token + "'>para confirmar la recuperacion de tu cuenta</a></p></body></html>";
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				  .build();
 				MediaType mediaType = MediaType.parse("application/json");
