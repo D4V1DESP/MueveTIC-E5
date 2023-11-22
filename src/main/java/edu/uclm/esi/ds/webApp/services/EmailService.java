@@ -3,11 +3,21 @@ package edu.uclm.esi.ds.webApp.services;
 import java.util.Map;
 
 import org.springframework.mail.SimpleMailMessage;
-import edu.uclm.esi.ds.webapp.email.config.MailSenderConfig;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import edu.uclm.esi.ds.webApp.emailConfig.MailSenderConfig;
 
 @Service
 public class EmailService {
+	
+	
+	
+	
+	public EmailService(JavaMailSender mailSender) {
+        this.mailsender = mailSender;
+    }
+	
 	
 	private JavaMailSender mailsender;
 	String from ="servicios.muevetic@gmail.com";
@@ -22,6 +32,7 @@ public class EmailService {
 		String messagecontent = content+""+org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("email").toString());
 		message.setText(messagecontent);
 		message.setSubject(subject);
+		
 		mailsender.send(message);
 	}
 
