@@ -112,6 +112,9 @@ public class ReservaService {
 		}
 		
 	}
+	public List<ReservaCliente> listaReservasPorEmail(String email) {
+		return reservaClienteDAO.findListByEmail(email);
+	}
 
 	public ReservaCliente obtenerReservaActivaPorEmail(String email) {
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);

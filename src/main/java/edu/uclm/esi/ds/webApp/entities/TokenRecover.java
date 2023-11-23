@@ -1,4 +1,4 @@
-package edu.uclm.esi.ds.webApp.entities;
+/*package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -30,3 +30,4 @@ public class TokenRecover {
 	
 
 }
+*/

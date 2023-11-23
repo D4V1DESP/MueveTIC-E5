@@ -1,4 +1,4 @@
-package edu.uclm.esi.ds.webApp.dao;
+/*package edu.uclm.esi.ds.webApp.dao;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -8,3 +8,4 @@ public interface TokenRecoverDAO extends MongoRepository<TokenRecover, String> {
 	TokenRecover findBytoken(String token);
 
 }
+*/

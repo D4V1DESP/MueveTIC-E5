@@ -33,10 +33,11 @@ public class ReservaController {
 	
 	@PostMapping ("/usersAdd")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
-		vehicleService.reservarVehiculo(info);
+		
 		
 		try {
 			reservaService.addReservaCliente(info);
+			vehicleService.reservarVehiculo(info);
 		}catch(Exception e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
 		}
@@ -60,6 +61,16 @@ public class ReservaController {
 	@GetMapping("/reservaActiva/{email}")
 	public ResponseEntity<ReservaCliente> obtenerReservaActivaPorEmail(@PathVariable String email) {
 	    ReservaCliente reserva = reservaService.obtenerReservaActivaPorEmail(email);
+	    if (reserva != null) {
+	        return new ResponseEntity<>(reserva, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	}
+	
+	@GetMapping("/reservasCliente/{email}")
+	public ResponseEntity<List<ReservaCliente>> obtenerReservasPorEmail(@PathVariable String email) {
+	    List<ReservaCliente> reserva = reservaService.listaReservasPorEmail(email);
 	    if (reserva != null) {
 	        return new ResponseEntity<>(reserva, HttpStatus.OK);
 	    } else {
