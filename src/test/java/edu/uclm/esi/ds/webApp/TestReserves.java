@@ -42,10 +42,10 @@ public class TestReserves {
 	@Autowired
 	private ReservaClienteDAO reservaClienteDAO;
 	
-	private String tokenAdmin;
+	private String tokenCliente;
 	@BeforeAll
 	void obtenerToken() throws Exception{
-		tokenAdmin = testToken.generarTokenAdmin();
+		tokenCliente = testToken.generarTokenCliente();
 	}
 	@Test
 	void AddClientReserve() throws Exception {
@@ -64,7 +64,7 @@ public class TestReserves {
 				.put("matricula", vehiculo);
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/reservas/usersAdd").
-				header("Authorization", "Bearer " + tokenAdmin).
+				header("Authorization", "Bearer " + tokenCliente).
 				contentType("application/json").
 				content(jsonReserve.toString());
 		
