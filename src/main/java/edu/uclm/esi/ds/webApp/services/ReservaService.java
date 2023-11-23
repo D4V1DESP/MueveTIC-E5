@@ -43,7 +43,7 @@ public class ReservaService {
 	@Autowired
 	private ConfigDAO configDAO;
 	
-		
+	
 	public void addReservaCliente(Map<String, Object> info) {
 	    String email = info.get("email").toString();
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
@@ -132,6 +132,8 @@ public class ReservaService {
 	}
 
 	public void AddValoracion(Map<String, Object> info) {
+		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
+		int valorCarga =this.configDAO.findBynombre("BateriaCarga").getValor();
 		String email = info.get("email").toString();
 		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
@@ -158,7 +160,7 @@ public class ReservaService {
 			Moto moto = this.motoDAO.findByMatricula(matricula);
 			moto.setBateria(moto.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
 			
-			if(moto.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(moto.getBateria()>=valorCarga) {
 				moto.setEstado("disponible");
 			}
 			this.motoDAO.save(moto);
