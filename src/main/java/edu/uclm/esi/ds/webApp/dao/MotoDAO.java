@@ -14,6 +14,5 @@ public interface MotoDAO extends MongoRepository <Moto, String>{
 	
 	List<Vehiculo> findByestado(String estado);
 
-	List<Moto> findByEstado(String string);
 	Moto findByMatricula(String matricula);
 }

@@ -73,17 +73,19 @@ public class VehicleController {
 	
 	@GetMapping("/coches/disponibles")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
-	public List <Coche> listaCocheDisponible(){
+	public List <Vehiculo> listaCocheDisponible(){
 		return vehicleService.listaCochesDisponibles();
 	}
 	@GetMapping("/motos/disponibles")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
-	public List <Moto> listaMotoDisponible(){
+	public List <Vehiculo> listaMotoDisponible(){
 		return vehicleService.listaMotosDisponibles();
 	}
+	
 	@GetMapping("/patinetes/disponibles")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MANTENIMIENTO', 'ROLE_CLIENTE')")
-	public List <Patinete> listaPatineteDisponible(){
+	@CrossOrigin("*")
+	public List <Vehiculo> listaPatineteDisponible(){
 		return vehicleService.listaPatinetesDisponibles();
 	}
 	

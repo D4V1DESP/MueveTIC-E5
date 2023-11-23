@@ -148,35 +148,35 @@ public class VehicleService extends ConstVehiculos{
 		}
 	}
 
-	public List<Coche> listaCochesDisponibles() {
-        return this.cocheDAO.findByEstado("disponible");
+	public List<Vehiculo> listaCochesDisponibles() {
+        return this.cocheDAO.findByestado(DISPONIBLE);
     }
 
-	public List<Moto> listaMotosDisponibles() {
-		return this.motoDAO.findByEstado("disponible");
+	public List<Vehiculo> listaMotosDisponibles() {
+		return this.motoDAO.findByestado(DISPONIBLE);
 	}
 
-	public List<Patinete> listaPatinetesDisponibles() {
-		return this.patineteDAO.findByEstado("disponible");
+	public List<Vehiculo> listaPatinetesDisponibles() {
+		return this.patineteDAO.findByestado(DISPONIBLE);
 	}
 	public void reservarVehiculo(Map<String, Object> info) {
 		Matricula m = this.matriculaDAO.findByMatricula((String) info.get(MATRICULA));
 		
 		Coche coche = this.cocheDAO.findByMatricula(m.getMatricula());
 		if (coche != null) {
-		    coche.setEstado("No Disponible");
+		    coche.setEstado(NO_DISPONIBLE);
 		    this.cocheDAO.save(coche);
 		}
 		
 		Moto moto = this.motoDAO.findByMatricula(m.getMatricula());
 		if(moto != null) {
-			moto.setEstado("No Disponible");
+			moto.setEstado(NO_DISPONIBLE);
 			this.motoDAO.save(moto);
 		}
 		
 		Patinete patinete = this.patineteDAO.findByMatricula(m.getMatricula());
 		if(patinete != null) {
-			patinete.setEstado("No Disponible");
+			patinete.setEstado(NO_DISPONIBLE);
 			this.patineteDAO.save(patinete);
 		}
 		

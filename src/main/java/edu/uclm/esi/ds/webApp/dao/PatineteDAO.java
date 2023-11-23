@@ -14,7 +14,5 @@ public interface PatineteDAO extends MongoRepository <Patinete, String>{
 
 	List<Vehiculo> findByestado(String estado);
 	
-	
-	List<Patinete> findByEstado(String string);
 	Patinete findByMatricula(String matricula);
 }

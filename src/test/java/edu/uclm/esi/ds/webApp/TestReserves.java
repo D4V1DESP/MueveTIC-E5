@@ -10,10 +10,11 @@ import java.io.UnsupportedEncodingException;
 
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,14 +32,25 @@ import edu.uclm.esi.ds.webApp.dao.ReservaClienteDAO;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestReserves {
 	
 	@Autowired
 	private MockMvc server;
-
+	@Autowired
+	private JWToken testToken;
+	@Autowired
+	private ReservaClienteDAO reservaClienteDAO;
 	
+	private String tokenAdmin;
+	@BeforeAll
+	void obtenerToken() throws Exception{
+		tokenAdmin = testToken.generarTokenAdmin();
+	}
 	@Test
 	void AddClientReserve() throws Exception {
+		
+		this.reservaClienteDAO.deleteByEmail("floresmanu99@gmail.com");
 		
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
@@ -52,6 +64,7 @@ public class TestReserves {
 				.put("matricula", vehiculo);
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/reservas/usersAdd").
+				header("Authorization", "Bearer " + tokenAdmin).
 				contentType("application/json").
 				content(jsonReserve.toString());
 		

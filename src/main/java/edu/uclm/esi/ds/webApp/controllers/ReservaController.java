@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ public class ReservaController {
 	private VehicleService vehicleService;
 	
 	@PostMapping ("/usersAdd")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
 		vehicleService.reservarVehiculo(info);
 		
@@ -44,6 +46,7 @@ public class ReservaController {
 	}
 	
 	@PostMapping("/usersCancel")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
 		
 		//metodo para cambiar estado a disponible 
@@ -58,6 +61,7 @@ public class ReservaController {
 	}
 	
 	@GetMapping("/reservaActiva/{email}")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public ResponseEntity<ReservaCliente> obtenerReservaActivaPorEmail(@PathVariable String email) {
 	    ReservaCliente reserva = reservaService.obtenerReservaActivaPorEmail(email);
 	    if (reserva != null) {
@@ -68,6 +72,7 @@ public class ReservaController {
 	}
 	
 	@GetMapping("/listaReservas")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public List<ReservaCliente> obtenerReserva() {
 	    return reservaService.listaReservas();
 	}

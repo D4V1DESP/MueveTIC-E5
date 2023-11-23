@@ -19,9 +19,10 @@ import edu.uclm.esi.ds.webApp.entities.Moto;
 import edu.uclm.esi.ds.webApp.entities.Patinete;
 import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
 import edu.uclm.esi.ds.webApp.entities.Vehiculo;
+import edu.uclm.esi.ds.webApp.interfaces.ConstReservas;
 
 @Service
-public class ReservaService {
+public class ReservaService extends ConstReservas{
 	
 	@Autowired 
 	private ReservaClienteDAO reservaClienteDAO;
@@ -43,7 +44,7 @@ public class ReservaService {
 	    boolean tieneReservaEnEstadoReservado = false;
 
 	    for (ReservaCliente reserva : reservas) {
-	        if (reserva.getEstado().equals("reservado")) {
+	        if (reserva.getEstado().equals(RESERVADO)) {
 	            tieneReservaEnEstadoReservado = true;
 	            break;
 	        }
@@ -67,9 +68,7 @@ public class ReservaService {
 
 
 	public void CancelUserReserve(Map<String, Object> info) {
-		 System.out.println("Contenido del objeto info: " + info);
 
-		try {
 			
 			String email = info.get("cliente").toString();
 			String matricula = info.get("vehiculo").toString();
@@ -79,11 +78,7 @@ public class ReservaService {
 			Matricula m = this.matriculaDAO.findByMatricula(matricula);
 			
 			for (ReservaCliente reserva : reservas) {
-			    System.out.println("Estado actual de la reserva: " + reserva.getEstado());
-			    
-			    if (reserva.getEstado().equals("reservado")) {
-			        System.out.println("Cancelando reserva: " + reserva);
-			        
+			    if (reserva.getEstado().equals(RESERVADO)) { 
 			        reserva.setEstado("cancelada");
 			        this.reservaClienteDAO.save(reserva);
 			    }
@@ -92,24 +87,20 @@ public class ReservaService {
 			
 		    if(tipo.equals("Coche")) {
 		    	Coche coche = this.cocheDAO.findByMatricula(matricula);
-		    	coche.setEstado("disponible");
+		    	coche.setEstado(DISPONIBLE);
 		    	this.cocheDAO.save(coche);
 		    }
 		    if(tipo.equals("Moto")) {
 		    	Moto moto = this.motoDAO.findByMatricula(matricula);
-		    	moto.setEstado("disponible");
+		    	moto.setEstado(DISPONIBLE);
 		    	this.motoDAO.save(moto);
 		    }
 		    if(tipo.equals("Patinete")) {
 		    	Patinete patinete = this.patineteDAO.findByMatricula(matricula);
-		    	patinete.setEstado("disponible");
+		    	patinete.setEstado(DISPONIBLE);
 		    	this.patineteDAO.save(patinete);
 		    }
-		} catch (NullPointerException npe) {
-		    npe.printStackTrace();
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+
 		
 	}
 
@@ -119,7 +110,7 @@ public class ReservaService {
 	    for (int i = 0; i < reservas.size(); i++) {
 	        ReservaCliente reserva = reservas.get(i);
 	        
-	        if ("reservado".equals(reserva.getEstado())) {
+	        if (RESERVADO.equals(reserva.getEstado())) {
 	            return reserva;
 	        }
 	    }

@@ -135,10 +135,10 @@ public class UserController extends ConstUsers{
 	}
 
 	@PostMapping("/login")
-	public void login(@RequestBody Map<String, Object> info) {
+	public Usuario login(@RequestBody Map<String, Object> info) {
 
 		try {
-			this.userService.login(info);
+			return this.userService.login(info);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			
