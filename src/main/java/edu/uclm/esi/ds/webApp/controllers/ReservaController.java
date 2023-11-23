@@ -46,7 +46,7 @@ public class ReservaController {
 	@PostMapping("/usersCancel")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
 		
-		//metodo para cambiar estado a disponible 
+	
 		
 		try {
 			reservaService.CancelUserReserve(info);
@@ -71,7 +71,6 @@ public class ReservaController {
 	
 	@PostMapping("/AddReview")
 	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
-		
 		//metodo para cambiar estado a disponible y resta bateria
 		try {
 			reservaService.AddValoracion(info);
