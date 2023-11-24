@@ -114,12 +114,12 @@ public class VehicleService extends ConstVehiculos{
 		if(listaVehiculos == null) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
-
+		
 		for (int i = 0; i < listaVehiculos.size(); i++) {
-		  if(listaVehiculos.get(i).getBateria() >= config.getValor()) {
-			  listaVehiculos.remove(i);
-		  }
-		}
+			  if(listaVehiculos.get(i).getBateria() >= config.getValor()) {	
+				  listaVehiculos.remove(i);
+			  }
+			}
 		return listaVehiculos;
 	}
 	
@@ -146,37 +146,61 @@ public class VehicleService extends ConstVehiculos{
 	}
 
 	public List<Vehiculo> listaCochesDisponibles() {
-        return this.cocheDAO.findByestado(DISPONIBLE);
+		Config config = this.configDAO.findBynombre("bateriaViaje");
+        return filtrarPorBateria(this.cocheDAO.findByestado(DISPONIBLE), config);
     }
 
 	public List<Vehiculo> listaMotosDisponibles() {
-		return this.motoDAO.findByestado(DISPONIBLE);
+		Config config = this.configDAO.findBynombre("bateriaViaje");
+		return filtrarPorBateria(this.motoDAO.findByestado(DISPONIBLE), config);
 	}
 
 	public List<Vehiculo> listaPatinetesDisponibles() {
-		return this.patineteDAO.findByestado(DISPONIBLE);
+		Config config = this.configDAO.findBynombre("bateriaViaje");
+		return filtrarPorBateria(this.patineteDAO.findByestado(DISPONIBLE), config);
 	}
+	
 	public void reservarVehiculo(Map<String, Object> info) {
 		Matricula m = this.matriculaDAO.findByMatricula((String) info.get(MATRICULA));
 		
 		Coche coche = this.cocheDAO.findByMatricula(m.getMatricula());
-		if (coche != null) {
-		    coche.setEstado(NO_DISPONIBLE);
-		    this.cocheDAO.save(coche);
-		}
-		
-		Moto moto = this.motoDAO.findByMatricula(m.getMatricula());
-		if(moto != null) {
-			moto.setEstado(NO_DISPONIBLE);
-			this.motoDAO.save(moto);
-		}
-		
-		Patinete patinete = this.patineteDAO.findByMatricula(m.getMatricula());
-		if(patinete != null) {
-			patinete.setEstado(NO_DISPONIBLE);
-			this.patineteDAO.save(patinete);
-		}
-		
+			if (coche != null) {
+				if(!coche.getEstado().equals(NO_DISPONIBLE)) {
+				coche.setEstado(NO_DISPONIBLE);
+				this.cocheDAO.save(coche);
+				}else {
+					throw new ResponseStatusException (HttpStatus.CONFLICT);
+				}
+			}
+
+			Moto moto = this.motoDAO.findByMatricula(m.getMatricula());
+			if (moto != null) {
+				if(!moto.getEstado().equals(NO_DISPONIBLE)) {
+				moto.setEstado(NO_DISPONIBLE);
+				this.motoDAO.save(moto);
+				}else {
+					throw new ResponseStatusException (HttpStatus.CONFLICT);
+				}
+			}
+
+			Patinete patinete = this.patineteDAO.findByMatricula(m.getMatricula());
+			if (patinete != null) {
+				if(!patinete.getEstado().equals(NO_DISPONIBLE)) {
+				patinete.setEstado(NO_DISPONIBLE);
+				this.patineteDAO.save(patinete);
+				}else {
+					throw new ResponseStatusException (HttpStatus.CONFLICT);
+				}
+			}
+	}
+	
+	public List <Vehiculo> filtrarPorBateria(List <Vehiculo> listaVehiculos, Config config){
+		for (int i = 0; i < listaVehiculos.size(); i++) {
+			  if(listaVehiculos.get(i).getBateria() <= config.getValor()) {	
+				  listaVehiculos.remove(i);
+			  }
+			}
+		return listaVehiculos;
 	}
 
 }

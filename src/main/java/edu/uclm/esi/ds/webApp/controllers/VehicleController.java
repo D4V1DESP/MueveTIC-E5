@@ -60,6 +60,7 @@ public class VehicleController {
 		return vehicleService.listaPatinetes();
 	}
 	@PostMapping("/reservar")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public void reservarVehiculo(@RequestBody Map<String, Object> info) {
 		vehicleService.reservarVehiculo(info);
 	}

@@ -132,7 +132,7 @@ public class ReservaService extends ConstReservas{
 
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
-		int valorCarga =this.configDAO.findBynombre("BateriaCarga").getValor();
+		int valorCarga =this.configDAO.findBynombre("bateriaRecarga").getValor();
 		String email = info.get("email").toString();
 		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
@@ -148,16 +148,16 @@ public class ReservaService extends ConstReservas{
 		
 		if(m.getTipo().equals("Coche")) {
 			Coche coche = this.cocheDAO.findByMatricula(matricula);
-			coche.setBateria(coche.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			coche.setBateria(coche.getBateria() - bateriaViaje);
 			
-			if(coche.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(coche.getBateria()>=valorCarga) {
 				coche.setEstado("disponible");
 			}
 			this.cocheDAO.save(coche);
 		}
 		else if (m.getTipo().equals("Moto")) {
 			Moto moto = this.motoDAO.findByMatricula(matricula);
-			moto.setBateria(moto.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			moto.setBateria(moto.getBateria() - bateriaViaje);
 			
 			if(moto.getBateria()>=valorCarga) {
 				moto.setEstado("disponible");
@@ -166,9 +166,9 @@ public class ReservaService extends ConstReservas{
 			
 		}else if(m.getTipo().equals("Patinete")){
 			Patinete patin = this.patineteDAO.findByMatricula(matricula);
-			patin.setBateria(patin.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			patin.setBateria(patin.getBateria() - bateriaViaje);
 			
-			if(patin.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(patin.getBateria()>=valorCarga) {
 				patin.setEstado("disponible");
 			}
 			this.patineteDAO.save(patin);

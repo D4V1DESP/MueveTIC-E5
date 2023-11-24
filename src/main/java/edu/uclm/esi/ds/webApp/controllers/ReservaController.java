@@ -35,10 +35,11 @@ public class ReservaController {
 	@PostMapping ("/usersAdd")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
-		vehicleService.reservarVehiculo(info);
-		
 		try {
-			reservaService.addReservaCliente(info);
+		
+		vehicleService.reservarVehiculo(info);
+		reservaService.addReservaCliente(info);
+			
 		}catch(Exception e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
 		}
