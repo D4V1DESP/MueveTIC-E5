@@ -47,9 +47,16 @@ public class ReservaService extends ConstReservas{
 	
 	public void addReservaCliente(Map<String, Object> info) {
 	    String email = info.get("email").toString();
+	    String vehiculo = (String) info.get("matricula");
+	    
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
-
-	    // Verificar si hay alguna reserva en estado "reservado"
+	    
+	    if (this.correoDAO.findByEmail(email)==null) {
+	    	throw new ResponseStatusException (HttpStatus.CONFLICT);
+	    }
+	    if (this.matriculaDAO.findByMatricula(vehiculo)==null) {
+	    	throw new ResponseStatusException (HttpStatus.CONFLICT);
+	    }
 	    boolean tieneReservaEnEstadoReservado = false;
 
 	    for (ReservaCliente reserva : reservas) {
@@ -65,7 +72,7 @@ public class ReservaService extends ConstReservas{
 	        String fecha = Integer.toString(c.get(Calendar.DATE)) + "/" +
 	                Integer.toString(c.get(Calendar.MONTH) + 1) + "/" +
 	                Integer.toString(c.get(Calendar.YEAR));
-	        String vehiculo = (String) info.get("matricula");
+	       
 
 	        ReservaCliente newReserva = new ReservaCliente(email, vehiculo, fecha);
 	        this.reservaClienteDAO.save(newReserva);
