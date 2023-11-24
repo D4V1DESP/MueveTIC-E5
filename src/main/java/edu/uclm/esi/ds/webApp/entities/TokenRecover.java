@@ -1,16 +1,18 @@
 /*package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="TokenUserx")
+@Document(collection="TokenUser")
 public class TokenRecover {
-	
+	@Id
+	private String id;
 	protected String email;
-	protected String hash;
+	protected String token;
 	
 	public TokenRecover(String email) {
 		this.email= email;
-		this.hash= org.apache.commons.codec.digest.DigestUtils.sha512Hex(email);
+		this.token= org.apache.commons.codec.digest.DigestUtils.sha512Hex(email);
 	}
 	
 	public String getEmail() {
@@ -19,11 +21,11 @@ public class TokenRecover {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getHash() {
-		return hash;
+	public String getToken() {
+		return token;
 	}
-	public void setHash(String hash) {
-		this.hash = hash;
+	public void setTOken(String hash) {
+		this.token = hash;
 	}
 	
 	

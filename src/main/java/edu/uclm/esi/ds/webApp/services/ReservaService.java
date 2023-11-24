@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.CocheDAO;
+import edu.uclm.esi.ds.webApp.dao.ConfigDAO;
 import edu.uclm.esi.ds.webApp.dao.MatriculaDAO;
 import edu.uclm.esi.ds.webApp.dao.MotoDAO;
 import edu.uclm.esi.ds.webApp.dao.PatineteDAO;
@@ -39,8 +40,10 @@ public class ReservaService {
 	private PatineteDAO patineteDAO;
 	@Autowired 
 	private CorreoDAO correoDAO;
+	@Autowired
+	private ConfigDAO configDAO;
 	
-		
+	
 	public void addReservaCliente(Map<String, Object> info) {
 	    String email = info.get("email").toString();
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
@@ -135,15 +138,48 @@ public class ReservaService {
 	}
 
 	public void AddValoracion(Map<String, Object> info) {
+		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
+		int valorCarga =this.configDAO.findBynombre("BateriaCarga").getValor();
 		String email = info.get("email").toString();
 		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
 		String comentario = info.get("comentario").toString();
+		String matricula= info.get("matricula").toString();
 		
 		reservaActiva.setValoracion(valoracion);
 		reservaActiva.setValoracionText(comentario);
 		reservaActiva.setEstado("finalizada");
 		this.reservaClienteDAO.save(reservaActiva);
+		
+		Matricula m = this.matriculaDAO.findByMatricula(matricula);
+		
+		if(m.getTipo().equals("Coche")) {
+			Coche coche = this.cocheDAO.findByMatricula(matricula);
+			coche.setBateria(coche.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			
+			if(coche.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+				coche.setEstado("disponible");
+			}
+			this.cocheDAO.save(coche);
+		}
+		else if (m.getTipo().equals("Moto")) {
+			Moto moto = this.motoDAO.findByMatricula(matricula);
+			moto.setBateria(moto.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			
+			if(moto.getBateria()>=valorCarga) {
+				moto.setEstado("disponible");
+			}
+			this.motoDAO.save(moto);
+			
+		}else if(m.getTipo().equals("Patinete")){
+			Patinete patin = this.patineteDAO.findByMatricula(matricula);
+			patin.setBateria(patin.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			
+			if(patin.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+				patin.setEstado("disponible");
+			}
+			this.patineteDAO.save(patin);
+		}
 		
 		
 	}
