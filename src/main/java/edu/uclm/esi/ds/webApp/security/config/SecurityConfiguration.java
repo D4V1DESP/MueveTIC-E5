@@ -29,7 +29,9 @@ public class SecurityConfiguration {
 	
 	private static final String[] WHITE_LIST_URL = {"/users/AddUser",
             "/users/login",
-            "/users/authenticate"};
+            "/users/authenticate",
+            "/users/recover",
+            "/users/updatePass"};
 		
 	@Bean
 	public SecurityFilterChain securityFilterChain(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, HttpSecurity http) throws Exception{

@@ -54,7 +54,7 @@ public class TestReserves {
 		ResultActions result = this.sendRequest("floresmanu99@gmail.com", "1234CFG");
 		result.andExpect(status().isOk()).andReturn();
 		// usuario no existe 
-		/*result = this.sendRequest("aaa@gmail.com", "1234CFG");
+		result = this.sendRequest("aaa@gmail.com", "1234CFG");
 		result.andExpect(status().isConflict()).andReturn();
 		// vehiculo no existe
 		result = this.sendRequest("floresmanu99@gmail.com", "1111AAA");
@@ -65,7 +65,6 @@ public class TestReserves {
 		// usuario con reserva activa
 		result = this.sendRequest("floresmanu99@gmail.com", "2342GSL");
 		result.andExpect(status().isConflict()).andReturn();
-	*/
 		
 	}
 
