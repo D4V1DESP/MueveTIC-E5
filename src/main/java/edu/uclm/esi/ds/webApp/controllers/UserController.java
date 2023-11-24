@@ -19,6 +19,7 @@ import edu.uclm.esi.ds.webApp.entities.Admin;
 import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
+import edu.uclm.esi.ds.webApp.services.EmailService;
 import edu.uclm.esi.ds.webApp.interfaces.ConstUsers;
 import edu.uclm.esi.ds.webApp.services.UserService;
 
@@ -32,6 +33,8 @@ public class UserController extends ConstUsers{
 	
 	@Autowired 
 	private UserService userService;
+	@Autowired 
+	private EmailService emailService;
 	
 	@GetMapping("/administradores")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -193,6 +196,38 @@ public class UserController extends ConstUsers{
 		try {
 			this.userService.updateUsers(info);
 		}catch(DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
+	
+	@PostMapping("/BajaUser")
+	public boolean bajaUsuario(@RequestBody Map<String, Object> info) {
+		try {
+			this.userService.bajaUsuarios(info);
+		}catch(DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
+	@PostMapping("/recover")
+	public boolean recuperarPassword(@RequestBody Map<String,Object> info) {
+		try {
+			
+			if (this.userService.checkUser(info))
+				this.emailService.sendRecover(info);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
+	
+	@PostMapping("/updatePass")
+	public boolean updatePass(@RequestBody Map<String,Object> info) {
+		try {
+			this.userService.updatePassword(info);
+			
+		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
 		return true;

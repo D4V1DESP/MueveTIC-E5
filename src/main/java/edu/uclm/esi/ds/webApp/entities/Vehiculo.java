@@ -41,8 +41,13 @@ public class Vehiculo {
 	public String getEstado() {
 		return estado;
 	}
+
 	public void setBateria(int bateria) {
 		this.bateria = bateria;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 	
 }

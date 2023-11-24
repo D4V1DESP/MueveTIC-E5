@@ -4,7 +4,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.UnsupportedEncodingException;
 
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -82,7 +81,29 @@ public class TestUsers  {
 		
 		
 	}
+	@Test
+	void RecoverPass() throws Exception {
+		ResultActions result= this.sendRequest( "Manuelfv99@", "Manuelfv99@", "f20ccdefeb66736ee7d47b7eba0168bb488acdd1e78a3a314b76cb8a969043a8357649b6276333d48f37626b8e88749e0996db7fdf1006e6f33d968c841abc63");
+		result.andExpect(status().isOk()).andReturn();
+	
+		
+	}
+	private ResultActions sendRequest(String contrasena, String rcontrasena, String email) throws Exception {
+		JSONObject jsonUser = new JSONObject()
+				.put("email", email)
+				.put("contrasena", contrasena)
+				.put("repetirContrasena" ,rcontrasena);
+		
+		
+		RequestBuilder request = MockMvcRequestBuilders.
+				post("/users/updatePass").
+				contentType("application/json").
+				content(jsonUser.toString());
+		
 
+		ResultActions resultActions =this.server.perform(request);
+		return resultActions;
+	}
 	private ResultActions sendRequest(String email, String dni, String nombre, String apellidos, String contraseña,
 			String rcontraseña, String activo, String tipo,String ciudad) throws Exception, UnsupportedEncodingException {
 		JSONObject jsonUser = new JSONObject()

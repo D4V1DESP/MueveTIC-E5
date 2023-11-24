@@ -128,6 +128,23 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+    		<version>2.5.6</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp/okhttp -->
+		<dependency>
+    		<groupId>com.squareup.okhttp3</groupId>
+    		<artifactId>okhttp</artifactId>
+   			<version>4.9.1</version>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<plugins>

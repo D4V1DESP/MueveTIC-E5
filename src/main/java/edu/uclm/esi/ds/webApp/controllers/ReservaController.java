@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +31,7 @@ public class ReservaController {
 	@Autowired 
 	private VehicleService vehicleService;
 	
+	
 	@PostMapping ("/usersAdd")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
@@ -49,7 +49,7 @@ public class ReservaController {
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
 		
-		//metodo para cambiar estado a disponible 
+	
 		
 		try {
 			reservaService.CancelUserReserve(info);
@@ -78,4 +78,16 @@ public class ReservaController {
 	}
 
 
+	
+	@PostMapping("/AddReview")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
+	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
+		//metodo para cambiar estado a disponible y resta bateria
+		try {
+			reservaService.AddValoracion(info);
+		}catch(Exception e) {
+			throw new  ResponseStatusException(HttpStatus.CONFLICT);
+		}
+		return true;
+	}
 }
