@@ -139,12 +139,12 @@ public class ReservaService {
 
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
-		int valorCarga =this.configDAO.findBynombre("BateriaCarga").getValor();
-		String email = info.get("email").toString();
+		int valorCarga =this.configDAO.findBynombre("bateriaRecarga").getValor();
+		String email = info.get("cliente").toString();
 		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
 		String comentario = info.get("comentario").toString();
-		String matricula= info.get("matricula").toString();
+		String matricula= info.get("vehiculo").toString();
 		
 		reservaActiva.setValoracion(valoracion);
 		reservaActiva.setValoracionText(comentario);
@@ -157,7 +157,7 @@ public class ReservaService {
 			Coche coche = this.cocheDAO.findByMatricula(matricula);
 			coche.setBateria(coche.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
 			
-			if(coche.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(coche.getBateria()>=this.configDAO.findBynombre("bateriaRecarga").getValor()) {
 				coche.setEstado("disponible");
 			}
 			this.cocheDAO.save(coche);
@@ -175,7 +175,7 @@ public class ReservaService {
 			Patinete patin = this.patineteDAO.findByMatricula(matricula);
 			patin.setBateria(patin.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
 			
-			if(patin.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(patin.getBateria()>=this.configDAO.findBynombre("bateriaRecarga").getValor()) {
 				patin.setEstado("disponible");
 			}
 			this.patineteDAO.save(patin);
