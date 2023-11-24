@@ -1,10 +1,12 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="TokenUser")
 public class TokenRecover {
-	
+	@Id
+	private String id;
 	protected String email;
 	protected String token;
 	
