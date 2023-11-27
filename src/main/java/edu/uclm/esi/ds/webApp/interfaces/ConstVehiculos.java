@@ -11,5 +11,7 @@ public class ConstVehiculos {
 	public static final String DISPONIBLE = "disponible";
 	public static final String NO_DISPONIBLE = "No Disponible";
 	
+	public static final String BATERIAVIAJE = "bateriaViaje";
+	
 	public static final int RECARGA = 100;
 }

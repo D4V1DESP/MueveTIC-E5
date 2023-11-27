@@ -146,17 +146,17 @@ public class VehicleService extends ConstVehiculos{
 	}
 
 	public List<Vehiculo> listaCochesDisponibles() {
-		Config config = this.configDAO.findBynombre("bateriaViaje");
+		Config config = this.configDAO.findBynombre(BATERIAVIAJE);
         return filtrarPorBateria(this.cocheDAO.findByestado(DISPONIBLE), config);
     }
 
 	public List<Vehiculo> listaMotosDisponibles() {
-		Config config = this.configDAO.findBynombre("bateriaViaje");
+		Config config = this.configDAO.findBynombre(BATERIAVIAJE);
 		return filtrarPorBateria(this.motoDAO.findByestado(DISPONIBLE), config);
 	}
 
 	public List<Vehiculo> listaPatinetesDisponibles() {
-		Config config = this.configDAO.findBynombre("bateriaViaje");
+		Config config = this.configDAO.findBynombre(BATERIAVIAJE);
 		return filtrarPorBateria(this.patineteDAO.findByestado(DISPONIBLE), config);
 	}
 	

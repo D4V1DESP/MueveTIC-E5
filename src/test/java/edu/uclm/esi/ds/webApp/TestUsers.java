@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +51,7 @@ public class TestUsers  {
 		tokenAdmin = testToken.generarTokenAdmin();
 	}
 	
-	@Test 
+	@Test @Order(1) 
 	void testAdduser() throws Exception {
 		// pruebas de registros correctos
 		
@@ -81,14 +81,30 @@ public class TestUsers  {
 		
 		
 	}
-	@Test
+	@Test @Order(2)
 	void RecoverPass() throws Exception {
-		ResultActions result= this.sendRequest( "Manuelfv99@", "Manuelfv99@", "f20ccdefeb66736ee7d47b7eba0168bb488acdd1e78a3a314b76cb8a969043a8357649b6276333d48f37626b8e88749e0996db7fdf1006e6f33d968c841abc63");
-		result.andExpect(status().isOk()).andReturn();
-	
-		
+	    ResultActions result = this.sendRequestRecoverPass("floresmanu99@gmail.com");
+	    result.andExpect(status().isOk()).andReturn();
+
+	    result = this.sendRequestUpdatePass("Manuelfv99@", "Manuelfv99@", "f20ccdefeb66736ee7d47b7eba0168bb488acdd1e78a3a314b76cb8a969043a8357649b6276333d48f37626b8e88749e0996db7fdf1006e6f33d968c841abc63");
+	    result.andExpect(status().isOk()).andReturn();
 	}
-	private ResultActions sendRequest(String contrasena, String rcontrasena, String email) throws Exception {
+
+	
+	private ResultActions sendRequestRecoverPass(String email) throws Exception{
+		JSONObject jsonUser = new JSONObject()
+				.put("email", email);
+		
+		RequestBuilder request = MockMvcRequestBuilders.
+				post("/users/recover").
+				contentType("application/json").
+				content(jsonUser.toString());
+
+		ResultActions resultActions =this.server.perform(request);
+		return resultActions;
+	}
+	
+	private ResultActions sendRequestUpdatePass(String contrasena, String rcontrasena, String email) throws Exception {
 		JSONObject jsonUser = new JSONObject()
 				.put("email", email)
 				.put("contrasena", contrasena)

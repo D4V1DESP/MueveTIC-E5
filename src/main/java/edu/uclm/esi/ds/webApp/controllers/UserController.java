@@ -225,7 +225,11 @@ public class UserController extends ConstUsers{
 	@PostMapping("/updatePass")
 	public boolean updatePass(@RequestBody Map<String,Object> info) {
 		try {
-			this.userService.updatePassword(info);
+				if(info.get("contrasena").equals(info.get("repetirContrasena"))) {
+					this.userService.updatePassword(info);
+				}else {
+					throw new ResponseStatusException(HttpStatus.CONFLICT);
+				}
 			
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);

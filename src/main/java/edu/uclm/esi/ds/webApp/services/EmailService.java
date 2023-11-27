@@ -17,6 +17,9 @@ import okhttp3.Response;
 @Service
 public class EmailService {
 
+	public static final String EMAIL = "email";
+	public static final String JSON = "application/json";
+	
 	/*public void sendConfirmationEmail(User user, Token token) {
 		String htmlContent = "<html><head></head><body><p>Por favor confirma tu cuenta</p><p>Haz click aquí <a href='http://localhost/users/confirm/" + token.getId() + "'>para confirmar la creación de tu cuenta</a></p></body></html>";
 		
@@ -59,20 +62,19 @@ public class EmailService {
 	}*/
 
 	public void sendRecover(Map<String, Object> info) {
-		String email = info.get("email").toString();
+		String email = info.get(EMAIL).toString();
 		String token = org.apache.commons.codec.digest.DigestUtils.sha512Hex(email);
-		
 		String htmlContent = "<html><head></head><body><p>Por favor usa el enlace de a continuacion para recuperar tu cuenta</p><p>Haz click aquí <a href='http://localhost:4200/modificar-contrasena/" + token + "'> para confirmar la recuperacion de tu cuenta</a></p></body></html>";
 		OkHttpClient client = new OkHttpClient().newBuilder()
 				  .build();
-				MediaType mediaType = MediaType.parse("application/json");
+				MediaType mediaType = MediaType.parse(JSON);
 				
 				JSONObject jsoSender = new JSONObject().
 					put("name", "MueveTIC").
-					put("email", "manuel.flores1@alu.uclm.es");
+					put(EMAIL, "manuel.flores1@alu.uclm.es");
 				
 				JSONObject jsoTo = new JSONObject().	
-					put("email", email);
+					put(EMAIL, email);
 				
 				JSONArray jsaTo = new JSONArray().
 					put(jsoTo);
@@ -89,14 +91,14 @@ public class EmailService {
 				Request request = new Request.Builder()
 				  .url("https://api.brevo.com/v3/smtp/email")
 				  .post(body)
-				  .addHeader("accept", "application/json")
+				  .addHeader("accept", JSON)
 				  .addHeader("api-key", "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") //Introducir la api-key de Brevo
-				  .addHeader("content-type", "application/json")
+				  .addHeader("content-type", JSON)
 				  .build();
 				try {
 					Response response = client.newCall(request).execute();
 				} catch (IOException e) {
-					e.printStackTrace();
+					
 				}
 		
 	}

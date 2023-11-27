@@ -163,7 +163,7 @@ public class ReservaService extends ConstReservas{
 			coche.setBateria(coche.getBateria() - bateriaViaje);
 			
 			if(coche.getBateria()>=valorCarga) {
-				coche.setEstado("disponible");
+				coche.setEstado(DISPONIBLE);
 			}
 			this.cocheDAO.save(coche);
 		}
@@ -172,7 +172,7 @@ public class ReservaService extends ConstReservas{
 			moto.setBateria(moto.getBateria() - bateriaViaje);
 			
 			if(moto.getBateria()>=valorCarga) {
-				moto.setEstado("disponible");
+				moto.setEstado(DISPONIBLE);
 			}
 			this.motoDAO.save(moto);
 			
@@ -181,7 +181,7 @@ public class ReservaService extends ConstReservas{
 			patin.setBateria(patin.getBateria() - bateriaViaje);
 			
 			if(patin.getBateria()>=valorCarga) {
-				patin.setEstado("disponible");
+				patin.setEstado(DISPONIBLE);
 			}
 			this.patineteDAO.save(patin);
 		}

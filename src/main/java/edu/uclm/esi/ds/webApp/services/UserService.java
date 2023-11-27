@@ -293,8 +293,7 @@ public class UserService extends ConstUsers{
 
 	public void updatePassword(Map<String, Object> info) {
 		String mailEncripted = info.get(EMAIL).toString();
-		String password = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
-		String rpassword = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("repetirContrasena").toString());
+		String password = passwordEncoder.encode(info.get("contrasena").toString());
 		TokenRecover token = this.tokenRecoverDAO.findBytoken(mailEncripted);
 		String email = token.getEmail();
 		this.tokenRecoverDAO.delete(token);
@@ -302,21 +301,21 @@ public class UserService extends ConstUsers{
 		if (correo.getTipo().equals(ADMIN)) {
 			Admin admin = this.admindao.findByEmail(email);
 			admin.setContrasena(password);
-			admin.setRepetirContrasena(rpassword);
+			admin.setRepetirContrasena(password);
 			this.admindao.save(admin);
 			
 		}
 		else if (correo.getTipo().equals(MANTENIMIENTO)) {
 			Mantenimiento mantenimiento = this.mandao.findByEmail(email);
 			mantenimiento.setContrasena(password);
-			mantenimiento.setRepetirContrasena(rpassword);
+			mantenimiento.setRepetirContrasena(password);
 			this.mandao.save(mantenimiento);
 			
 		}
 		else if (correo.getTipo().equals(CLIENTE)) {
 			Cliente cliente = this.clientedao.findByEmail(email);
 			cliente.setContrasena(password);
-			cliente.setRepetirContrasena(rpassword);
+			cliente.setRepetirContrasena(password);
 			this.clientedao.save(cliente);
 			
 		}
