@@ -118,6 +118,9 @@ public class ReservaService extends ConstReservas{
 
 		
 	}
+	public List<ReservaCliente> listaReservasPorEmail(String email) {
+		return reservaClienteDAO.findListByEmail(email);
+	}
 
 	public ReservaCliente obtenerReservaActivaPorEmail(String email) {
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
@@ -132,10 +135,6 @@ public class ReservaService extends ConstReservas{
 	    
 	    // Devolver null si no se encuentra ninguna reserva en estado 'reservado'
 	    return null;
-	}
-	
-	public List<ReservaCliente> listaReservasPorEmail(String email) {
-		return reservaClienteDAO.findListByEmail(email);
 	}
 	
 	public List<ReservaCliente> listaReservas() {
