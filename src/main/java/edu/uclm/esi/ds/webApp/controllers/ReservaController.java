@@ -72,6 +72,18 @@ public class ReservaController {
 	    }
 	}
 	
+	
+	@GetMapping("/reservasCliente/{email}")
+	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
+	public ResponseEntity<List<ReservaCliente>> obtenerReservasPorEmail(@PathVariable String email) {
+	    List<ReservaCliente> reserva = reservaService.listaReservasPorEmail(email);
+	    if (reserva != null) {
+	        return new ResponseEntity<>(reserva, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	}
+	
 	@GetMapping("/listaReservas")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public List<ReservaCliente> obtenerReserva() {

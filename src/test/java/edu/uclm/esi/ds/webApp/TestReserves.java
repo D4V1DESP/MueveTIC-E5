@@ -147,8 +147,8 @@ public class TestReserves {
 	}
 	
 	private JSONObject crearValoracion(JSONObject jsoValoracion, String email, String matricula) throws Exception{
-		jsoValoracion.put("email", email);
-		jsoValoracion.put("matricula", matricula);
+		jsoValoracion.put("cliente", email);
+		jsoValoracion.put("vehiculo", matricula);
 		jsoValoracion.put("estrellas", 5);
 		jsoValoracion.put("comentario", "Me ha encantado MueveTIC");
 		

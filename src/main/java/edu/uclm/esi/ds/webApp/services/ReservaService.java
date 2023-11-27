@@ -133,6 +133,11 @@ public class ReservaService extends ConstReservas{
 	    // Devolver null si no se encuentra ninguna reserva en estado 'reservado'
 	    return null;
 	}
+	
+	public List<ReservaCliente> listaReservasPorEmail(String email) {
+		return reservaClienteDAO.findListByEmail(email);
+	}
+	
 	public List<ReservaCliente> listaReservas() {
 		return reservaClienteDAO.findAll();
 	}
@@ -140,11 +145,11 @@ public class ReservaService extends ConstReservas{
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
 		int valorCarga =this.configDAO.findBynombre("bateriaRecarga").getValor();
-		String email = info.get("email").toString();
+		String email = info.get("cliente").toString();
 		ReservaCliente reservaActiva = obtenerReservaActivaPorEmail(email);
 		int valoracion = Integer.parseInt(info.get("estrellas").toString());
 		String comentario = info.get("comentario").toString();
-		String matricula= info.get("matricula").toString();
+		String matricula= info.get("vehiculo").toString();
 		
 		reservaActiva.setValoracion(valoracion);
 		reservaActiva.setValoracionText(comentario);
