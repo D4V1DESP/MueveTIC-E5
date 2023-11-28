@@ -2,7 +2,11 @@ package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+* ESTA CLASE ES LA ENTIDAD RESERVASCLIENTE
+* TIIENE ASOCIADO UN EMAIL DE UN USUARIO EXISTENTE Y UN VEHICULO EXISTENTE,
+* CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+*/
 @Document(collection= "Reservas")
 public class ReservaCliente {
 	

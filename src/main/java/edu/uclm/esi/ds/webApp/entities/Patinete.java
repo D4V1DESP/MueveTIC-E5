@@ -1,7 +1,10 @@
 package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+ * ESTA CLASE ES LA ENTIDAD PATINETE,
+ * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+ */
 @Document(collection = "Patinete")
 public class Patinete extends Vehiculo{
 

@@ -1,7 +1,10 @@
 package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+ * ESTA CLASE ES LA ENTIDAD MANTENIMIENTO, HEREDA DE LA CLASE USUARIO Y AÑADE LOS ATRIBUTOS UNICOS DE UN PERSONAL DE MANTENIMIENTO
+ * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+ */
 @Document(collection= "Mantenimiento")
 public class Mantenimiento extends Usuario{
 	

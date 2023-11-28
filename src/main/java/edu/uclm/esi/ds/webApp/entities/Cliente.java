@@ -2,6 +2,10 @@ package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * ESTA CLASE ES LA ENTIDAD CLIENTE, HEREDA DE LA CLASE USUARIO Y AÑADE LOS ATRIBUTOS UNICOS DE UN CLIENTE
+ * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+ */
 @Document(collection= "Cliente")
 public class Cliente extends Usuario{
 	

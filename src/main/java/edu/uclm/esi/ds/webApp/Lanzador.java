@@ -5,7 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-
+/*
+ * Clase lanzador que inicia la apliacion 
+ */
 @SpringBootApplication 
 @ServletComponentScan
 @EnableMongoRepositories

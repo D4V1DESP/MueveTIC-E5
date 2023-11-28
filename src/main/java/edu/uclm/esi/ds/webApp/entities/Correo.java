@@ -3,7 +3,11 @@ package edu.uclm.esi.ds.webApp.entities;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+ * ESTA CLASE ES LA ENTIDAD CORREO,
+ * ES UNA TABLA AUXILIAR QUE NOS AYUDA A CONTROLAR QUE NO HAYA UN MISMO CORREO REGISTRADO DOS VECES CON DOS ROLES DISTINTOS 
+ * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+ */
 @Document(collection= "Correos")
 public class Correo {
 	

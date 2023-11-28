@@ -4,7 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 
-
+/**
+ * ESTA CLASE ES LA ENTIDAD USUARIO,
+ * CLASE BASE DE LA QUE HEREDAN CLIENTE, ADMINISTRADOR Y MANTENIMIENTO.
+ * CONTIENE TODOS LOS ATRIBUTOS COMUNES A ELLOS.
+ * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
+ */
 
 
 public class Usuario {
