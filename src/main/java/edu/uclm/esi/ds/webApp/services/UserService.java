@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ import edu.uclm.esi.ds.webApp.entities.Usuario;
 import edu.uclm.esi.ds.webApp.interfaces.ConstUsers;
 import edu.uclm.esi.ds.webApp.security.Role;
 import edu.uclm.esi.ds.webApp.security.config.JwtService;
+import edu.uclm.esi.ds.webApp.security.tfa.AESEncryption;
 import edu.uclm.esi.ds.webApp.security.tfa.TwoFactorAuthenticationService;
 import edu.uclm.esi.ds.webApp.entities.TokenRecover;
 
@@ -63,8 +65,11 @@ public class UserService extends ConstUsers{
 	private BCryptPasswordEncoder passwordChecker;
 	@Autowired
 	private TwoFactorAuthenticationService tfaService;
+	
+	@Value("${application.security.secret-key}")
+	private String SECRET_KEY;
 
-	public String Alta(Map<String, Object> info) {
+	public String Alta(Map<String, Object> info) throws Exception {
 		String email = info.get(EMAIL).toString();
 		String nombre = info.get(NOMBRE).toString();
 		String apellidos = info.get(APELLIDOS).toString();
@@ -107,9 +112,10 @@ public class UserService extends ConstUsers{
 			this.clientedao.save(c);
 			
 			if((boolean) info.get("mFaEnabled")) {
-				c.setSecret(tfaService.generateNewSecret());
+				c.setSecret(AESEncryption.encrypt(tfaService.generateNewSecret(), SECRET_KEY));
 				c.setmFaEnabled(true);
-				return tfaService.generateQrCodeImageUri(c.getSecret());
+				this.clientedao.save(c);
+				return tfaService.generateQrCodeImageUri(AESEncryption.decrypt(c.getSecret(), SECRET_KEY));
 			}
 		}
 		
@@ -184,11 +190,10 @@ public class UserService extends ConstUsers{
 		return jwtService.generateToken(usuario);
 	}
 	
-	public String verifyCode(Map <String, Object> info) {
+	public String verifyCode(Map <String, Object> info) throws Exception {
 		Cliente cliente = this.clientedao.findByEmail(info.get(EMAIL).toString());
 		
-		if(tfaService.isOtpNotValid(cliente.getSecret(), info.get("codigo").toString())) {
-			 
+		if(tfaService.isOtpNotValid(AESEncryption.decrypt(cliente.getSecret(), SECRET_KEY), info.get("codigo").toString())) {
 			throw new BadCredentialsException("Codigo no correcto");
 		} else {
 			return jwtService.generateToken(cliente);

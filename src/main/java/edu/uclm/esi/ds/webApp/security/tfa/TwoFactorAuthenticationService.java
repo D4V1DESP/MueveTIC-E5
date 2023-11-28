@@ -28,7 +28,7 @@ public class TwoFactorAuthenticationService {
 				.label("MueveTIC 2FA")
 				.secret(secret)
 				.issuer("MueveTIC")
-				.algorithm(HashingAlgorithm.SHA512)
+				.algorithm(HashingAlgorithm.SHA1)
 				.digits(6)
 				.period(30)
 				.build();

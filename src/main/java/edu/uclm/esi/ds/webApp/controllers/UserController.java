@@ -153,7 +153,7 @@ public class UserController extends ConstUsers{
 	}
 	
 	@PostMapping("/verify")
-	public String verifyCode(@RequestBody Map<String, Object> info) {
+	public String verifyCode(@RequestBody Map<String, Object> info) throws Exception {
 		return userService.verifyCode(info);
 	}
 	
