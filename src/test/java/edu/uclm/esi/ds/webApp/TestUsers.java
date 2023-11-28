@@ -24,6 +24,7 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
+import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -43,6 +44,8 @@ public class TestUsers  {
 	private CorreoDAO correoDAO;
 	@Autowired
 	private JWToken testToken;
+	@Autowired
+	private UsuarioDAO usuarioDAO;
 	
 	private String tokenAdmin;	
 	
@@ -61,11 +64,14 @@ public class TestUsers  {
 		this.correoDAO.deleteByemail("floresmanu99@gmail.com");
 		this.correoDAO.deleteByemail("danielMachuca@gmial.com");
 		this.correoDAO.deleteByemail("pabloGarcia@gmial.com");
+		this.usuarioDAO.deleteByemail("floresmanu99@gmail.com");
+		this.usuarioDAO.deleteByemail("danielMachuca@gmial.com");
+		this.usuarioDAO.deleteByemail("pabloGarcia@gmial.com");
 		
 		ResultActions result= this.sendRequest("floresmanu99@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
 		result.andExpect(status().isOk()).andReturn();
 
-		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999");
+		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999", true);
 		result.andExpect(status().isOk()).andReturn();
 		
 		result= this.sendRequest("pabloGarcia@gmial.com","05939081Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "mantenimiento","puertollano", "5");
@@ -136,7 +142,6 @@ public class TestUsers  {
 		
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/users/AddUser")
-				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsonUser.toString());
 		
@@ -145,7 +150,7 @@ public class TestUsers  {
 		return resultActions;
 	}
 	private ResultActions sendRequest(String email, String dni, String nombre, String apellidos, String contraseña,
-			String rcontraseña, String activo, String tipo,  String telefono, String carnet, String fecha)throws Exception, UnsupportedEncodingException {
+			String rcontraseña, String activo, String tipo,  String telefono, String carnet, String fecha, boolean mFaEnabled)throws Exception, UnsupportedEncodingException {
 		JSONObject jsonUser = new JSONObject()
 				.put("email", email)
 				.put("nombre", nombre)
@@ -157,12 +162,12 @@ public class TestUsers  {
 				.put("activo", activo)
 				.put("telefono", telefono)
 				.put("carnet", carnet)
-				.put("fecha", fecha);
+				.put("fecha", fecha)
+				.put("mFaEnabled", mFaEnabled);
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/users/AddUser")
-				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsonUser.toString());
 		
@@ -188,7 +193,6 @@ public class TestUsers  {
 		
 		RequestBuilder request = MockMvcRequestBuilders.
 				post("/users/AddUser")
-				.header("Authorization", "Bearer " + tokenAdmin)
 				.contentType("application/json")
 				.content(jsonUser.toString());
 		
