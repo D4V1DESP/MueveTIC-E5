@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import edu.uclm.esi.ds.webApp.entities.Coche;
+import edu.uclm.esi.ds.webApp.entities.Vehiculo;
 
 public interface CocheDAO extends MongoRepository<Coche, String>{
 
 	void deleteBymatricula(String string);
-	List<Coche> findByEstado(String estado);
+	
+	List<Vehiculo> findByestado(String estado);
+	
 	Coche findByMatricula(String matricula);
 }
