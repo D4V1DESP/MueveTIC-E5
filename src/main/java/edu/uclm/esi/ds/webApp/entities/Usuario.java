@@ -21,6 +21,7 @@ import edu.uclm.esi.ds.webApp.security.Role;
 public class Usuario implements UserDetails{
 	@Id
     private String id;
+	
 	@Indexed(unique= true)
 	protected String email;
 	protected String dni;
@@ -84,7 +85,8 @@ public class Usuario implements UserDetails{
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
+
+
 	public Usuario(String email, String dni, String nombre, String apellidos, String contrasena,
 			String repetirContrasena, boolean activo,String tipo, Role role) {
 		super();

@@ -31,7 +31,8 @@ public class SecurityConfiguration {
             "/users/login",
             "/users/authenticate",
             "/users/recover",
-            "/users/updatePass"};
+            "/users/updatePass",
+            "/users/verify"};
 		
 	@Bean
 	public SecurityFilterChain securityFilterChain(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, HttpSecurity http) throws Exception{
