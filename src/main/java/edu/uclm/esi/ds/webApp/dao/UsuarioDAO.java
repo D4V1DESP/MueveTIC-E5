@@ -7,4 +7,6 @@ import edu.uclm.esi.ds.webApp.entities.Usuario;
 public interface UsuarioDAO extends MongoRepository<Usuario, String> {
 
 	Usuario findByEmail(String email);
+
+	void deleteByemail(String string);
 }

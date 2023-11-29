@@ -48,7 +48,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/AddUser")
-	public boolean anadirUsuario(@RequestBody Map<String, Object> info) {
+	public String anadirUsuario(@RequestBody Map<String, Object> info) {
 		String contrasena = info.get("contrasena").toString();
 		String rcontrasena = info.get("repetirContrasena").toString();
 		if (contrasena.length()< 8 && !contrasena.equals(rcontrasena)) {
@@ -56,12 +56,11 @@ public class UserController {
 		}
 		else {
 			try {
-				userService.Alta(info);
+				return userService.Alta(info);
 			}catch(Exception e) {
 				throw new ResponseStatusException (HttpStatus.CONFLICT);
 			} 
 		}
-		return true;
 	}
 	
 	@PutMapping("/administradores/{email}")
@@ -137,6 +136,11 @@ public class UserController {
 			
 		}
 		return u;
+	}
+	
+	@PostMapping("/verify")
+	public String verifyCode(@RequestBody Map<String, Object> info) throws Exception {
+		return userService.verifyCode(info);
 	}
 	
 	@GetMapping("/administradores/{email}")
