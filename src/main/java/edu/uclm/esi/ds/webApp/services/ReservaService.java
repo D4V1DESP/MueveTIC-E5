@@ -140,6 +140,9 @@ public class ReservaService extends ConstReservas {
 	public List<ReservaCliente> listaReservas() {
 		return reservaClienteDAO.findAll();
 	}
+	public List<ReservaMantenimiento> listaReservasMantenimiento(String email) {
+		return reservaMantenimientoDAO.findListByEmail(email);
+	}
 
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje = this.configDAO.findBynombre("bateriaViaje").getValor();

@@ -8,9 +8,9 @@ import edu.uclm.esi.ds.webApp.entities.ReservaMantenimiento;
 
 public interface ReservaMantenimientoDAO extends MongoRepository<ReservaMantenimiento, String> {
 	List<ReservaMantenimiento> findListByEmail(String email);
-	ReservaMantenimiento findByEmail(String email);
 	
 	void deleteByEmail(String email);
-	
+
 	ReservaMantenimiento findByMatricula(String matricula);
+
 }

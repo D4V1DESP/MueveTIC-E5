@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
+import edu.uclm.esi.ds.webApp.entities.ReservaMantenimiento;
 import edu.uclm.esi.ds.webApp.services.ReservaService;
 import edu.uclm.esi.ds.webApp.services.VehicleService;
 
@@ -84,6 +85,17 @@ public class ReservaController {
 	    }
 	}
 	
+	@GetMapping("/reservasMantenimiento/{email}")
+	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
+	public ResponseEntity<List<ReservaMantenimiento>> obtenerReservasMantenimiento(@PathVariable String email) {
+		List<ReservaMantenimiento> reserva = reservaService.listaReservasMantenimiento(email);
+		if (reserva != null) {
+	        return new ResponseEntity<>(reserva, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
+	}
+	
 	@GetMapping("/listaReservas")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public List<ReservaCliente> obtenerReserva() {
@@ -127,6 +139,7 @@ public class ReservaController {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
 	}
+	
 	
 	@PostMapping("/mantenimientoFinalizar")
 	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
