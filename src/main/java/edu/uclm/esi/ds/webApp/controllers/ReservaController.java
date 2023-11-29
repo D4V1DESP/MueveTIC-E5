@@ -89,8 +89,6 @@ public class ReservaController {
 	public List<ReservaCliente> obtenerReserva() {
 	    return reservaService.listaReservas();
 	}
-
-
 	
 	@PostMapping("/AddReview")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
