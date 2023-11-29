@@ -58,20 +58,32 @@ public class TestUsers  {
 	void testAdduser() throws Exception {
 		// pruebas de registros correctos
 		
-		this.adminDAO.deleteByemail("floresmanu99@gmail.com");
+		this.adminDAO.deleteByemail("adminCreado@gmail.com");
 		this.mantenimientoDAO.deleteByemail("pabloGarcia@gmial.com");
 		this.clienteDAO.deleteByemail("danielMachuca@gmial.com");
+		this.clienteDAO.deleteByemail("floresmanu99@gmail.com");
+		this.clienteDAO.deleteByemail("NuevoCLienteAutenticado@gmail.com");
+		this.correoDAO.deleteByemail("adminCreado@gmail.com");
 		this.correoDAO.deleteByemail("floresmanu99@gmail.com");
 		this.correoDAO.deleteByemail("danielMachuca@gmial.com");
+		this.correoDAO.deleteByemail("NuevoCLienteAutenticado@gmail.com");
 		this.correoDAO.deleteByemail("pabloGarcia@gmial.com");
+		this.usuarioDAO.deleteByemail("adminCreado@gmail.com");
 		this.usuarioDAO.deleteByemail("floresmanu99@gmail.com");
 		this.usuarioDAO.deleteByemail("danielMachuca@gmial.com");
 		this.usuarioDAO.deleteByemail("pabloGarcia@gmial.com");
+		this.usuarioDAO.deleteByemail("NuevoCLienteAutenticado@gmail.com");
 		
-		ResultActions result= this.sendRequest("floresmanu99@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
+		ResultActions result= this.sendRequest("adminCreado@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
 		result.andExpect(status().isOk()).andReturn();
 
-		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999", false);
+		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999", true);
+		result.andExpect(status().isOk()).andReturn();
+		
+		result= this.sendRequest("floresmanu99@gmail.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999", true);
+		result.andExpect(status().isOk()).andReturn();
+		
+		result= this.sendRequest("NuevoCLienteAutenticado@gmail.com","05939981Q", "manuel", "flores villajos", "TuContrasena","TuContrasena","true", "cliente", "666697498", "c", "19/10/1999", true);
 		result.andExpect(status().isOk()).andReturn();
 		
 		result= this.sendRequest("pabloGarcia@gmial.com","05939081Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "mantenimiento","puertollano", "5");

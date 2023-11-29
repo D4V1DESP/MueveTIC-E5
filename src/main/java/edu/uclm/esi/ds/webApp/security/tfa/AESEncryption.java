@@ -16,7 +16,7 @@ import java.util.Base64;
 public class AESEncryption {
 
     public static String encrypt(String data, String secretKey) throws Exception {
-        Cipher cipher = Cipher.getInstance("AES/GCM/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), secretKey.getBytes(), 65536, 256);
         SecretKey tmp = factory.generateSecret(spec);
@@ -34,7 +34,7 @@ public class AESEncryption {
         byte[] iv = Base64.getDecoder().decode(parts[0]);
         byte[] encrypted = Base64.getDecoder().decode(parts[1]);
 
-        Cipher cipher = Cipher.getInstance("AES/GCM/PKCS5Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         KeySpec spec = new PBEKeySpec(secretKey.toCharArray(), secretKey.getBytes(), 65536, 256);
         SecretKey tmp = factory.generateSecret(spec);
