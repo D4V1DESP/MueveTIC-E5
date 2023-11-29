@@ -327,6 +327,10 @@ public class UserService extends ConstUsers{
 		TokenRecover token = this.tokenRecoverDAO.findBytoken(mailEncripted);
 		String email = token.getEmail();
 		this.tokenRecoverDAO.delete(token);
+		Usuario usuario = this.usuarioDAO.findByEmail(email);
+		usuario.setContrasena(password);
+		usuario.setRepetirContrasena(password);
+		this.usuarioDAO.save(usuario);
 		Correo correo = this.correodao.findByEmail(email);
 		if (correo.getTipo().equals(ADMIN)) {
 			Admin admin = this.admindao.findByEmail(email);
