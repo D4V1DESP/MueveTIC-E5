@@ -236,7 +236,7 @@ public class ReservaService extends ConstReservas {
 		}
 		boolean tieneReservaEnEstadoReservado = true;
 
-		if (reservas.size() > this.configDAO.findBynombre("vehiculosMantenimiento").getValor()) {
+		if (reservas.size() >= this.configDAO.findBynombre("vehiculosMantenimiento").getValor()) {
 			tieneReservaEnEstadoReservado = false;
 		}
 
