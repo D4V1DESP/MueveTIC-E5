@@ -103,4 +103,39 @@ public class ReservaController {
 		}
 		return true;
 	}
+	
+	@PostMapping ("/mantenimientoAdd")
+	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
+	public boolean AddMantenimientoReserve(@RequestBody Map<String, Object> info) {
+		
+		
+		try {
+			reservaService.addReservaMantenimiento(info);
+			vehicleService.reservarVehiculo(info);
+		}catch(Exception e) {
+			throw new ResponseStatusException (HttpStatus.CONFLICT);
+		}
+		return true;
+	}
+	
+	@PostMapping("/mantenimientoCancel")
+	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
+	public void cancelarMantenimiento(@RequestBody Map<String, Object> info) {
+		try {
+			reservaService.cancelMantenimiento(info);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+	}
+	
+	@PostMapping("/mantenimientoFinalizar")
+	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
+	public void finalizarMantenimiento(@RequestBody Map<String, Object> info) {
+		try {
+			reservaService.finalizarMantenimiento(info);
+		}catch(Exception e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT);
+		}
+	}
+	
 }

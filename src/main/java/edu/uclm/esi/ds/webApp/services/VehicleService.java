@@ -102,13 +102,13 @@ public class VehicleService extends ConstVehiculos{
 		List <Vehiculo> listaVehiculos = null;
 		
 		if (tipo.equals(COCHE)) {
-			 listaVehiculos = this.cocheDAO.findByestado(DISPONIBLE);
+			 listaVehiculos = this.cocheDAO.findByestado(DESCARGADO);
 		
 		}else if (tipo.equals(MOTO)) {
-			listaVehiculos = this.motoDAO.findByestado(DISPONIBLE);
+			listaVehiculos = this.motoDAO.findByestado(DESCARGADO);
 		
 		}else if (tipo.equals(PATINETE)) {
-			listaVehiculos = this.patineteDAO.findByestado(DISPONIBLE);
+			listaVehiculos = this.patineteDAO.findByestado(DESCARGADO);
 		}
 		
 		if(listaVehiculos == null) {
@@ -131,16 +131,19 @@ public class VehicleService extends ConstVehiculos{
 		if(tipo.equals(COCHE)) {
 			Coche coche = this.cocheDAO.findByMatricula(matricula);
 			coche.setBateria(RECARGA);
+			coche.setEstado(DISPONIBLE);
 			this.cocheDAO.save(coche);
 			
 		}else if (tipo.equals(MOTO)) {
 			Moto moto = this.motoDAO.findByMatricula(matricula);
 			moto.setBateria(RECARGA);
+			moto.setEstado(DISPONIBLE);
 			this.motoDAO.save(moto);
 		
 		}else if (tipo.equals(PATINETE)) {
 			Patinete patinete = this.patineteDAO.findByMatricula(matricula);
 			patinete.setBateria(RECARGA);
+			patinete.setEstado(DISPONIBLE);
 			this.patineteDAO.save(patinete);
 		}
 	}
