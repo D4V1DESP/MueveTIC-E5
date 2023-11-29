@@ -63,7 +63,7 @@ public class UserController extends ConstUsers{
 		}
 		else {
 			try {
-				return userService.Alta(info);
+				 return userService.Alta(info);
 			}catch(Exception e) {
 				throw new ResponseStatusException (HttpStatus.CONFLICT);
 			} 

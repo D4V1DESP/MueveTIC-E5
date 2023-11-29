@@ -74,10 +74,10 @@ public class UserService extends ConstUsers{
 	 * DESCRIPCION: METODO GENERICO QUE AÑADE USUARIOS DE CUALQUIER TIPO AL SISTEMA. CREA INSTANCIAS DE LA ENTIDAD CORREOS PARA 
 	 * CONTROLAR QUE UN MISMO MAIL NO SE REPITA CON ROLES DISTINTOS EN EL SISTEMA.
 	 */
-	public void Alta(Map<String, Object> info) {
-		String email = info.get(emailS).toString();
-		String nombre = info.get(nombreS).toString();
-		String apellidos = info.get(apellidosS).toString();
+	public String Alta(Map<String, Object> info) throws Exception {
+		String email = info.get(EMAIL).toString();
+		String nombre = info.get(NOMBRE).toString();
+		String apellidos = info.get(APELLIDOS).toString();
 		String dni = info.get("dni").toString();
 		String contrasena = info.get(CONTRASENA).toString();
 		String repetircontrasena = info.get("repetirContrasena").toString();

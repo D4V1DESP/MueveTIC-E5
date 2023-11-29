@@ -25,6 +25,8 @@ import edu.uclm.esi.ds.webApp.entities.Patinete;
 import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
 import edu.uclm.esi.ds.webApp.entities.Vehiculo;
 import edu.uclm.esi.ds.webApp.interfaces.ConstReservas;
+import edu.uclm.esi.ds.webApp.interfaces.ConstVehiculos;
+import edu.uclm.esi.ds.webApp.interfaces.ConstUsers;
 
 @Service
 public class ReservaService extends ConstReservas{
@@ -40,9 +42,11 @@ public class ReservaService extends ConstReservas{
 	@Autowired
 	private PatineteDAO patineteDAO;
 	@Autowired 
-	private CorreoDAO correoDAO;
+	private CorreoDAO correoDAO;s
 	@Autowired
 	private ConfigDAO configDAO;
+	@Autowired 
+	private ReservaMantenimientoDAO reservaMantenimientoDAO;
 	
 	/*
 	 * METODO: ADDRESERVACLIENTE
@@ -181,6 +185,7 @@ public class ReservaService extends ConstReservas{
 			if(coche.getBateria()>=valorCarga) {
 				coche.setEstado(DISPONIBLE);
 			}
+			
 			this.cocheDAO.save(coche);
 		}
 		else if (m.getTipo().equals("Moto")) {
@@ -236,6 +241,60 @@ public class ReservaService extends ConstReservas{
 		}
 		
 		return checked;
+	}
+
+
+	public void cancelMantenimiento(Map<String, Object> info) {
+		String email = info.get("email").toString();
+		String vehiculo = info.get("vehiculo").toString();
+		List<ReservaMantenimiento> lista =this.reservaMantenimientoDAO.findByEmail(email);
+		ReservaMantenimiento reserva = null; 
+		
+		for (ReservaMantenimienro reserve :  lista) {
+			if (reserve.getVehiculo.equals(vehiculo)) {
+				reserva = reserve;
+			}
+		}
+		this.reservaMantenimientoDAO.delete(reserva);
+		
+		
+	}
+
+
+	public void finalizarMantenimiento(Map<String, Object> info) {
+		String email = info.get("email").toString();
+		String vehiculo = info.get("vehiculo").toString();
+		List<ReservaMantenimiento> lista =this.reservaMantenimientoDAO.findByEmail(email);
+		ReservaMantenimiento reserva = null; 
+		
+		for (ReservaMantenimienro reserve :  lista) {
+			if (reserve.getVehiculo.equals(vehiculo)) {
+				reserva = reserve;
+			}
+		}
+		Matricula matricula = this.matriculaDAO.findByMatricula(vehiculo);
+		if (matricula.getTipo().equals("coche")) {
+			Coche coche = this.cocheDAO.findByMatricula(vehiculo);
+			coche.setBateria(100);
+			coche.setEstado(DISPONIBLE);
+			this.cocheDAO.save(coche);
+		}
+		else if (matricula.getTipo().equals("moto")) {
+			Moto moto = this.motoDAO.findByMatricula(vehiculo);
+			moto.setBateria(100);
+			moto.setEstado(DISPONIBLE);
+			this.motoDAO.save(moto);
+		}
+		else if (matricula.getTipo().equals("patinete")) {
+			Patinete patin = this.patineteDAO.findByMatricula(vehiculo);
+			patin.setEstado(DISPONIBLE);
+			patin.setBateria(100);
+			this.patineteDAO.save(patin);
+			
+		}
+		
+		this.reservaMantenimientoDAO.delete(reserva);
+		
 	}
 	
 }
