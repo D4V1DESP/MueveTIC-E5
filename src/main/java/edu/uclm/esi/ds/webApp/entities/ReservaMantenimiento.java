@@ -9,7 +9,7 @@ public class ReservaMantenimiento {
 	@Id 
 	private String id;
 	protected String email;
-	protected String vehiculo;
+	protected String matricula;
 	
 	
 	public String getCliente() {
@@ -18,16 +18,16 @@ public class ReservaMantenimiento {
 	public void setCliente(String cliente) {
 		this.email = cliente;
 	}
-	public String getVehiculo() {
-		return vehiculo;
+
+	public String getMatricula() {
+		return matricula;
 	}
-	public void setVehiculo(String vehiculo) {
-		this.vehiculo = vehiculo;
+	public void setMatricula(String matricula) {
+		this.matricula = matricula;
 	}
-	
-	public ReservaMantenimiento(String email, String vehiculo) {
+	public ReservaMantenimiento(String email, String matricula) {
 		this.email = email;
-		this.vehiculo = vehiculo;
+		this.matricula = matricula;
 		
 	}
 	

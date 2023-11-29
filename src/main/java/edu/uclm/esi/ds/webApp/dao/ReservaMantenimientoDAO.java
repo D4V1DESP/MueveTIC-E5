@@ -12,5 +12,5 @@ public interface ReservaMantenimientoDAO extends MongoRepository<ReservaMantenim
 	
 	void deleteByEmail(String email);
 	
-	ReservaMantenimiento findByVehiculo(String vehiculo);
+	ReservaMantenimiento findByMatricula(String matricula);
 }

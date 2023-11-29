@@ -231,13 +231,13 @@ public class ReservaService extends ConstReservas {
 		if (this.matriculaDAO.findByMatricula(vehiculo) == null) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
-		boolean tieneReservaEnEstadoReservado = false;
+		boolean tieneReservaEnEstadoReservado = true;
 
 		if (reservas.size() > this.configDAO.findBynombre("vehiculosMantenimiento").getValor()) {
-			tieneReservaEnEstadoReservado = true;
+			tieneReservaEnEstadoReservado = false;
 		}
 
-		if (!tieneReservaEnEstadoReservado) {
+		if (tieneReservaEnEstadoReservado) {
 			// No hay reservas en estado "reservado", se puede añadir la nueva reserva
 			Calendar c = Calendar.getInstance();
 			String fecha = Integer.toString(c.get(Calendar.DATE)) + "/" + Integer.toString(c.get(Calendar.MONTH) + 1)
@@ -252,23 +252,23 @@ public class ReservaService extends ConstReservas {
 	}
 
 	public void finalizarMantenimiento(Map<String, Object> info) {
-		String vehiculo = info.get(MATRICULA).toString();
+		String matricula = info.get(MATRICULA).toString();
 
-		ReservaMantenimiento reserva = this.reservaMantenimientoDAO.findByVehiculo(vehiculo);
+		ReservaMantenimiento reserva = this.reservaMantenimientoDAO.findByMatricula(matricula);
 
-		Matricula matricula = this.matriculaDAO.findByMatricula(vehiculo);
-		if (matricula.getTipo().equals(COCHE)) {
-			Coche coche = this.cocheDAO.findByMatricula(vehiculo);
+		Matricula matriculaVehiculo = this.matriculaDAO.findByMatricula(matricula);
+		if (matriculaVehiculo.getTipo().equals(COCHE)) {
+			Coche coche = this.cocheDAO.findByMatricula(matricula);
 			coche.setBateria(100);
 			coche.setEstado(DISPONIBLE);
 			this.cocheDAO.save(coche);
-		} else if (matricula.getTipo().equals("Moto")) {
-			Moto moto = this.motoDAO.findByMatricula(vehiculo);
+		} else if (matriculaVehiculo.getTipo().equals("Moto")) {
+			Moto moto = this.motoDAO.findByMatricula(matricula);
 			moto.setBateria(100);
 			moto.setEstado(DISPONIBLE);
 			this.motoDAO.save(moto);
-		} else if (matricula.getTipo().equals(PATINETE)) {
-			Patinete patinete = this.patineteDAO.findByMatricula(vehiculo);
+		} else if (matriculaVehiculo.getTipo().equals(PATINETE)) {
+			Patinete patinete = this.patineteDAO.findByMatricula(matricula);
 			patinete.setBateria(100);
 			patinete.setEstado(DISPONIBLE);
 			this.patineteDAO.save(patinete);
@@ -277,21 +277,21 @@ public class ReservaService extends ConstReservas {
 	}
 
 	public void cancelMantenimiento(Map<String, Object> info) {
-		String vehiculo = info.get(MATRICULA).toString();
+		String matricula = info.get(MATRICULA).toString();
 
-		ReservaMantenimiento reserva = this.reservaMantenimientoDAO.findByVehiculo(vehiculo);
+		ReservaMantenimiento reserva = this.reservaMantenimientoDAO.findByMatricula(matricula);
 
-		Matricula matricula = this.matriculaDAO.findByMatricula(vehiculo);
-		if (matricula.getTipo().equals(COCHE)) {
-			Coche coche = this.cocheDAO.findByMatricula(vehiculo);
+		Matricula matriculaVehiculo = this.matriculaDAO.findByMatricula(matricula);
+		if (matriculaVehiculo.getTipo().equals(COCHE)) {
+			Coche coche = this.cocheDAO.findByMatricula(matricula);
 			coche.setEstado(DESCARGADO);
 			this.cocheDAO.save(coche);
-		} else if (matricula.getTipo().equals("Moto")) {
-			Moto moto = this.motoDAO.findByMatricula(vehiculo);
+		} else if (matriculaVehiculo.getTipo().equals("Moto")) {
+			Moto moto = this.motoDAO.findByMatricula(matricula);
 			moto.setEstado(DESCARGADO);
 			this.motoDAO.save(moto);
-		} else if (matricula.getTipo().equals(PATINETE)) {
-			Patinete patinete = this.patineteDAO.findByMatricula(vehiculo);
+		} else if (matriculaVehiculo.getTipo().equals(PATINETE)) {
+			Patinete patinete = this.patineteDAO.findByMatricula(matricula);
 			patinete.setEstado(DESCARGADO);
 			this.patineteDAO.save(patinete);
 		}
