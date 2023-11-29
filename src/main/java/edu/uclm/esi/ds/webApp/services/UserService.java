@@ -299,6 +299,7 @@ public class UserService extends ConstUsers{
 	    this.reservadao.saveAll(reservasCliente);
 	    this.clientedao.deleteByemail(email);
 	    this.correodao.deleteByemail(email);
+	    this.usuarioDAO.deleteByemail(email);
 	}
 
 	public boolean checkUser(Map<String, Object> info) {

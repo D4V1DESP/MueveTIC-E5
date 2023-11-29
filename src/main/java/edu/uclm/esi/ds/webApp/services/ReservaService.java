@@ -161,16 +161,22 @@ public class ReservaService extends ConstReservas {
 			Coche coche = this.cocheDAO.findByMatricula(matricula);
 			coche.setBateria(coche.getBateria() - bateriaViaje);
 
-			if (coche.getBateria() >= valorCarga) {
+			if (coche.getBateria() < valorCarga) {
 				coche.setEstado(DESCARGADO);
+			}else {
+				coche.setEstado(DISPONIBLE);
 			}
+			
 			this.cocheDAO.save(coche);
 		} else if (m.getTipo().equals("Moto")) {
 			Moto moto = this.motoDAO.findByMatricula(matricula);
 			moto.setBateria(moto.getBateria() - bateriaViaje);
 
-			if (moto.getBateria() >= valorCarga) {
+			if (moto.getBateria() < valorCarga) {
 				moto.setEstado(DESCARGADO);
+			}
+			else {
+				moto.setEstado(DISPONIBLE);
 			}
 			this.motoDAO.save(moto);
 
@@ -178,8 +184,11 @@ public class ReservaService extends ConstReservas {
 			Patinete patin = this.patineteDAO.findByMatricula(matricula);
 			patin.setBateria(patin.getBateria() - bateriaViaje);
 
-			if (patin.getBateria() >= valorCarga) {
+			if (patin.getBateria() < valorCarga) {
 				patin.setEstado(DESCARGADO);
+			}
+			else {
+				patin.setEstado(DISPONIBLE);
 			}
 			this.patineteDAO.save(patin);
 		}

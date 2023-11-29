@@ -1,11 +1,13 @@
 package edu.uclm.esi.ds.webApp.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -205,15 +207,21 @@ public class UserController extends ConstUsers{
 		return true;
 	}
 	
-	@PostMapping("/BajaUser")
-	public boolean bajaUsuario(@RequestBody Map<String, Object> info) {
-		try {
-			this.userService.bajaUsuarios(info);
-		}catch(DataIntegrityViolationException e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT);
-		}
-		return true;
+	@DeleteMapping("/BajaUser/{email}")
+	public boolean bajaUsuario(@PathVariable String email) {
+	    Map<String, Object> info = new HashMap<>();
+	    info.put("email", email);
+	    
+	    try {
+	        this.userService.bajaUsuarios(info);
+	    } catch (DataIntegrityViolationException e) {
+	        throw new ResponseStatusException(HttpStatus.CONFLICT);
+	    }
+	    
+	    return true;
 	}
+
+
 	@PostMapping("/recover")
 	public boolean recuperarPassword(@RequestBody Map<String,Object> info) {
 		try {
