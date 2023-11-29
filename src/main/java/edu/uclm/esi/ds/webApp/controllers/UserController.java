@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import edu.uclm.esi.ds.webApp.entities.Cliente;
 import edu.uclm.esi.ds.webApp.entities.Mantenimiento;
 import edu.uclm.esi.ds.webApp.entities.Usuario;
 import edu.uclm.esi.ds.webApp.services.EmailService;
+import edu.uclm.esi.ds.webApp.interfaces.ConstUsers;
 import edu.uclm.esi.ds.webApp.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 @RestController
 @RequestMapping("users")
 @CrossOrigin("*")
-public class UserController {
+public class UserController extends ConstUsers{
 	
 	@Autowired 
 	private UserService userService;
@@ -35,22 +37,25 @@ public class UserController {
 	private EmailService emailService;
 	
 	@GetMapping("/administradores")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public List<Admin> listaAdministrador(){
 		return userService.listaAdministradores();
 	}
 	
 	@GetMapping("/mantenimiento")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public List<Mantenimiento> listaMantenimiento(){
 		return userService.listaMantenimiento();
 	}
 	
 	@GetMapping("/cliente")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public List<Cliente> listaCliente(){
 		return userService.listaClientes();
 	}
 	
 	@PostMapping("/AddUser")
-	public boolean anadirUsuario(@RequestBody Map<String, Object> info) {
+	public String anadirUsuario(@RequestBody Map<String, Object> info) {
 		String contrasena = info.get("contrasena").toString();
 		String rcontrasena = info.get("repetirContrasena").toString();
 		if (contrasena.length()< 8 && !contrasena.equals(rcontrasena)) {
@@ -58,23 +63,23 @@ public class UserController {
 		}
 		else {
 			try {
-				userService.Alta(info);
+				return userService.Alta(info);
 			}catch(Exception e) {
 				throw new ResponseStatusException (HttpStatus.CONFLICT);
 			} 
 		}
-		return true;
 	}
 	
 	@PutMapping("/administradores/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Map <String, Object> nuevoAdministrador) {
 	    
 	    Admin administradorExistente = userService.obtenerAdminPorEmail(email);
 	    
 	    if (administradorExistente != null) {
 	        
-	        administradorExistente.setNombre(nuevoAdministrador.get("nombre").toString());
-	        administradorExistente.setApellidos(nuevoAdministrador.get("apellidos").toString());
+	        administradorExistente.setNombre(nuevoAdministrador.get(NOMBRE).toString());
+	        administradorExistente.setApellidos(nuevoAdministrador.get(APELLIDOS).toString());
 	        administradorExistente.setDni(nuevoAdministrador.get("dni").toString());
 	        administradorExistente.setCiudad(nuevoAdministrador.get("ciudad").toString());
 	        
@@ -87,14 +92,15 @@ public class UserController {
 	}
 	
 	@PutMapping("/mantenimiento/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Mantenimiento> actualizarMantenimiento(@PathVariable String email, @RequestBody Map <String, Object> nuevoMantenimiento) {
 	    
 	    Mantenimiento mantenimientoExistente = userService.obtenerMantenimientoPorEmail(email);
 	    
 	    if (mantenimientoExistente != null) {
 	        
-	    	mantenimientoExistente.setNombre(nuevoMantenimiento.get("nombre").toString());
-	    	mantenimientoExistente.setApellidos(nuevoMantenimiento.get("apellidos").toString());
+	    	mantenimientoExistente.setNombre(nuevoMantenimiento.get(NOMBRE).toString());
+	    	mantenimientoExistente.setApellidos(nuevoMantenimiento.get(APELLIDOS).toString());
 	    	mantenimientoExistente.setDni(nuevoMantenimiento.get("dni").toString());
 	    	mantenimientoExistente.setCiudad(nuevoMantenimiento.get("ciudad").toString());
 	    	mantenimientoExistente.setExperiencia(Integer.parseInt(nuevoMantenimiento.get("experiencia").toString()));
@@ -108,14 +114,15 @@ public class UserController {
 	}
 
 	@PutMapping("/cliente/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Cliente> actualizarCliente(@PathVariable String email, @RequestBody Map <String, Object> nuevoCliente){
 		
 	    Cliente clienteExistente = userService.obtenerClientePorEmail(email);
 	    
 	    if (clienteExistente != null) {
 	        
-	    	clienteExistente.setNombre(nuevoCliente.get("nombre").toString());
-	    	clienteExistente.setApellidos(nuevoCliente.get("apellidos").toString());
+	    	clienteExistente.setNombre(nuevoCliente.get(NOMBRE).toString());
+	    	clienteExistente.setApellidos(nuevoCliente.get(APELLIDOS).toString());
 	    	clienteExistente.setDni(nuevoCliente.get("dni").toString());
 	    	clienteExistente.setCarnet(nuevoCliente.get("carnet").toString().charAt(0));
 	    	clienteExistente.setTelefono(nuevoCliente.get("telefono").toString());
@@ -131,17 +138,27 @@ public class UserController {
 
 	@PostMapping("/login")
 	public Usuario login(@RequestBody Map<String, Object> info) {
-		Usuario u;
+
 		try {
-			u =this.userService.login(info);
+			return this.userService.login(info);
 		}catch (Exception e) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			
 		}
-		return u;
+	}
+	
+	@PostMapping("/authenticate")
+	public String authenticate(@RequestBody Map<String, Object> info) {
+		return this.userService.authenticate(info);
+	}
+	
+	@PostMapping("/verify")
+	public String verifyCode(@RequestBody Map<String, Object> info) throws Exception {
+		return userService.verifyCode(info);
 	}
 	
 	@GetMapping("/administradores/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Admin> obtenerAdminPorEmail(@PathVariable String email) {
 	    Admin administrador = userService.obtenerAdminPorEmail(email);
 	    if (administrador != null) {
@@ -152,6 +169,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/mantenimiento/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Mantenimiento> obtenerMantenimientoPorEmail(@PathVariable String email) {
 
 	    Mantenimiento mantenimiento = userService.obtenerMantenimientoPorEmail(email); // Implementa esta función en tu userService
@@ -163,6 +181,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/cliente/{email}")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Usuario> obtenerClientePorEmail(@PathVariable String email) {
 	    
 	    Cliente cliente = userService.obtenerClientePorEmail(email);
@@ -175,6 +194,7 @@ public class UserController {
 
 
 	@PostMapping("/UpdateUser")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public boolean updateUser(@RequestBody Map<String,Object> info) {
 		
 		try {
@@ -209,7 +229,11 @@ public class UserController {
 	@PostMapping("/updatePass")
 	public boolean updatePass(@RequestBody Map<String,Object> info) {
 		try {
-			this.userService.updatePassword(info);
+				if(info.get("contrasena").equals(info.get("repetirContrasena"))) {
+					this.userService.updatePassword(info);
+				}else {
+					throw new ResponseStatusException(HttpStatus.CONFLICT);
+				}
 			
 		}catch(Exception e) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);

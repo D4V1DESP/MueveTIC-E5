@@ -1,8 +1,18 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import edu.uclm.esi.ds.webApp.security.Role;
 
 /**
  * ESTA CLASE ES LA ENTIDAD USUARIO,
@@ -12,9 +22,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
  */
 
 
-public class Usuario {
+@Document(collection = "Usuario")
+public class Usuario implements UserDetails{
 	@Id
     private String id;
+	
 	@Indexed(unique= true)
 	protected String email;
 	protected String dni;
@@ -24,6 +36,8 @@ public class Usuario {
 	protected String repetirContrasena;
 	protected boolean activo; 
 	protected String tipo;
+	
+	private Role role;
 	
 	public String getId() {
         return id;
@@ -77,8 +91,9 @@ public class Usuario {
 		this.activo = activo;
 	}
 
+
 	public Usuario(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena, boolean activo,String tipo) {
+			String repetirContrasena, boolean activo,String tipo, Role role) {
 		super();
 		this.email = email;
 		this.dni = dni;
@@ -88,5 +103,41 @@ public class Usuario {
 		this.repetirContrasena = repetirContrasena;
 		this.activo = activo;
 		this.tipo = tipo;
+		this.role = role;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return role.getAuthorities();
+	}
+	
+	@Override
+	public String getPassword() {
+		return contrasena;
+	}
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

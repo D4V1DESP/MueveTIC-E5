@@ -1,6 +1,14 @@
 package edu.uclm.esi.ds.webApp.entities;
 
+import java.util.Set;
+
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import edu.uclm.esi.ds.webApp.security.Role;
+import edu.uclm.esi.ds.webApp.security.Role;
+
+import edu.uclm.esi.ds.webApp.security.Role;
+import edu.uclm.esi.ds.webApp.security.Role;
 
 /**
  * ESTA CLASE ES LA ENTIDAD CLIENTE, HEREDA DE LA CLASE USUARIO Y AÑADE LOS ATRIBUTOS UNICOS DE UN CLIENTE
@@ -12,13 +20,16 @@ public class Cliente extends Usuario{
 	protected String telefono;
 	protected char carnet;
 	protected String fecha;
+	private boolean mFaEnabled = false;
+	private String secret; 
 
 	public Cliente(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha) {
-		super(email, dni, nombre, apellidos, contrasena, repetirContrasena,  activo, tipo);
+			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha, Role role, boolean mFaEnabled) {
+		super(email, dni, nombre, apellidos, contrasena, repetirContrasena,  activo, tipo, role);
 		this.telefono = telefono;
 		this.carnet = carnet;
 		this.fecha= fecha;
+		this.mFaEnabled = mFaEnabled;
 	}
 
 	public String getFecha() {
@@ -39,5 +50,21 @@ public class Cliente extends Usuario{
 	}
 	public void setCarnet(char carnet) {
 		this.carnet = carnet;
+	}
+	
+	public String getSecret() {
+		return secret;
+	}
+
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public boolean ismFaEnabled() {
+		return mFaEnabled;
+	}
+
+	public void setmFaEnabled(boolean mFaEnabled) {
+		this.mFaEnabled = mFaEnabled;
 	}
 }

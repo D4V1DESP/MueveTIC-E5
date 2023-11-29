@@ -5,10 +5,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.UnsupportedEncodingException;
 
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,12 +24,14 @@ import edu.uclm.esi.ds.webApp.dao.AdminDAO;
 import edu.uclm.esi.ds.webApp.dao.ClienteDAO;
 import edu.uclm.esi.ds.webApp.dao.CorreoDAO;
 import edu.uclm.esi.ds.webApp.dao.MantenimientoDAO;
+import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 
-public class TestUsers {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class TestUsers  {
 	@Autowired
 	private MockMvc server;
 	@Autowired 
@@ -39,8 +42,19 @@ public class TestUsers {
 	private ClienteDAO clienteDAO;
 	@Autowired
 	private CorreoDAO correoDAO;
+	@Autowired
+	private JWToken testToken;
+	@Autowired
+	private UsuarioDAO usuarioDAO;
 	
-	@Test 
+	private String tokenAdmin;	
+	
+	@BeforeAll
+	void obtenerToken() throws Exception{
+		tokenAdmin = testToken.generarTokenAdmin();
+	}
+	
+	@Test @Order(1) 
 	void testAdduser() throws Exception {
 		// pruebas de registros correctos
 		
@@ -50,11 +64,14 @@ public class TestUsers {
 		this.correoDAO.deleteByemail("floresmanu99@gmail.com");
 		this.correoDAO.deleteByemail("danielMachuca@gmial.com");
 		this.correoDAO.deleteByemail("pabloGarcia@gmial.com");
+		this.usuarioDAO.deleteByemail("floresmanu99@gmail.com");
+		this.usuarioDAO.deleteByemail("danielMachuca@gmial.com");
+		this.usuarioDAO.deleteByemail("pabloGarcia@gmial.com");
 		
 		ResultActions result= this.sendRequest("floresmanu99@gmail.com","05939881Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "admin","puertollano");
 		result.andExpect(status().isOk()).andReturn();
 
-		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999");
+		result= this.sendRequest("danielMachuca@gmial.com","05939981Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "cliente", "666697498", "c", "19/10/1999", false);
 		result.andExpect(status().isOk()).andReturn();
 		
 		result= this.sendRequest("pabloGarcia@gmial.com","05939081Q", "manuel", "flores villajos", "manuelfv99","manuelfv99","true", "mantenimiento","puertollano", "5");
@@ -70,14 +87,30 @@ public class TestUsers {
 		
 		
 	}
-	@Test
+	@Test @Order(2)
 	void RecoverPass() throws Exception {
-		ResultActions result= this.sendRequest( "Manuelfv99@", "Manuelfv99@", "f20ccdefeb66736ee7d47b7eba0168bb488acdd1e78a3a314b76cb8a969043a8357649b6276333d48f37626b8e88749e0996db7fdf1006e6f33d968c841abc63");
-		result.andExpect(status().isOk()).andReturn();
-	
-		
+	    ResultActions result = this.sendRequestRecoverPass("floresmanu99@gmail.com");
+	    result.andExpect(status().isOk()).andReturn();
+
+	    result = this.sendRequestUpdatePass("Manuelfv99@", "Manuelfv99@", "f20ccdefeb66736ee7d47b7eba0168bb488acdd1e78a3a314b76cb8a969043a8357649b6276333d48f37626b8e88749e0996db7fdf1006e6f33d968c841abc63");
+	    result.andExpect(status().isOk()).andReturn();
 	}
-	private ResultActions sendRequest(String contrasena, String rcontrasena, String email) throws Exception {
+
+	
+	private ResultActions sendRequestRecoverPass(String email) throws Exception{
+		JSONObject jsonUser = new JSONObject()
+				.put("email", email);
+		
+		RequestBuilder request = MockMvcRequestBuilders.
+				post("/users/recover").
+				contentType("application/json").
+				content(jsonUser.toString());
+
+		ResultActions resultActions =this.server.perform(request);
+		return resultActions;
+	}
+	
+	private ResultActions sendRequestUpdatePass(String contrasena, String rcontrasena, String email) throws Exception {
 		JSONObject jsonUser = new JSONObject()
 				.put("email", email)
 				.put("contrasena", contrasena)
@@ -108,16 +141,16 @@ public class TestUsers {
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);
 		return resultActions;
 	}
 	private ResultActions sendRequest(String email, String dni, String nombre, String apellidos, String contraseña,
-			String rcontraseña, String activo, String tipo,  String telefono, String carnet, String fecha)throws Exception, UnsupportedEncodingException {
+			String rcontraseña, String activo, String tipo,  String telefono, String carnet, String fecha, boolean mFaEnabled)throws Exception, UnsupportedEncodingException {
 		JSONObject jsonUser = new JSONObject()
 				.put("email", email)
 				.put("nombre", nombre)
@@ -129,13 +162,14 @@ public class TestUsers {
 				.put("activo", activo)
 				.put("telefono", telefono)
 				.put("carnet", carnet)
-				.put("fecha", fecha);
+				.put("fecha", fecha)
+				.put("mFaEnabled", mFaEnabled);
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);
@@ -158,9 +192,9 @@ public class TestUsers {
 		
 		
 		RequestBuilder request = MockMvcRequestBuilders.
-				post("/users/AddUser").
-				contentType("application/json").
-				content(jsonUser.toString());
+				post("/users/AddUser")
+				.contentType("application/json")
+				.content(jsonUser.toString());
 		
 
 		ResultActions resultActions =this.server.perform(request);

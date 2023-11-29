@@ -11,4 +11,6 @@ import edu.uclm.esi.ds.webApp.entities.ReservaCliente;
 public interface ReservaClienteDAO extends MongoRepository<ReservaCliente, String> {
 	List<ReservaCliente> findListByEmail(String email);
 	ReservaCliente findByEmail(String email);
+	
+	void deleteByEmail(String email);
 }

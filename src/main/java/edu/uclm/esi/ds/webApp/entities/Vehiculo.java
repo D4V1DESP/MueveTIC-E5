@@ -9,8 +9,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
  * CONFIGURAMOS LA COLECCION DE LA BASE DE DATOS PARA SU CORRECTO ENLACE MEDIANTE EL DAO
  */
 public class Vehiculo {
+	
 	@Id
-    private String id;
+	private String id;
 	@Indexed (unique = true)
 	protected String matricula;
 	protected String tipo;
