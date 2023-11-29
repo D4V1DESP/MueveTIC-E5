@@ -110,7 +110,7 @@ public class ReservaController {
 		
 		
 		try {
-			reservaService.addReservaMantenimiento(info);
+			reservaService.finalizarMantenimiento(info);
 			vehicleService.reservarVehiculo(info);
 		}catch(Exception e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);

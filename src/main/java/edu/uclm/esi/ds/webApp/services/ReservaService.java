@@ -237,31 +237,20 @@ public class ReservaService extends ConstReservas {
 	public void cancelMantenimiento(Map<String, Object> info) {
 		String email = info.get("email").toString();
 		String vehiculo = info.get("vehiculo").toString();
-		List<ReservaMantenimiento> lista =this.reservaMantenimientoDAO.findByEmail(email);
-		ReservaMantenimiento reserva = null; 
-		
-		for (ReservaMantenimienro reserve :  lista) {
-			if (reserve.getVehiculo.equals(vehiculo)) {
-				reserva = reserve;
-			}
-		}
+		ReservaMantenimiento reserva =this.reservaMantenimientoDAO.findByEmail(email);
 		this.reservaMantenimientoDAO.delete(reserva);
 		
-		
+		//falta un cacho de poner estado a descargado
 	}
 
 
 	public void finalizarMantenimiento(Map<String, Object> info) {
 		String email = info.get("email").toString();
 		String vehiculo = info.get("vehiculo").toString();
-		List<ReservaMantenimiento> lista =this.reservaMantenimientoDAO.findByEmail(email);
-		ReservaMantenimiento reserva = null; 
+		ReservaMantenimiento reserva =this.reservaMantenimientoDAO.findByVehiculo(email);
 		
-		for (ReservaMantenimienro reserve :  lista) {
-			if (reserve.getVehiculo.equals(vehiculo)) {
-				reserva = reserve;
-			}
-		}
+		
+		
 		Matricula matricula = this.matriculaDAO.findByMatricula(vehiculo);
 		if (matricula.getTipo().equals("coche")) {
 			Coche coche = this.cocheDAO.findByMatricula(vehiculo);
