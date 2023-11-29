@@ -24,7 +24,8 @@ public class Cliente extends Usuario{
 	private String secret; 
 
 	public Cliente(String email, String dni, String nombre, String apellidos, String contrasena,
-			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha, Role role, boolean mFaEnabled) {
+			String repetirContrasena,  boolean activo, String telefono, char carnet,String tipo,String fecha, Role role,
+			boolean mFaEnabled) {
 		super(email, dni, nombre, apellidos, contrasena, repetirContrasena,  activo, tipo, role);
 		this.telefono = telefono;
 		this.carnet = carnet;
