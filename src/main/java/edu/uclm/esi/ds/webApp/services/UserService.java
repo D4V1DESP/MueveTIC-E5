@@ -48,6 +48,11 @@ public class UserService {
 	String mantenimientoS = "mantenimiento";
 	String nombreS = "nombre";
 
+	/*
+	 * METODO: ALTA
+	 * DESCRIPCION: METODO GENERICO QUE AÑADE USUARIOS DE CUALQUIER TIPO AL SISTEMA. CREA INSTANCIAS DE LA ENTIDAD CORREOS PARA 
+	 * CONTROLAR QUE UN MISMO MAIL NO SE REPITA CON ROLES DISTINTOS EN EL SISTEMA.
+	 */
 	public void Alta(Map<String, Object> info) {
 		String email = info.get(emailS).toString();
 		String nombre = info.get(nombreS).toString();
@@ -88,7 +93,11 @@ public class UserService {
 			this.clientedao.save(c);
 		}
 	}
-
+	/*
+	 * METODO: LOGIN
+	 * DESCRIPCION: LOGIN GENERICO PARA ACCEDER AL SISTEMA. TODOS LOS ROLES DDE DISTINTOS USUARIOS UTILIZAN ESTE MISMO METOODO PARA ACCEDER AL 
+	 * SISTEMA.
+	 */
 	public Usuario login(Map<String, Object> info) {
 		String email = info.get(emailS).toString();
 		String pass = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
@@ -127,7 +136,10 @@ public class UserService {
 		}
 		return null;
 	}
-
+	/*
+	 * METODO: UPDATEUSERS
+	 * DESCRIPCION:METODO GENERICO QUE ACTUALIZA LA INFORMACION DE LOS DISTINTOS TIPOS DE USUARIOS DEL SISTEMA.
+	 */
 	public void updateUsers(Map<String, Object> info) {
 		Correo c = this.correodao.findByEmail((String) info.get(emailS));
 
@@ -168,44 +180,80 @@ public class UserService {
 		}
 
 	}
+	/*
+	 * METODO: LISTAADMINISTRADORES
+	 * DESCRIPCION: NDEVUELVE TODOS LOS ADMINISTRADORES DEL SISTEMA
+	 */
 
 	public List<Admin> listaAdministradores() {
 		return this.admindao.findAll();
 	}
-
+	/*
+	 * METODO: LISTAMANTENIMIENTIO
+	 * DESCRIPCION: DEVUELVE LA LISTA CON TODO EL PERSONAL DE MANTENIMIENTO DEL SISTEMA
+	 */
 	public List<Mantenimiento> listaMantenimiento() {
 		return this.mandao.findAll();
 	}
+	/*
+	 * METODO:  LISTACLIENTES
+	 * DESCRIPCION: DEVUELVE LA LSITA CON TODOS LOS CLIENTES DEL SISTEMA
+	 */
 
 	public List<Cliente> listaClientes() {
 		return this.clientedao.findAll();
 	}
+	/*
+	 * METODO: OBTENER ADMIN POR EMAIL
+	 * DESCRIPCION: A PARTIR DE UN EMAIL DEVUELVE LA INFORMACION DE UN ADMINISTRADOR.
+	 */
 
 	public Admin obtenerAdminPorEmail(String email) {
 		return admindao.findByEmail(email);
 	}
+	/*
+	 * METODO: OBTENER MANTENIMIENTO POR EMAIL 
+	 * DESCRIPCION:A PARTIR DE UN EMAIL DEVUELVE LA INFORMACION DE UN PERSONAL DE MANTENIMIENTO.
+	 */
 
 	public Mantenimiento obtenerMantenimientoPorEmail(String email) {
 		return mandao.findByEmail(email);
 	}
+	/*
+	 * METODO: OBTENER CLIENTE POR EMAIL
+	 * DESCRIPCION:A PARTIR DE UN EMAIL DEVUELVE LA INFORMACION DE UN CLIENTE.
+	 */
 
 	public Cliente obtenerClientePorEmail(String email) {
 		return clientedao.findByEmail(email);
 	}
-
+	/*
+	 * METODO: ACTUALIZARADMIN
+	 * DESCRIPCION: GUARDA INFORMACION DE UN ADMINISTRADOR EXISTENTE
+	 */
 	public Admin actualizarAdmin(Admin administradorExistente) {
 		return admindao.save(administradorExistente);
 
 	}
-
+	/*
+	 * METODO: ACTUALIZAR MANTENIMIENTO
+	 * DESCRIPCION:GUARDA INFORMACION DE UN PERSONAL DE MANTENIMIENTO EXISTENTE
+	 */
 	public Mantenimiento actualizarMantenimiento(Mantenimiento mantenimientoExistente) {
 		return mandao.save(mantenimientoExistente);
 	}
-
+	/*
+	 * METODO: ACTUALIZAR CLIENTE
+	 * DESCRIPCION:GUARDA INFORMACION DE UN CLIENTE EXISTENTE
+	 */
 	public Cliente actualizarCliente(Cliente clienteExistente) {
 		return clientedao.save(clienteExistente);
 	}
-
+	/*
+	 * METODO: BAJA USUARIOS
+	 * DESCRIPCION: REALIZA EL BORRADO FISICO DE TODA LA INFORMACION DE USUARIOS, EN HISTORICOS DE OTRAS ENTIDADES , LO SUSTITUYE POR VALORES
+	 * GENERICOS PARA NO PERDER INFORMACION DE NUESTRO SISTEMA.
+	 */
 	public void bajaUsuarios(Map<String, Object> info) {
 	    String email = (String) info.get(emailS);
 	    Cliente cliente = this.clientedao.findByEmail(email);
@@ -222,7 +270,11 @@ public class UserService {
 	    this.clientedao.deleteByemail(email);
 	    this.correodao.deleteByemail(email);
 	}
-
+	/*
+	 * METODO: CHECKUSER
+	 * DESCRIPCION: METODO UTILIZADO PARA LA RECUPERACION DE CONTRASEÑA, SU FUNCIONES SE AGRUPAN EN DOS FASES, PRIMERO COMPRUEBA QUE EL CORREO QUE HA 
+	 * SOLICITADO RECUPERAR LA CONTRASEÑA EXISTE, SI ES ASI GENERA UN TOKEN PARA SABER QUE ESE USUARIO  HA SOLICITADO LA RECUPERACION DE SU CONTRASEÑA.
+	 */
 	public boolean checkUser(Map<String, Object> info) {
 		boolean exist = false;
 		TokenRecover token= null;
@@ -241,10 +293,14 @@ public class UserService {
 		return exist;
 		
 	}
-
+	/*
+	 * METODO: UPDATE PASSWORD
+	 * DESCRIPCION: METODO QUE COMPRUEBA PRIMERO QUE EL USUARIO HA SOLICITADO UN CAMBIO DE LA CONTRASEÑA , MEDIANTE SU CAMPO TOKEN(VARIABLE MAILENCRIPTED)
+	 * Y DESPUES FILTRA PARA SABER EN QUE TABLA ESTAN LOS DATOS DE ESE USUARIO Y ALMACENA SU CONTRASEÑA. 
+	 */
 	public void updatePassword(Map<String, Object> info) {
 		String mailEncripted = info.get(emailS).toString();
-		String password = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
+		String password =org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("contrasena").toString());
 		String rpassword = org.apache.commons.codec.digest.DigestUtils.sha512Hex(info.get("repetirContrasena").toString());
 		TokenRecover token = this.tokenRecoverDAO.findBytoken(mailEncripted);
 		String email = token.getEmail();

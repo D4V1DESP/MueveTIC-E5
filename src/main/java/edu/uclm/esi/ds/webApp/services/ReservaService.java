@@ -43,7 +43,12 @@ public class ReservaService {
 	@Autowired
 	private ConfigDAO configDAO;
 	
-	
+	/*
+	 * METODO: ADDRESERVACLIENTE
+	 * DESCRIPCION: ESTE METODO ES EL QUE SE UTILIZA PARA RESERVAR UN VEHICULO DESDE EL PUNTO DE VISTA DEL CLIENTE, RECIBE POR ARGUMENTO 
+	 * UN MAPA CON TODA LA INFO NECESARIA PARA LA CORRECTA GENERACION DE LA ENTIDAD. HACE COMPROBACION DE QUE EL CLIENETE TENGA UNA RESERVA ACTIVA 
+	 * Y LE IMPIDE RESERVAR EN CASO DE QUE SEA ASI
+	 */
 	public void addReservaCliente(Map<String, Object> info) {
 	    String email = info.get("email").toString();
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
@@ -73,6 +78,10 @@ public class ReservaService {
 	        throw new ResponseStatusException(HttpStatus.CONFLICT);
 	    }
 	}
+	/*
+	 * METODO: CANCELUSERRESERVE
+	 * DESCRIPCION: ESTE METODO PRIMERO ENCUENTRA LA RESERVA ACTIVA DE UN CLIENTE DADO Y DESPUES PONE ESTA EN ESTADO CANCELADO 
+	 */
 
 
 	public void CancelUserReserve(Map<String, Object> info) {
@@ -115,7 +124,10 @@ public class ReservaService {
 		}
 		
 	}
-
+	/*
+	 * METODO: OBTENER RESERVA ACTIVA POR EMAIL
+	 * DESCRIPCION: ESTE METODO OBTIENE LA RESERVA ACTIVA DE UN CLIENTE (EMAIL DE LA ENTRADA DE ARGUMENTOS) Y LO DEVUELVE EN CASO DE QUE ESTA EXISTA
+	 */
 	public ReservaCliente obtenerReservaActivaPorEmail(String email) {
 	    List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
 	    
@@ -131,6 +143,11 @@ public class ReservaService {
 	    return null;
 	}
 
+	/*
+	 * METODO: ADDVALORACION
+	 * DESCRIPCION: ESTE METODO ES EL ENCARGADO DE FINALIZAR LA RESERVA DE FORMA CORRECTA Y DE PONER TANTO LA VALORACION COMO EL COMENTARIO DE LA 
+	 * RESERVA.
+	 */
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje =this.configDAO.findBynombre("bateriaViaje").getValor();
 		int valorCarga =this.configDAO.findBynombre("BateriaCarga").getValor();
@@ -149,16 +166,16 @@ public class ReservaService {
 		
 		if(m.getTipo().equals("Coche")) {
 			Coche coche = this.cocheDAO.findByMatricula(matricula);
-			coche.setBateria(coche.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			coche.setBateria(coche.getBateria()-bateriaViaje);
 			
-			if(coche.getBateria()>=this.configDAO.findBynombre("BateriaCarga").getValor()) {
+			if(coche.getBateria()>=valorCarga) {
 				coche.setEstado("disponible");
 			}
 			this.cocheDAO.save(coche);
 		}
 		else if (m.getTipo().equals("Moto")) {
 			Moto moto = this.motoDAO.findByMatricula(matricula);
-			moto.setBateria(moto.getBateria()-this.configDAO.findBynombre("bateriaViaje").getValor());
+			moto.setBateria(moto.getBateria()-bateriaViaje);
 			
 			if(moto.getBateria()>=valorCarga) {
 				moto.setEstado("disponible");
@@ -178,7 +195,10 @@ public class ReservaService {
 		
 	}
 
-
+	/*
+	 * METODO: CHECKUSER
+	 * DESCRIPCION: ESTE METODO COMPRUEBA SI UN USUARIO EXISTE EN EL SISTEMA.
+	 */
 
 	public boolean checkUser(String email) {
 		boolean checked = false;
@@ -191,6 +211,11 @@ public class ReservaService {
 		
 		return checked;
 	}
+	
+	/*
+	 * METODO: CHECKVEHICLE
+	 * DESCRIPCION: ESTE METODO COMPRUEBA SI UN VEHICULO EXISTE EN EL SISTEMA.
+	 */
 	public boolean checkVehicle(String matricula) {
 		boolean checked = false;
 		List<Matricula> lstvehicles = this.matriculaDAO.findAll();
