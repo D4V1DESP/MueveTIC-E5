@@ -36,7 +36,12 @@ public class VehicleService extends ConstVehiculos{
 	@Autowired 
 	private ConfigDAO configDAO;
 	
-	
+	/*
+	 * METODO: ALTAVEHICULO
+	 * DESCRIPCION: Registra un nuevo vehículo en el sistema.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para el registro del vehículo (MATRICULA, tipo, direccion, modelo, bateria, estado, nPlazas, casco, color).
+	 */
 	public void altaVehiculo(Map <String, Object> info) {
 		
 		String matricula = info.get(MATRICULA).toString();
@@ -162,7 +167,14 @@ public class VehicleService extends ConstVehiculos{
 		Config config = this.configDAO.findBynombre(BATERIAVIAJE);
 		return filtrarPorBateria(this.patineteDAO.findByestado(DISPONIBLE), config);
 	}
-	
+	/*
+	 * METODO: RESERVARVEHICULO
+	 * DESCRIPCION: Reserva un vehículo, actualizando su estado a "NO_DISPONIBLE".
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la reserva del vehículo (MATRICULA).
+	 * EXCEPCIONES LANZADAS:
+	 *   - ResponseStatusException con HttpStatus.CONFLICT si el vehículo ya está reservado (estado = "NO_DISPONIBLE").
+	 */
 	public void reservarVehiculo(Map<String, Object> info) {
 		Matricula m = this.matriculaDAO.findByMatricula((String) info.get(MATRICULA));
 		
