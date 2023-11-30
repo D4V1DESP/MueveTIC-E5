@@ -14,7 +14,11 @@ public class ConfigService {
 	
 	@Autowired
 	ConfigDAO configDAO;
-	
+	/*
+	 * METODO UOPDATECONFIG 
+	 * RECIBE COMO ARGUMENTO UN MAPA EL CUAL SIEMPRE VA A CONTENER DOS VALORES, EL NOMBRE DE LA VARIABLE A MODIFICAR Y EL NUEVO VALOR
+	 * PRIMERO COMPRUEBA QUE EXISTE Y DESPUES ACTUALIZA SU VALOR EN BBDD.
+	 */
 	public void updateConfig(Map<String,Object>info) {
 		String variable = info.get("nombre").toString();
 		Config config = this.configDAO.findBynombre(variable);
