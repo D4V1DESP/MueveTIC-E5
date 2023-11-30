@@ -32,7 +32,10 @@ public class ReservaController {
 	@Autowired 
 	private VehicleService vehicleService;
 	
-	
+	/*
+	 * AÑADE UNA RESERVA DE CLIENTE Y ASIGNA UN VEHÍCULO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE CLIENTE.
+	 */
 	@PostMapping ("/usersAdd")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean AddClientReserve(@RequestBody Map<String, Object> info) {
@@ -47,6 +50,10 @@ public class ReservaController {
 		return true;
 	}
 	
+	/*
+	 * CANCELA UNA RESERVA DE CLIENTE.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE CLIENTE.
+	 */
 	@PostMapping("/usersCancel")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean CancelarReserva(@RequestBody Map<String, Object> info) {
@@ -62,6 +69,10 @@ public class ReservaController {
 		return true;
 	}
 	
+	/*
+	 * OBTIENE LA RESERVA ACTIVA DE UN CLIENTE POR SU CORREO ELECTRÓNICO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE CLIENTE.
+	 */
 	@GetMapping("/reservaActiva/{email}")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public ResponseEntity<ReservaCliente> obtenerReservaActivaPorEmail(@PathVariable String email) {
@@ -73,7 +84,10 @@ public class ReservaController {
 	    }
 	}
 	
-	
+	/*
+	 * OBTIENE LAS RESERVAS DE UN CLIENTE POR SU CORREO ELECTRÓNICO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE CLIENTE.
+	 */
 	@GetMapping("/reservasCliente/{email}")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public ResponseEntity<List<ReservaCliente>> obtenerReservasPorEmail(@PathVariable String email) {
@@ -85,6 +99,10 @@ public class ReservaController {
 	    }
 	}
 	
+	/*
+	 * OBTIENE LAS RESERVAS DE MANTENIMIENTO POR EL CORREO ELECTRÓNICO DE UN MANTENIMIENTO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE MANTENIMIENTO.
+	 */
 	@GetMapping("/reservasMantenimiento/{email}")
 	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
 	public ResponseEntity<List<ReservaMantenimiento>> obtenerReservasMantenimiento(@PathVariable String email) {
@@ -96,14 +114,20 @@ public class ReservaController {
 	    }
 	}
 	
+	/*
+	 * OBTIENE LA LISTA DE TODAS LAS RESERVAS.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/listaReservas")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public List<ReservaCliente> obtenerReserva() {
 	    return reservaService.listaReservas();
 	}
 
-
-	
+	/*
+	 * AÑADE UNA VALORACIÓN A UNA RESERVA.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE CLIENTE.
+	 */
 	@PostMapping("/AddReview")
 	@PreAuthorize("hasAnyAuthority('ROLE_CLIENTE')")
 	public boolean AñadirValoracion(@RequestBody Map<String,Object> info) {
@@ -116,6 +140,10 @@ public class ReservaController {
 		return true;
 	}
 	
+	/*
+	 * AÑADE UNA RESERVA DE MANTENIMIENTO Y ASIGNA UN VEHÍCULO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE MANTENIMIENTO.
+	 */
 	@PostMapping ("/mantenimientoAdd")
 	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
 	public boolean AddMantenimientoReserve(@RequestBody Map<String, Object> info) {
@@ -130,6 +158,10 @@ public class ReservaController {
 		return true;
 	}
 	
+	/*
+	 * CANCELA UNA RESERVA DE MANTENIMIENTO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE MANTENIMIENTO.
+	 */
 	@PostMapping("/mantenimientoCancel")
 	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
 	public void cancelarMantenimiento(@RequestBody Map<String, Object> info) {
@@ -140,7 +172,10 @@ public class ReservaController {
 		}
 	}
 	
-	
+	/*
+	 * FINALIZA UNA RESERVA DE MANTENIMIENTO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE MANTENIMIENTO.
+	 */
 	@PostMapping("/mantenimientoFinalizar")
 	@PreAuthorize("hasAnyAuthority('ROLE_MANTENIMIENTO')")
 	public void finalizarMantenimiento(@RequestBody Map<String, Object> info) {

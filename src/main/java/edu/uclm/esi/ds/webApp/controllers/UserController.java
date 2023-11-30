@@ -38,24 +38,44 @@ public class UserController extends ConstUsers{
 	@Autowired 
 	private EmailService emailService;
 	
+	
+	/*
+	 * OBTIENE UNA LISTA DE ADMINISTRADORES.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/administradores")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	
 	public List<Admin> listaAdministrador(){
 		return userService.listaAdministradores();
 	}
 	
+	/*
+	 * OBTIENE UNA LISTA DE PERSONAL DE MANTENIMIENTO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/mantenimiento")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	
 	public List<Mantenimiento> listaMantenimiento(){
 		return userService.listaMantenimiento();
 	}
 	
+	/*
+	 * OBTIENE UNA LISTA DE CLIENTES.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/cliente")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	
 	public List<Cliente> listaCliente(){
 		return userService.listaClientes();
 	}
 	
+	/*
+	 * AÑADE UN NUEVO USUARIO AL SISTEMA.
+	 * EL MAPA DEBE CONTENER LA INFORMACIÓN NECESARIA PARA CREAR EL USUARIO.
+	 */
 	@PostMapping("/AddUser")
 	public String anadirUsuario(@RequestBody Map<String, Object> info) {
 		String contrasena = info.get("contrasena").toString();
@@ -72,6 +92,10 @@ public class UserController extends ConstUsers{
 		}
 	}
 	
+	/*
+	 * ACTUALIZA LA INFORMACIÓN DE UN ADMINISTRADOR.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PutMapping("/administradores/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Admin> actualizarAdministrador(@PathVariable String email, @RequestBody Map <String, Object> nuevoAdministrador) {
@@ -93,6 +117,10 @@ public class UserController extends ConstUsers{
 	    }
 	}
 	
+	/*
+	 * ACTUALIZA LA INFORMACIÓN DE UN TRABAJADOR DE MANTENIMIENTO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PutMapping("/mantenimiento/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Mantenimiento> actualizarMantenimiento(@PathVariable String email, @RequestBody Map <String, Object> nuevoMantenimiento) {
@@ -115,10 +143,13 @@ public class UserController extends ConstUsers{
 	    }
 	}
 
+	/*
+	 * ACTUALIZA LA INFORMACIÓN DE UN CLIENTE.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PutMapping("/cliente/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Cliente> actualizarCliente(@PathVariable String email, @RequestBody Map <String, Object> nuevoCliente){
-		
 	    Cliente clienteExistente = userService.obtenerClientePorEmail(email);
 	    
 	    if (clienteExistente != null) {
@@ -138,6 +169,10 @@ public class UserController extends ConstUsers{
 	    }
 	}
 
+	/*
+	 * INICIA SESIÓN EN EL SISTEMA.
+	 * EL MAPA DEBE CONTENER LA INFORMACIÓN DE INICIO DE SESIÓN.
+	 */
 	@PostMapping("/login")
 	public Usuario login(@RequestBody Map<String, Object> info) {
 
@@ -149,16 +184,28 @@ public class UserController extends ConstUsers{
 		}
 	}
 	
+	/*
+	 * AUTENTICA AL USUARIO.
+	 * EL MAPA DEBE CONTENER LA INFORMACIÓN DE AUTENTICACIÓN.
+	 */
 	@PostMapping("/authenticate")
 	public String authenticate(@RequestBody Map<String, Object> info) {
 		return this.userService.authenticate(info);
 	}
 	
+	/*
+	 * VERIFICA UN CÓDIGO.
+	 * EL MAPA DEBE CONTENER EL CÓDIGO A VERIFICAR.
+	 */
 	@PostMapping("/verify")
 	public String verifyCode(@RequestBody Map<String, Object> info) throws Exception {
 		return userService.verifyCode(info);
 	}
 	
+	/*
+	 * OBTIENE UN ADMINISTRADOR POR SU CORREO ELECTRÓNICO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/administradores/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Admin> obtenerAdminPorEmail(@PathVariable String email) {
@@ -169,7 +216,10 @@ public class UserController extends ConstUsers{
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    }
 	}
-	
+	/*
+	 * OBTIENE UN TRABAJADOR DE MANTENIMIENTO POR SU CORREO ELECTRÓNICO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/mantenimiento/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Mantenimiento> obtenerMantenimientoPorEmail(@PathVariable String email) {
@@ -181,7 +231,10 @@ public class UserController extends ConstUsers{
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Otra respuesta apropiada si no se encuentra el administrador
 	    }
 	}
-	
+	/*
+	 * OBTIENE UN CLIENTE POR SU CORREO ELECTRÓNICO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/cliente/{email}")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public ResponseEntity<Usuario> obtenerClientePorEmail(@PathVariable String email) {
@@ -194,7 +247,10 @@ public class UserController extends ConstUsers{
 	    }
 	}
 
-
+	/*
+	 * ACTUALIZA LA INFORMACIÓN DE UN USUARIO.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PostMapping("/UpdateUser")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public boolean updateUser(@RequestBody Map<String,Object> info) {
@@ -207,6 +263,10 @@ public class UserController extends ConstUsers{
 		return true;
 	}
 	
+	/*
+	 * DARSE DE BAJA DE LA APLICACIÓN.
+	 * EL MAPA DEBE CONTENER EL CORREO ELECTRÓNICO DEL USUARIO.
+	 */
 	@DeleteMapping("/BajaUser/{email}")
 	public boolean bajaUsuario(@PathVariable String email) {
 	    Map<String, Object> info = new HashMap<>();
@@ -221,7 +281,10 @@ public class UserController extends ConstUsers{
 	    return true;
 	}
 
-
+	/*
+	 * RECUPERA LA CONTRASEÑA DEL USUARIO.
+	 * EL MAPA DEBE CONTENER LA INFORMACIÓN NECESARIA PARA RECUPERAR LA CONTRASEÑA.
+	 */
 	@PostMapping("/recover")
 	public boolean recuperarPassword(@RequestBody Map<String,Object> info) {
 		try {
@@ -234,6 +297,10 @@ public class UserController extends ConstUsers{
 		return true;
 	}
 	
+	/*
+	 * ACTUALIZA LA CONTRASEÑA DEL USUARIO.
+	 * EL MAPA DEBE CONTENER LA INFORMACIÓN NECESARIA PARA ACTUALIZAR LA CONTRASEÑA.
+	 */
 	@PostMapping("/updatePass")
 	public boolean updatePass(@RequestBody Map<String,Object> info) {
 		try {

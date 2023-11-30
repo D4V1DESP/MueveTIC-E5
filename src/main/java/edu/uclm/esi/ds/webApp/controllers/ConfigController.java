@@ -26,6 +26,10 @@ public class ConfigController {
 	@Autowired
 	ConfigService configservice;
 	
+	/*
+	 * AÑADE UNA NUEVA CONFIGURACIÓN AL SISTEMA.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PostMapping("/Add")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public boolean AddConfig(@RequestBody  Map<String,Object>info) {
@@ -34,9 +38,12 @@ public class ConfigController {
 		}catch(Exception e) {
 			throw new ResponseStatusException (HttpStatus.CONFLICT);
 		}
-		return true;
-		
+		return true;	
 	}
+	/*
+	 * ACTUALIZA UNA CONFIGURACIÓN DEL SISTEMA.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@PostMapping("/Update")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public boolean UpdateConfig(@RequestBody Map<String,Object>info) {
@@ -49,6 +56,10 @@ public class ConfigController {
 		return true;
 	}
 	
+	/*
+	 * OBTIENE LA LISTA DE CONFIGURACIONES DEL SISTEMA.
+	 * SOLO ACCESIBLE PARA USUARIOS CON ROL DE ADMINISTRADOR.
+	 */
 	@GetMapping("/Get")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	public List<Config> listaConfiguracion(){
