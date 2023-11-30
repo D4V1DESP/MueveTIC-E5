@@ -68,7 +68,19 @@ public class UserService extends ConstUsers{
 	
 	@Value("${application.security.secret-key}")
 	private String SECRET_KEY;
-
+	/*
+	 * METODO: ALTA
+	 * DESCRIPCION: Registra un nuevo usuario en el sistema con la información proporcionada.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para el registro del usuario.
+	 * EXCEPCIONES LANZADAS:
+	 *   - Exception: Se lanza una excepción general en caso de errores inesperados durante el proceso de registro.
+	 *   - ResponseStatusException con HttpStatus.CONFLICT en caso de violación de integridad de datos.
+	 * RETORNO:
+	 *   - En caso de registro exitoso de un cliente con autenticación de dos factores (mFaEnabled), devuelve la URI
+	 *     del código QR asociado al servicio de autenticación de dos factores.
+	 *   - En otros casos, devuelve un mensaje indicando el éxito del registro.
+	 */
 	public String Alta(Map<String, Object> info) throws Exception {
 		String email = info.get(EMAIL).toString();
 		String nombre = info.get(NOMBRE).toString();
@@ -121,7 +133,14 @@ public class UserService extends ConstUsers{
 		
 			return "Usuario registrado correctamente";
 	}
-	
+	/*
+	 * METODO: DARROL
+	 * DESCRIPCION: Asigna un rol específico según el tipo de usuario.
+	 * PARAMETROS:
+	 *   - tipo: Tipo de usuario para el cual se determina el rol.
+	 * RETORNO:
+	 *   - Rol asignado al tipo de usuario.
+	 */
 	public Role darRol(String tipo) {
 		
 		Role role = null;
@@ -135,7 +154,16 @@ public class UserService extends ConstUsers{
 		
 		return role;
 	}
-
+	/*
+	 * METODO: LOGIN
+	 * DESCRIPCION: Realiza el inicio de sesión para un usuario con las credenciales proporcionadas.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para el inicio de sesión (EMAIL, CONTRASENA).
+	 * EXCEPCIONES LANZADAS:
+	 *   - ResponseStatusException con HttpStatus.FORBIDDEN si las credenciales no son válidas.
+	 * RETORNO:
+	 *   - Usuario autenticado correspondiente al tipo de usuario (Admin, Cliente, Mantenimiento).
+	 */
 	public Usuario login(Map<String, Object> info) {
 		String email = info.get(EMAIL).toString();
 		String pass = info.get(CONTRASENA).toString();
@@ -174,7 +202,17 @@ public class UserService extends ConstUsers{
 		}
 		return null;
 	}
-	
+	/*
+	 * METODO: AUTHENTICATE
+	 * DESCRIPCION: Autentica a un usuario utilizando el sistema de autenticación de Spring Security
+	 *              y genera un token JWT para la autorización.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la autenticación (email, CONTRASENA).
+	 * RETORNO:
+	 *   - Token JWT generado para el usuario autenticado.
+	 * EXCEPCIONES LANZADAS:
+	 *   - AuthenticationException: Se lanza en caso de fallo en la autenticación.
+	 */
 	public String authenticate(Map<String, Object> info) {
 		String email = info.get("email").toString();
 		String contrasena = info.get(CONTRASENA).toString();
@@ -189,7 +227,18 @@ public class UserService extends ConstUsers{
 		Usuario usuario = this.usuarioDAO.findByEmail(email);
 		return jwtService.generateToken(usuario);
 	}
-	
+	/*
+	 * METODO: VERIFYCODE
+	 * DESCRIPCION: Verifica el código de autenticación de dos factores (2FA) para un cliente y genera un token JWT
+	 *              para la autorización.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la verificación del código (EMAIL, codigo).
+	 * RETORNO:
+	 *   - Token JWT generado para la autorización del cliente si el código es válido.
+	 * EXCEPCIONES LANZADAS:
+	 *   - Exception: Se lanza en caso de errores inesperados durante la verificación del código.
+	 *   - BadCredentialsException: Se lanza si el código no es correcto.
+	 */
 	public String verifyCode(Map <String, Object> info) throws Exception {
 		Cliente cliente = this.clientedao.findByEmail(info.get(EMAIL).toString());
 		
@@ -199,7 +248,14 @@ public class UserService extends ConstUsers{
 			return jwtService.generateToken(cliente);
 		}
 	}
-
+	/*
+	 * METODO: UPDATEUSERS
+	 * DESCRIPCION: Actualiza la información de los usuarios (Admin, Mantenimiento, Cliente) en el sistema.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información actualizada para los usuarios (EMAIL, NOMBRE, APELLIDOS, dni, etc.).
+	 * EXCEPCIONES LANZADAS:
+	 *   - ResponseStatusException con HttpStatus.FORBIDDEN si el tipo de usuario es inválido.
+	 */
 	public void updateUsers(Map<String, Object> info) {
 		Correo c = this.correodao.findByEmail((String) info.get(EMAIL));
 
@@ -283,6 +339,14 @@ public class UserService extends ConstUsers{
 	public Cliente actualizarCliente(Cliente clienteExistente) {
 		return clientedao.save(clienteExistente);
 	}
+	/*
+	 * METODO: BAJAUSUARIOS
+	 * DESCRIPCION: Da de baja a un cliente, cancelando todas sus reservas y eliminando su información del sistema.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la baja de usuario (EMAIL).
+	 * EXCEPCIONES LANZADAS:
+	 *   - ResponseStatusException con HttpStatus.CONFLICT si el cliente tiene reservas activas.
+	 */
 
 	public void bajaUsuarios(Map<String, Object> info) {
 	    String email = (String) info.get(EMAIL);
@@ -301,7 +365,14 @@ public class UserService extends ConstUsers{
 	    this.correodao.deleteByemail(email);
 	    this.usuarioDAO.deleteByemail(email);
 	}
-
+	/*
+	 * METODO: CHECKUSER
+	 * DESCRIPCION: Verifica la existencia de un usuario a través del correo electrónico y genera un token de recuperación.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la verificación del usuario (email).
+	 * RETORNO:
+	 *   - true si el usuario existe, false en caso contrario.
+	 */
 	public boolean checkUser(Map<String, Object> info) {
 		boolean exist = false;
 		TokenRecover token= null;
@@ -320,6 +391,13 @@ public class UserService extends ConstUsers{
 		return exist;
 		
 	}
+	
+	/*
+	 * METODO: UPDATEPASSWORD
+	 * DESCRIPCION: Actualiza la contraseña de un usuario después de un proceso de recuperación.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la actualización de contraseña (EMAIL, contrasena).
+	 */
 
 	public void updatePassword(Map<String, Object> info) {
 		String mailEncripted = info.get(EMAIL).toString();

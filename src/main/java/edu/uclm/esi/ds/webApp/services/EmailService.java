@@ -19,6 +19,11 @@ public class EmailService {
 
 	public static final String EMAIL = "email";
 	public static final String JSON = "application/json";
+	/*
+	 * ESTE METODO GENERA Y MANDA EL CORREO DE RECUPERACION DE CONTRASEÑA A PARTIR DE LA API WEB DE BREVO. 
+	 * GENERAMOS UN TOKEN QUE CONCATENAMOS AL ENLACE , QUE ES EL MISMO QUE ESTA EN BASE DE DATOS. DE ESTA MANERA CADA ENLACE PARA CADA
+	 * USUARIO ES UNICO.
+	 */
 
 	public void sendRecover(Map<String, Object> info) {
 		String email = info.get(EMAIL).toString();

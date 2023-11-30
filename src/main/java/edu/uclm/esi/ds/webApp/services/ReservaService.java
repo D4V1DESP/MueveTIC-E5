@@ -83,6 +83,11 @@ public class ReservaService extends ConstReservas {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
 	}
+	/*
+	 * METODO: CANCELUSERRESERVE
+	 * DESCRIPCION: ESTE METODO PRIMERO ENCUENTRA LA RESERVA ACTIVA DE UN CLIENTE DADO Y DESPUES PONE ESTA EN ESTADO CANCELADO 
+	 */
+
 
 	public void CancelUserReserve(Map<String, Object> info) {
 
@@ -121,6 +126,11 @@ public class ReservaService extends ConstReservas {
 	public List<ReservaCliente> listaReservasPorEmail(String email) {
 		return reservaClienteDAO.findListByEmail(email);
 	}
+	/*
+	 * METODO: OBTENER RESERVA ACTIVA POR EMAIL
+	 * DESCRIPCION: ESTE METODO OBTIENE LA RESERVA ACTIVA DE UN CLIENTE (EMAIL DE LA ENTRADA DE ARGUMENTOS) Y LO DEVUELVE EN CASO DE QUE ESTA EXISTA
+	 */
+
 
 	public ReservaCliente obtenerReservaActivaPorEmail(String email) {
 		List<ReservaCliente> reservas = this.reservaClienteDAO.findListByEmail(email);
@@ -143,6 +153,12 @@ public class ReservaService extends ConstReservas {
 	public List<ReservaMantenimiento> listaReservasMantenimiento(String email) {
 		return reservaMantenimientoDAO.findListByEmail(email);
 	}
+
+	/*
+	 * METODO: ADDVALORACION
+	 * DESCRIPCION: ESTE METODO ES EL ENCARGADO DE FINALIZAR LA RESERVA DE FORMA CORRECTA Y DE PONER TANTO LA VALORACION COMO EL COMENTARIO DE LA 
+	 * RESERVA.
+	 */
 
 	public void AddValoracion(Map<String, Object> info) {
 		int bateriaViaje = this.configDAO.findBynombre("bateriaViaje").getValor();
@@ -198,6 +214,10 @@ public class ReservaService extends ConstReservas {
 
 	}
 
+	/*
+	 * METODO: CHECKUSER
+	 * DESCRIPCION: ESTE METODO COMPRUEBA SI UN USUARIO EXISTE EN EL SISTEMA.
+	 */
 	public boolean checkUser(String email) {
 		boolean checked = false;
 		List<Correo> lstUser = this.correoDAO.findAll();
@@ -209,7 +229,10 @@ public class ReservaService extends ConstReservas {
 
 		return checked;
 	}
-
+	/*
+	 * METODO: CHECKVEHICLE
+	 * DESCRIPCION: ESTE METODO COMPRUEBA SI UN VEHICULO EXISTE EN EL SISTEMA.
+	 */
 	public boolean checkVehicle(String matricula) {
 		boolean checked = false;
 		List<Matricula> lstvehicles = this.matriculaDAO.findAll();
@@ -221,7 +244,15 @@ public class ReservaService extends ConstReservas {
 
 		return checked;
 	}
-
+	/*
+	 * METODO: ADDRESERVAMANTENIMIENTO
+	 * DESCRIPCION: Añade una reserva de mantenimiento al sistema.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para la reserva (EMAIL, MATRICULA).
+	 * EXCEPCIONES LANZADAS:
+	 *   - ResponseStatusException con HttpStatus.CONFLICT si ocurren conflictos, como email o matrícula no existentes,
+	 *     o si el límite de reservas en estado "reservado" se ha alcanzado.
+	 */
 	public void addReservaMantenimiento(Map<String, Object> info) {
 		String email = info.get(EMAIL).toString();
 		String vehiculo = (String) info.get(MATRICULA);
@@ -253,7 +284,19 @@ public class ReservaService extends ConstReservas {
 			throw new ResponseStatusException(HttpStatus.CONFLICT);
 		}
 	}
-
+	/*
+	 * METODO: FINALIZARMANTENIMIENTO
+	 * DESCRIPCION: Finaliza el mantenimiento de un vehículo y actualiza su estado y batería.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para finalizar el mantenimiento (MATRICULA).
+	 * ACCIONES REALIZADAS:
+	 *   - Busca la reserva de mantenimiento asociada a la matrícula proporcionada.
+	 *   - Obtiene el tipo de vehículo mediante la matrícula.
+	 *   - Si el tipo es COCHE, actualiza la batería y estado del coche.
+	 *   - Si el tipo es MOTO, actualiza la batería y estado de la moto.
+	 *   - Si el tipo es PATINETE, actualiza la batería y estado del patinete.
+	 *   - Elimina la reserva de mantenimiento asociada al vehículo.
+	 */
 	public void finalizarMantenimiento(Map<String, Object> info) {
 		String matricula = info.get(MATRICULA).toString();
 
@@ -278,7 +321,16 @@ public class ReservaService extends ConstReservas {
 		}
 		this.reservaMantenimientoDAO.delete(reserva);
 	}
-
+	/*
+	 * METODO: CANCELMANTENIMIENTO
+	 * DESCRIPCION: Cancela el mantenimiento de un vehículo y actualiza su estado.
+	 * PARAMETROS:
+	 *   - info: Mapa que contiene la información necesaria para cancelar el mantenimiento (MATRICULA).
+	 * ACCIONES:
+	 *   - Recupera la reserva de mantenimiento asociada a la matrícula proporcionada.
+	 *   - Obtiene el tipo de vehículo a partir de la matrícula y actualiza su estado a DESCARGADO.
+	 *   - Elimina la reserva de mantenimiento correspondiente.
+	 */
 	public void cancelMantenimiento(Map<String, Object> info) {
 		String matricula = info.get(MATRICULA).toString();
 
