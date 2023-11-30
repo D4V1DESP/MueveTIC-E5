@@ -9,6 +9,10 @@ import org.springframework.web.server.ResponseStatusException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+	/*
+     * Maneja excepciones del tipo ResponseStatusException.
+     * Devuelve una respuesta personalizada con el código de estado HTTP y un mensaje de error.
+     */
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(ResponseStatusException ex) {
         // Handle ResponseStatusException, which includes setting custom responses for specific HTTP status codes

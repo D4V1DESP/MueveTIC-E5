@@ -28,9 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 	@Autowired
 	private UserDetailsService userDetailsService;
 
+	/*
+	 * Realiza la validación y autenticación del token JWT en cada petición HTTP entrante.
+	 */
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request,
 			@NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+			// Evita la autenticación para la ruta de autenticación de usuarios.
 			throws ServletException, IOException {
 	    		if (request.getServletPath().contains("/users/authenticate")) {
 	    			filterChain.doFilter(request, response);
@@ -40,12 +44,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			final String authHeader = request.getHeader("Authorization");
 			final String jwt;
 			final String userEmail;
+			// Verifica si el encabezado de autorización y el formato del token son correctos.
 			if(authHeader == null || !authHeader.startsWith("Bearer ")) {
 				filterChain.doFilter(request, response);
 				return;
 			}
+			
+			// Extrae el token JWT y el correo electrónico del usuario.
 			jwt = authHeader.substring(7);
 			userEmail = jwtService.extractUsername(jwt);
+			// Valida y establece la autenticación si el token es válido.
 			if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 				if(jwtService.isTokenValid(jwt, userDetails)) {
@@ -60,6 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 					SecurityContextHolder.getContext().setAuthentication(authToken);
 				}
 			}
+			// Continúa con el filtro para otras peticiones.
 			filterChain.doFilter(request, response);
 	}
 

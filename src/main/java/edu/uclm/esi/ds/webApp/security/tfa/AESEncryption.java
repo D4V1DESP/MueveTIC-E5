@@ -15,6 +15,9 @@ import java.util.Base64;
 @Service
 public class AESEncryption {
 
+	/*
+     * Encripta datos utilizando el algoritmo AES.
+     */
     public static String encrypt(String data, String secretKey) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
@@ -29,6 +32,9 @@ public class AESEncryption {
         return Base64.getEncoder().encodeToString(iv) + ":" + Base64.getEncoder().encodeToString(encrypted);
     }
 
+    /*
+     * Desencripta datos previamente encriptados utilizando el algoritmo AES.
+     */
     public static String decrypt(String encryptedData, String secretKey) throws Exception {
         String[] parts = encryptedData.split(":");
         byte[] iv = Base64.getDecoder().decode(parts[0]);

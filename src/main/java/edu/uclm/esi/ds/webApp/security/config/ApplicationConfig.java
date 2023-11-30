@@ -16,11 +16,20 @@ import edu.uclm.esi.ds.webApp.dao.UsuarioDAO;
 @Configuration
 public class ApplicationConfig {
 	
+	/*
+	 * Método que proporciona una implementación de UserDetailsService
+	 * basada en el UsuarioDAO para buscar usuarios por su correo electrónico.
+	 */
+	
 	@Bean
 	public UserDetailsService userDetailsService(UsuarioDAO usuarioDAO){
 		return username -> usuarioDAO.findByEmail(username);
 	}
 	
+	/*
+	 * Método que crea y configura un AuthenticationProvider basado en DaoAuthenticationProvider.
+	 * Establece el UserDetailsService con el UsuarioDAO proporcionado y un PasswordEncoder.
+	 */
 	@Bean
 	public AuthenticationProvider authenticationProvider(UsuarioDAO usuarioDAO) {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -29,11 +38,17 @@ public class ApplicationConfig {
 		return authProvider;
 	}
 	
+	/*
+	 * Método que proporciona un AuthenticationManager obtenido de la configuración de autenticación de Spring Security.
+	 */
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
+	/*
+	 * Método que crea y devuelve un PasswordEncoder BCryptPasswordEncoder.
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

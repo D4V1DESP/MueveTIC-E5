@@ -19,10 +19,16 @@ import dev.samstevens.totp.util.Utils;
 @Service
 public class TwoFactorAuthenticationService {
 
+	/*
+     * Genera un nuevo secreto para la autenticación de dos factores.
+     */
 	public String generateNewSecret() {
 		return new DefaultSecretGenerator().generate();
 	}
 
+	/*
+     * Genera una URI de imagen del código QR para un secreto dado.
+     */
 	public String generateQrCodeImageUri(String secret) {
 		QrData data = new QrData.Builder()
 				.label("MueveTIC 2FA")
@@ -38,12 +44,15 @@ public class TwoFactorAuthenticationService {
 		try {
 			imageData = generator.generate(data);
 		} catch (QrGenerationException e) {
-
+			// Manejo de excepciones en la generación del código QR
 		}
 
 		return Utils.getDataUriForImage(imageData, generator.getImageMimeType());
 	}
 
+	/*
+     * Verifica si un código OTP dado es válido para un secreto dado.
+     */
 	public boolean isOtpValid(String secret, String code) {
 		TimeProvider timeProvider = new SystemTimeProvider();
 		CodeGenerator codeGenerator = new DefaultCodeGenerator();
@@ -51,6 +60,9 @@ public class TwoFactorAuthenticationService {
 		return verifier.isValidCode(secret, code);
 	}
 	
+	/*
+     * Verifica si un código OTP dado no es válido para un secreto dado.
+     */
     public boolean isOtpNotValid(String secret, String code) {
         return !this.isOtpValid(secret, code);
     }

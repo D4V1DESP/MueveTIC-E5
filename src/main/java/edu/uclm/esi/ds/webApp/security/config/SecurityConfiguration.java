@@ -26,7 +26,7 @@ import edu.uclm.esi.ds.webApp.security.Role;
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-	
+	// URLs permitidas sin autenticación
 	private static final String[] WHITE_LIST_URL = {"/users/AddUser",
             "/users/login",
             "/users/authenticate",
@@ -34,23 +34,26 @@ public class SecurityConfiguration {
             "/users/updatePass",
             "/users/verify"};
 		
+	/*
+     * Configuración de la cadena de filtros de seguridad.
+     */
 	@Bean
 	public SecurityFilterChain securityFilterChain(JwtAuthenticationFilter jwtAuthFilter, AuthenticationProvider authenticationProvider, HttpSecurity http) throws Exception{
 		http
-		.cors()
+		.cors() // Configuración de CORS
 		.and()
-        .csrf(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)	// Deshabilita CSRF
         .authorizeHttpRequests(req ->
                 req.requestMatchers(WHITE_LIST_URL)
-                        .permitAll()
+                        .permitAll()	// Permite el acceso a las URLs de la lista blanca sin autenticación
                         .anyRequest()
-                        .authenticated()
+                        .authenticated()	// Permite el acceso a las URLs de la lista blanca sin autenticación 
         )
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))	// Política de creación de sesiones sin estado
+        .authenticationProvider(authenticationProvider)	// Proveedor de autenticación
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);	// Agrega el filtro de autenticación JWT antes del filtro de usuario y contraseña
 		
 		
-		return http.build();
+		return http.build();	// Retorna la cadena de filtros de seguridad configurada
 	}
 }
