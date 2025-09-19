@@ -44,13 +44,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<version>3.1.4</version>
+			<version>3.4.10</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-acl</artifactId>
-			<version>6.1.4</version>
+			<version>6.4.11</version>
 		</dependency>
 
 
@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>4.1.5</version>
+			<version>4.4.10</version>
 		</dependency>
 	</dependencies>
 </project>
